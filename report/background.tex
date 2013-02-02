@@ -1,0 +1,39 @@
+\section{Theoretical background}
+
+\subsection{Hovering Information System}
+
+The hovering information system is composed by two main components: mobile
+nodes and pieces of hovering information.
+
+\emph{Mobile nodes} are components moving into the environment with a limited
+communication range, capable of communicate to peers, discover neighbors,
+access and store (into a limited buffer) pieces of
+hovering information. A mobile node is assumed able to determinate its
+geographic position, speed and direction.
+
+\emph{Pieces of hovering information} are data that have to \emph{survive}
+inside a circular area centered at a location called \emph{anchor location} and
+having a radius called \emph{anchor radius}. The survivability goal of a piece
+of hovering information is achieved moving or replicating the piece itself
+through the mobile nodes. A piece of hovering information may have some
+policies controlling the movement between nodes.
+
+In an hovering information system, three main requirements may be defined for each
+piece of hovering information \cite{hover}:
+\begin{description}
+	\item[Survivability:] a piece of hovering information is alive at some time
+		$t$, if there is at leas one node hosting a replica of this information.
+		\\
+		$survivability = \frac{alive\_time}{total\_time}$
+	\item[Availability:] a piece of hovering information is available at some time
+		$t$, if there is at least one node in its anchor area hosting a replica of
+		this information.
+		\\
+		$avaiability = \frac{avaiable\_time}{total\_time}$
+	\item[Accessibility:] a piece of hovering information is accessible by a node
+		at some time $t$, if the node is able to get this information; therefore, a
+		replica exists in the node communication range.
+		\\
+		$accessibility = \frac{replica\_covered\_area}{anchor\_area}$
+\end{description}
+

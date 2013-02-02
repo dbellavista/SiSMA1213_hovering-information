@@ -20,7 +20,7 @@ The repository is structured as following:
 * Presentation
 
 ## Background
-### Hoovering Information
+### Hovering Information
 
 > Hovering Information - Infrastructure-Free Self-Organising Location-Aware Information Dissemination Service, Alfredo A. Villalba Castro, Giovanna Di Marzo Serugendo, and Dimitri Konstantas
 
