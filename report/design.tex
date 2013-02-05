@@ -1,0 +1,238 @@
+\section{Hovering Information and Social System Design}
+\label{sec:design}
+
+The system should implement the hovering information system working inside
+a social environment. Mobile nodes are owned by people, who move inside an
+environment composed by anchors, that is locations where pieces of hovering
+information are present. Anchors are usually binded to points of interest, but
+generally hovering information can be dynamically created by people.
+
+Mobile nodes lose power and may have not enough energy to supply the whole
+function.  In that case some mobile node features may be limited such as
+information storage, communication, etc..
+
+Preliminary assumptions:
+\begin{enumerate}
+	\item \emph{Localization error negligible}.
+\end{enumerate}
+
+\subsection{Requirements Analysis}
+
+\subsubsection*{Requirements Tables}
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|p{4cm}|p{8cm}|}
+			\hline
+			\textbf{Actor} & \textbf{Description} \\
+			\hline
+			HoveringService & The system itself, it offers location-dependent information. \\
+			\hline
+			MobileDevice & Device able to interface itself with the system. \\
+			\hline
+			Person & User of a mobile device. \\
+			\hline
+			GraphAnalyst & Data gatherer, organizer and analyzer. \\
+			\hline
+		\end{tabular}
+	\caption{Actor table $(C)Ac_t$}
+	\label{tab:cact}
+\end{table}
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|p{4cm}|p{8cm}|}
+			\hline
+			\textbf{Requirement} & \textbf{Description} \\
+			\hline
+			ManageDeviceResources & Manage the resources needed by the service, such
+			as geo-location, communication, neighbor mobile device discovery, and so on. \\
+			\hline
+			AccessInformation & Access all the information that reside inside an anchor area. \\
+			\hline
+			CreateInformation & Creates a new hovering information. \\
+			\hline
+			ObtainSystemData & Known the current data (position, information access,
+			etc.) of all the system component. \\
+			\hline
+			Availability & Make all information available. \\
+			\hline
+			Survivability & Keep all information alive. \\
+			\hline
+			Accessibility & Make all information accessible in their anchor area. \\
+			\hline
+		\end{tabular}
+	\caption{Requirement table $(C)Re_t$}
+	\label{tab:cact}
+\end{table}
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|p{4cm}|p{8cm}|}
+			\hline
+			\textbf{Actor} & \textbf{Requirement} \\
+			\hline
+			HoveringService & AccessInformation, CreateInformation, Availability,
+			Survivability, Accessibility. \\
+			\hline
+			MobileDevice & ManageDeviceResources. \\
+			\hline
+			Person & AccessInformation, CreateInformation. \\
+			\hline
+			GraphAnalyst & ObtainSystemData. \\
+			\hline
+		\end{tabular}
+	\caption{Actor-Requirement table $(C)AR_t$}
+	\label{tab:cart}
+\end{table}
+
+\subsubsection*{Domain Tables}
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|p{4cm}|p{8cm}|}
+			\hline
+			\textbf{External Environment} & \textbf{Legacy system} \\
+			\hline
+			External & SimulatorOutput. \\
+			\hline
+		\end{tabular}
+	\caption{External Environment-Legacy System table $(C)EELS_t$}
+	\label{tab:ceelst}
+\end{table}
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|p{4cm}|p{8cm}|}
+			\hline
+			\textbf{Legacy System} & \textbf{Description} \\
+			\hline
+			SimulatorOutput & Final stage of the simulation, gather and show simulation data. \\
+			\hline
+		\end{tabular}
+	\caption{External Environment-Legacy System table $(C)EELS_t$}
+	\label{tab:ceelst}
+\end{table}
+
+\subsubsection*{Relations Tables}
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|p{4cm}|p{8cm}|}
+			\hline
+			\textbf{Relation} & \textbf{Description} \\
+			\hline
+			SimulatorData & make relevant information available to the simulator. \\
+			\hline
+			UseDeviceFeatures & Access the mobile device features. \\
+			\hline
+		\end{tabular}
+	\caption{Relation table $(C)Rel_t$}
+	\label{tab:crelt}
+\end{table}
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|p{4cm}|p{8cm}|}
+			\hline
+			\textbf{Requirement} & \textbf{Relation} \\
+			\hline
+			AccessInformation & UseDeviceFeatures, SimulatorData. \\
+			\hline
+			CreateInformation & UseDeviceFeatures, SimulatorData. \\
+			\hline
+			ManageDeviceResources & UseDeviceFeatures, SimulatorData. \\
+			\hline
+			ObtainSystemData & SimulatorData. \\
+			\hline
+		\end{tabular}
+	\caption{Requirement-Relation table $(C)RR_t$}
+	\label{tab:crrt}
+\end{table}
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|p{4cm}|p{8cm}|}
+			\hline
+			\textbf{Legacy-System} & \textbf{Relation} \\
+			\hline
+			SimulatorOutput & SimulatorData. \\
+			\hline
+		\end{tabular}
+	\caption{Relation-LegacySystem table $(C)RLS_t$}
+	\label{tab:crlst}
+\end{table}
+
+\subsection{Analysis}
+
+%\subsubsection*{References Tables}
+%
+%\begin{table}[H]
+%	\centering
+%	\begin{tabular}{|p{4cm}|p{8cm}|}
+%			\hline
+%			\textbf{Requirement} & \textbf{Task} \\
+%			\hline
+%			ManageDeviceResources & Manage device. \\
+%			\hline
+%			AccessInformation & Access information. \\
+%			\hline
+%			CreateInformation & Create information. \\
+%			\hline
+%			ObtainSystemData & Obtain system data. \\
+%			\hline
+%			Availability & Be available. \\
+%			\hline
+%			Survivability & Survive. \\
+%			\hline
+%			Accessibility & Maintain accessibility. \\
+%			\hline
+%		\end{tabular}
+%	\caption{Reference Requirement-Task table $(C)RRT_t$}
+%	\label{tab:crrtt}
+%\end{table}
+%
+%\begin{table}[H]
+%	\centering
+%	\begin{tabular}{|p{4cm}|p{8cm}|}
+%			\hline
+%			\textbf{Requirement} & \textbf{Function} \\
+%			\hline
+%			ManageDeviceResources & Communicate, Discover, Management Power, Management Storage. \\
+%			\hline
+%			AccessInformation & Communicate, Discover. \\
+%			\hline
+%			CreateInformation & Communicate, Discover. \\
+%			\hline
+%			ObtainSystemData & . \\
+%			\hline
+%			Availability & Communicate, Discover, Management storage. \\
+%			\hline
+%			Survivability & Communicate, Discover, Management storage. \\
+%			\hline
+%			Accessibility & Communicate, Discover, Management storage. \\
+%			\hline
+%		\end{tabular}
+%	\caption{Reference Requirement-Function table $(C)RRF_t$}
+%	\label{tab:crrft}
+%\end{table}
+%
+%\begin{table}[H]
+%	\centering
+%	\begin{tabular}{|p{4cm}|p{8cm}|}
+%			\hline
+%			\textbf{Requirement} & \textbf{Topology} \\
+%			\hline
+%			& \\
+%			\hline
+%		\end{tabular}
+%	\caption{Reference Requirement-Topology table $(C)RRTo_t$}
+%	\label{tab:crrtot}
+%\end{table}
+
+% TODO: mancano un po' di tabelle che non ho idea di cosa siano :/
+
+\subsection{Architectural Design}
+
+\subsection{Detailed Design}
+

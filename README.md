@@ -10,8 +10,8 @@ network theory for analysis.
 The repository is structured as following:
 
 * Report
-	* Background theory
-	* AOSE process
+	* Introduction
+	* AOSE process (SODA)
 	* Simulator implementation
 	* Analysis Results
 * MAS implementation
@@ -30,13 +30,13 @@ A possible approach:
 
 > Human Mobility in Shopping Mall Environments, Adriano Galati, Chris Greenhalgh
 
-### Analysis
+### Data Analysis
 
 *TODO*
 
 ## MAS Engineering methodology
 
-Use of SODA (Societies in Open and Distributed Agent spaces) expected.
+SODA (Societies in Open and Distributed Agent spaces) methodology used.
 
 > http://www.alice.unibo.it/xwiki/bin/view/SODA/Documents
 

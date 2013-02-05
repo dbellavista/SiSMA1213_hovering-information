@@ -1,7 +1,15 @@
 \documentclass[11pt]{article}
 
+\usepackage{float}
+\usepackage[utf8]{inputenc}
+\usepackage{hyperref}
+\hypersetup{
+    unicode=true,          % non-Latin characters in Acrobat’s bookmarks
+    pdftitle={Hovering Information: implementation, simulation and analysis},    % title
+    pdfauthor={Daniele Bellavista},     % author
+}
 \begin{document}
-\title{Hovering Information}
+\title{Hovering Information: implementation, simulation and analysis}
 \author{Daniele Bellavista\\
 Scuola di Ingegneria ed Archiettura\\
 Ingegneria Informatica Magistrale\\
@@ -11,7 +19,8 @@ Corso Sistemi Multiagente LM\\
 \maketitle
 
 \input{introduction.tex}
-\input{background.tex}
+\input{design.tex}
+%\input{background.tex}
 
 \bibliographystyle{plain}
 \nocite{*}
