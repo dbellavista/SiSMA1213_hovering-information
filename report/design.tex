@@ -1,4 +1,4 @@
-\section{Hovering Information and Social System Design}
+\section{Hovering Information and Social System analysis and design}
 \label{sec:design}
 
 The system should implement the hovering information system working inside
@@ -11,14 +11,49 @@ Mobile nodes lose power and may have not enough energy to supply the whole
 function.  In that case some mobile node features may be limited such as
 information storage, communication, etc..
 
-Preliminary assumptions:
+The system should simulate an hovering information usage, inside an
+environment.  People, carrying mobile nodes, have to walk with different
+behaviour, emulating movements inside an area composed by points of interest.
+The simulation should gather periodic data about hovering information status
+and properties (i.e.\ availability, survivability and accessibility), nodes
+position and communications link.
+
+\subsection{Preliminary analysis}
+
+Requirements implicate that the system is composed by three sub-systems:
 \begin{enumerate}
-	\item \emph{Localization error negligible}.
+	\item Simulator (graphic interface and data analyzer).
+	\item Hovering information (composed by pieces of hovering information and
+		mobile nodes).
+	\item Social system (a group of hovering information users moving into
+		the environment).
 \end{enumerate}
+
+Aside from required interfaces, these subsystems can be designed independently
+from each other.
+
+A simulator user may want to create people and assign a behaviour, nodes and
+initial hovering information.
+
+A person behaviour can be initialized defining social roles. Taking the cue from
+\cite{human} some behaviour can be defined:
+
+\begin{description}
+	\item[Guard:] a person who walks following a predefined path.
+	\item[Owner:] a person who resides, works near a certain point of interest.
+	\item[Ant:] a person who performs a random walk but he's influenced by other
+		people movement.
+	\item[Group:] some people walking together sharing one of the previous
+		behaviour.
+\end{description}
 
 \subsection{Requirements Analysis}
 
 \subsubsection*{Requirements Tables}
+
+The subsystem \emph{Simulator} doesn't require independent control or
+intelligence, so the simulator interface it can be assumed as a \emph{Legacy
+System}, already present in the environment.
 
 \begin{table}[H]
 	\centering
@@ -26,13 +61,9 @@ Preliminary assumptions:
 			\hline
 			\textbf{Actor} & \textbf{Description} \\
 			\hline
-			HoveringService & The system itself, it offers location-dependent information. \\
+			Simulation Analyst & The simulation data analyzer. \\
 			\hline
-			MobileDevice & Device able to interface itself with the system. \\
-			\hline
-			Person & User of a mobile device. \\
-			\hline
-			GraphAnalyst & Data gatherer, organizer and analyzer. \\
+			Person & User of a mobile node. \\
 			\hline
 		\end{tabular}
 	\caption{Actor table $(C)Ac_t$}
@@ -45,21 +76,14 @@ Preliminary assumptions:
 			\hline
 			\textbf{Requirement} & \textbf{Description} \\
 			\hline
-			ManageDeviceResources & Manage the resources needed by the service, such
-			as geo-location, communication, neighbor mobile device discovery, and so on. \\
+			Access Information & Access all the information that reside inside an anchor area. \\
 			\hline
-			AccessInformation & Access all the information that reside inside an anchor area. \\
+			Create Information & Creates a new hovering information. \\
 			\hline
-			CreateInformation & Creates a new hovering information. \\
-			\hline
-			ObtainSystemData & Known the current data (position, information access,
+			Obtain System Data & Known the current data (position, information access,
 			etc.) of all the system component. \\
 			\hline
-			Availability & Make all information available. \\
-			\hline
-			Survivability & Keep all information alive. \\
-			\hline
-			Accessibility & Make all information accessible in their anchor area. \\
+			Manage Simulation & Manage the simulation. \\
 			\hline
 		\end{tabular}
 	\caption{Requirement table $(C)Re_t$}
@@ -72,14 +96,9 @@ Preliminary assumptions:
 			\hline
 			\textbf{Actor} & \textbf{Requirement} \\
 			\hline
-			HoveringService & AccessInformation, CreateInformation, Availability,
-			Survivability, Accessibility. \\
+			Person & Access Information, Create Information. \\
 			\hline
-			MobileDevice & ManageDeviceResources. \\
-			\hline
-			Person & AccessInformation, CreateInformation. \\
-			\hline
-			GraphAnalyst & ObtainSystemData. \\
+			Simulation Analyst & Obtain System Data, Manage Simulation. \\
 			\hline
 		\end{tabular}
 	\caption{Actor-Requirement table $(C)AR_t$}
@@ -94,7 +113,7 @@ Preliminary assumptions:
 			\hline
 			\textbf{External Environment} & \textbf{Legacy system} \\
 			\hline
-			External & SimulatorOutput. \\
+			External & Simulator UI. \\
 			\hline
 		\end{tabular}
 	\caption{External Environment-Legacy System table $(C)EELS_t$}
@@ -107,7 +126,7 @@ Preliminary assumptions:
 			\hline
 			\textbf{Legacy System} & \textbf{Description} \\
 			\hline
-			SimulatorOutput & Final stage of the simulation, gather and show simulation data. \\
+			Simulator UI & Simulation interface: show simulation data. \\
 			\hline
 		\end{tabular}
 	\caption{External Environment-Legacy System table $(C)EELS_t$}
@@ -122,9 +141,7 @@ Preliminary assumptions:
 			\hline
 			\textbf{Relation} & \textbf{Description} \\
 			\hline
-			SimulatorData & make relevant information available to the simulator. \\
-			\hline
-			UseDeviceFeatures & Access the mobile device features. \\
+			Simulator Data & make relevant information available to the Simulator UI. \\
 			\hline
 		\end{tabular}
 	\caption{Relation table $(C)Rel_t$}
@@ -137,13 +154,13 @@ Preliminary assumptions:
 			\hline
 			\textbf{Requirement} & \textbf{Relation} \\
 			\hline
-			AccessInformation & UseDeviceFeatures, SimulatorData. \\
+			Access Information & Simulator Data. \\
 			\hline
-			CreateInformation & UseDeviceFeatures, SimulatorData. \\
+			Create Information & Simulator Data. \\
 			\hline
-			ManageDeviceResources & UseDeviceFeatures, SimulatorData. \\
+			Obtain System Data & Simulator Data. \\
 			\hline
-			ObtainSystemData & SimulatorData. \\
+			Manage Simulation & Simulator Data. \\
 			\hline
 		\end{tabular}
 	\caption{Requirement-Relation table $(C)RR_t$}
@@ -156,7 +173,7 @@ Preliminary assumptions:
 			\hline
 			\textbf{Legacy-System} & \textbf{Relation} \\
 			\hline
-			SimulatorOutput & SimulatorData. \\
+			Simulator UI & Simulator Data. \\
 			\hline
 		\end{tabular}
 	\caption{Relation-LegacySystem table $(C)RLS_t$}
@@ -173,19 +190,14 @@ Preliminary assumptions:
 %			\hline
 %			\textbf{Requirement} & \textbf{Task} \\
 %			\hline
-%			ManageDeviceResources & Manage device. \\
+%			Access Information & list_information, access_information. \\
 %			\hline
-%			AccessInformation & Access information. \\
+%			Create Information & create_information. \\
 %			\hline
-%			CreateInformation & Create information. \\
+%			Obtain System Data & obtain_node_position, obtain_hovering_information,
+%			obtain_communication_link. \\
 %			\hline
-%			ObtainSystemData & Obtain system data. \\
-%			\hline
-%			Availability & Be available. \\
-%			\hline
-%			Survivability & Survive. \\
-%			\hline
-%			Accessibility & Maintain accessibility. \\
+%			Manage Simulation & start, stop, pause. \\
 %			\hline
 %		\end{tabular}
 %	\caption{Reference Requirement-Task table $(C)RRT_t$}
@@ -198,19 +210,13 @@ Preliminary assumptions:
 %			\hline
 %			\textbf{Requirement} & \textbf{Function} \\
 %			\hline
-%			ManageDeviceResources & Communicate, Discover, Management Power, Management Storage. \\
+%			Access Information & communicate_data, show_information, discover_neighbor \\
 %			\hline
-%			AccessInformation & Communicate, Discover. \\
+%			Create Information & communicate_data, insert_information, discover_neighbor \\
 %			\hline
-%			CreateInformation & Communicate, Discover. \\
+%			Obtain System Data & inquire_node, inquire_hovering_information. \\
 %			\hline
-%			ObtainSystemData & . \\
-%			\hline
-%			Availability & Communicate, Discover, Management storage. \\
-%			\hline
-%			Survivability & Communicate, Discover, Management storage. \\
-%			\hline
-%			Accessibility & Communicate, Discover, Management storage. \\
+%			Manage Simulation & render. \\
 %			\hline
 %		\end{tabular}
 %	\caption{Reference Requirement-Function table $(C)RRF_t$}
@@ -229,9 +235,59 @@ Preliminary assumptions:
 %	\caption{Reference Requirement-Topology table $(C)RRTo_t$}
 %	\label{tab:crrtot}
 %\end{table}
-
-% TODO: mancano un po' di tabelle che non ho idea di cosa siano :/
-
+%
+%% TODO: mancano un po' di tabelle che non ho idea di cosa siano :/
+%
+%\subsubsection*{Responsibilities Tables}
+%
+%\begin{table}[H]
+%	\centering
+%	\begin{tabular}{|p{4cm}|p{8cm}|}
+%			\hline
+%			\textbf{Task} & \textbf{Description} \\
+%			\hline
+%			Manage device & Managing of device resources and features: communication,
+%			neighbor discovery, geo-location, power management and storing
+%			management. \\
+%			\hline
+%			Obtain information & An existing information has to be accessed. \\
+%			\hline
+%			Create Information & A new information, with all the required data has to
+%			be inserted int the system. \\
+%			\hline
+%			Obtain system data & . \\
+%			\hline
+%			Be avaiable & Replicate and move information inside the information anchor area. \\
+%			\hline
+%			Survive & Replicate and move information keeping it alive. \\
+%			\hline
+%			Maintain accessibility & Replicate and move information in order to be
+%			available in the whole anchor area. \\
+%			\hline
+%		\end{tabular}
+%	\caption{Reference Requirement-Task table $(C)RRT_t$}
+%	\label{tab:crrtt}
+%\end{table}
+%
+%\begin{table}[H]
+%	\centering
+%	\begin{tabular}{|p{4cm}|p{8cm}|}
+%			\hline
+%			\textbf{Function} & \textbf{Description} \\
+%			\hline
+%			Communicate & Manage data transmission and receiving.  \\
+%			\hline
+%			Discover & Find other devices inside the communication range. \\
+%			\hline
+%			Management power & Check power usage and disable some functionality. \\
+%			\hline
+%			Management storage & Manage the memory, enabling or disabling information storing. \\
+%			\hline
+%		\end{tabular}
+%	\caption{Reference Requirement-Task table $(C)RRT_t$}
+%	\label{tab:crrtt}
+%\end{table}
+%
 \subsection{Architectural Design}
 
 \subsection{Detailed Design}
