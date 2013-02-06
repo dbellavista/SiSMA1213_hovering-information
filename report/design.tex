@@ -4,8 +4,8 @@
 The system should implement the hovering information system working inside
 a social environment. Mobile nodes are owned by people, who move inside an
 environment composed by anchors, that is locations where pieces of hovering
-information are present. Anchors are usually binded to points of interest, but
-generally hovering information can be dynamically created by people.
+information are present. Anchors are usually bound to points of interest, but
+in a more general way hovering information can be dynamically created by people.
 
 Mobile nodes lose power and may have not enough energy to supply the whole
 function.  In that case some mobile node features may be limited such as
@@ -30,30 +30,31 @@ Requirements implicate that the system is composed by three sub-systems:
 \end{enumerate}
 
 Aside from required interfaces, these subsystems can be designed independently
-from each other.
+from each other and each of them as different users. A simulator user may want
+to create people and assign a behaviour, nodes and initial hovering information.
+The simulator itself is the user of the social system and a single person inside
+the latter system is an user of the hovering information service.
 
-A simulator user may want to create people and assign a behaviour, nodes and
-initial hovering information.
-
-A person behaviour can be initialized defining social roles. Taking the cue from
-\cite{human} some behaviour can be defined:
+Social system requires people to move with different behaviours; a possible
+solution is to assign \emph{social roles} with different behavior pattern.
+Taking the cue from \cite{human} some roles can be defined:
 
 \begin{description}
 	\item[Guard:] a person who walks following a predefined path.
-	\item[Owner:] a person who resides, works near a certain point of interest.
-	\item[Ant:] a person who performs a random walk but he's influenced by other
-		people movement.
-	\item[Group:] some people walking together sharing one of the previous
+	\item[Employee:] a person who resides -works- near a certain point of interest.
+	\item[Ant:] a person who performs a random walk but he's influenced in a
+		certain manner by other people.
+	\item[Group:] some people walking together, using one of the previous
 		behaviour.
 \end{description}
 
 \subsection{Requirements Analysis}
 
-\subsubsection*{Requirements Tables}
-
 The subsystem \emph{Simulator} doesn't require independent control or
-intelligence, so the simulator interface it can be assumed as a \emph{Legacy
+intelligence, so the simulator interface can be assumed as a \emph{Legacy
 System}, already present in the environment.
+
+\subsubsection*{Requirements Tables}
 
 \begin{table}[H]
 	\centering
@@ -129,8 +130,8 @@ System}, already present in the environment.
 			Simulator UI & Simulation interface: show simulation data. \\
 			\hline
 		\end{tabular}
-	\caption{External Environment-Legacy System table $(C)EELS_t$}
-	\label{tab:ceelst}
+	\caption{Legacy System table $(C)LS_t$}
+	\label{tab:clst}
 \end{table}
 
 \subsubsection*{Relations Tables}
@@ -182,112 +183,301 @@ System}, already present in the environment.
 
 \subsection{Analysis}
 
-%\subsubsection*{References Tables}
-%
-%\begin{table}[H]
-%	\centering
-%	\begin{tabular}{|p{4cm}|p{8cm}|}
-%			\hline
-%			\textbf{Requirement} & \textbf{Task} \\
-%			\hline
-%			Access Information & list_information, access_information. \\
-%			\hline
-%			Create Information & create_information. \\
-%			\hline
-%			Obtain System Data & obtain_node_position, obtain_hovering_information,
-%			obtain_communication_link. \\
-%			\hline
-%			Manage Simulation & start, stop, pause. \\
-%			\hline
-%		\end{tabular}
-%	\caption{Reference Requirement-Task table $(C)RRT_t$}
-%	\label{tab:crrtt}
-%\end{table}
-%
-%\begin{table}[H]
-%	\centering
-%	\begin{tabular}{|p{4cm}|p{8cm}|}
-%			\hline
-%			\textbf{Requirement} & \textbf{Function} \\
-%			\hline
-%			Access Information & communicate_data, show_information, discover_neighbor \\
-%			\hline
-%			Create Information & communicate_data, insert_information, discover_neighbor \\
-%			\hline
-%			Obtain System Data & inquire_node, inquire_hovering_information. \\
-%			\hline
-%			Manage Simulation & render. \\
-%			\hline
-%		\end{tabular}
-%	\caption{Reference Requirement-Function table $(C)RRF_t$}
-%	\label{tab:crrft}
-%\end{table}
-%
-%\begin{table}[H]
-%	\centering
-%	\begin{tabular}{|p{4cm}|p{8cm}|}
-%			\hline
-%			\textbf{Requirement} & \textbf{Topology} \\
-%			\hline
-%			& \\
-%			\hline
-%		\end{tabular}
-%	\caption{Reference Requirement-Topology table $(C)RRTo_t$}
-%	\label{tab:crrtot}
-%\end{table}
-%
-%% TODO: mancano un po' di tabelle che non ho idea di cosa siano :/
-%
-%\subsubsection*{Responsibilities Tables}
-%
-%\begin{table}[H]
-%	\centering
-%	\begin{tabular}{|p{4cm}|p{8cm}|}
-%			\hline
-%			\textbf{Task} & \textbf{Description} \\
-%			\hline
-%			Manage device & Managing of device resources and features: communication,
-%			neighbor discovery, geo-location, power management and storing
-%			management. \\
-%			\hline
-%			Obtain information & An existing information has to be accessed. \\
-%			\hline
-%			Create Information & A new information, with all the required data has to
-%			be inserted int the system. \\
-%			\hline
-%			Obtain system data & . \\
-%			\hline
-%			Be avaiable & Replicate and move information inside the information anchor area. \\
-%			\hline
-%			Survive & Replicate and move information keeping it alive. \\
-%			\hline
-%			Maintain accessibility & Replicate and move information in order to be
-%			available in the whole anchor area. \\
-%			\hline
-%		\end{tabular}
-%	\caption{Reference Requirement-Task table $(C)RRT_t$}
-%	\label{tab:crrtt}
-%\end{table}
-%
-%\begin{table}[H]
-%	\centering
-%	\begin{tabular}{|p{4cm}|p{8cm}|}
-%			\hline
-%			\textbf{Function} & \textbf{Description} \\
-%			\hline
-%			Communicate & Manage data transmission and receiving.  \\
-%			\hline
-%			Discover & Find other devices inside the communication range. \\
-%			\hline
-%			Management power & Check power usage and disable some functionality. \\
-%			\hline
-%			Management storage & Manage the memory, enabling or disabling information storing. \\
-%			\hline
-%		\end{tabular}
-%	\caption{Reference Requirement-Task table $(C)RRT_t$}
-%	\label{tab:crrtt}
-%\end{table}
-%
+\subsubsection*{References Tables}
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|p{4cm}|p{8cm}|}
+			\hline
+			\textbf{Requirement} & \textbf{Task} \\
+			\hline
+			Access Information & list\_information \newline access\_information \\
+			\hline
+			Create Information & create\_information \\
+			\hline
+			Obtain System Data & obtain\_nodes\_information \newline obtain\_hovering\_information \newline
+			obtain\_communication\_links \\
+			\hline
+			Manage Simulation & start\newline stop\newline pause \\
+			\hline
+		\end{tabular}
+	\caption{Reference Requirement-Task table $(C)RRT_t$}
+	\label{tab:crrtt}
+\end{table}
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|p{4cm}|p{8cm}|}
+			\hline
+			\textbf{Requirement} & \textbf{Function} \\
+			\hline
+			Access Information & communicate\_data\newline show\_information\newline discover\_neighbor \\
+			\hline
+			Create Information & communicate\_data\newline insert\_information\newline discover\_neighbor \\
+			\hline
+			Obtain System Data & inquire\_node\newline inquire\_hovering\_information \\
+			\hline
+			Manage Simulation & render \\
+			\hline
+		\end{tabular}
+	\caption{Reference Requirement-Function table $(C)RRF_t$}
+	\label{tab:crrft}
+\end{table}
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|p{4cm}|p{8cm}|}
+			\hline
+			\textbf{Requirement} & \textbf{Topology} \\
+			\hline
+			Access Information & Anchor Area, Communication Range \\
+			\hline
+			Create Information & Anchor Area, Communication Range \\
+			\hline
+		\end{tabular}
+	\caption{Reference Requirement-Topology table $(C)RRTo_t$}
+	\label{tab:crrtot}
+\end{table}
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|p{4cm}|p{8cm}|}
+			\hline
+			\textbf{Requirement} & \textbf{Dependency} \\
+			\hline
+			 & \\
+			\hline
+		\end{tabular}
+		\caption{Reference Requirement-Dependency table $(C)RReqD_t$}
+	\label{tab:crreqdt}
+\end{table}
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|p{4cm}|p{8cm}|}
+			\hline
+			\textbf{Legacy System} & \textbf{Function} \\
+			\hline
+			Simulator UI & render. \\
+			\hline
+		\end{tabular}
+	\caption{Reference Legacy System-Function table $(C)RLSF_t$}
+	\label{tab:crlsft}
+\end{table}
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|p{4cm}|p{8cm}|}
+			\hline
+			\textbf{Legacy System} & \textbf{Topology} \\
+			\hline
+			& \\
+			\hline
+		\end{tabular}
+	\caption{Reference Legacy System-Topology table $(C)RLST_t$}
+	\label{tab:crlsTt}
+\end{table}
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|p{4cm}|p{8cm}|}
+			\hline
+			\textbf{Relation} & \textbf{Dependency} \\
+			\hline
+			Simulator Data & SimulatorDataDep. \\
+			\hline
+		\end{tabular}
+	\caption{Reference Relation-Dependency table $(C)RRD_t$}
+	\label{tab:crrdt}
+\end{table}
+
+\subsubsection*{Responsibilities Tables}
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|p{5cm}|p{7cm}|}
+			\hline
+			\textbf{Task} & \textbf{Description} \\
+			\hline
+			list\_information & List the information available from the current
+			position.\\
+			\hline
+			access\_information & Access the selected information available in the
+			current position.\\
+			\hline
+			create\_information & Create a new hovering information. \\
+			\hline
+			obtain\_nodes\_information & Get information of each mobile node of the
+			system.\\
+			\hline
+			obtain\_hovering\_information & Get information of each hovering
+			information of the system. \\
+			\hline
+			obtain\_communication\_links & Get information about current data exchange
+			between mobile nodes. \\
+			\hline
+			start & Start the simulation. \\
+			\hline
+			stop & Stop the simulation. \\
+			\hline
+			pause & Pause the simulation. \\
+			\hline
+		\end{tabular}
+	\caption{Task table $(C)T_t$}
+	\label{tab:ctt}
+\end{table}
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|p{5cm}|p{7cm}|}
+			\hline
+			\textbf{Function} & \textbf{Description} \\
+			\hline
+			communicate\_data & Send data to a mobile node in range.\\
+			\hline
+			show\_information & Output the requested hovering information data.\\
+			\hline
+			discover\_neighbor & Find reachable mobile nodes.\\
+			\hline
+			insert\_information & Input from user data needed for a new hovering
+			information.\\
+			\hline
+			inquire\_node & Get all the information about a mobile node.\\
+			\hline
+			inquire\_hovering\_information & Get all the information about a piece of
+			hovering information. \\
+			\hline
+			render & Show the simulation data. \\
+			\hline
+		\end{tabular}
+	\caption{Function table $(C)F_t$}
+	\label{tab:cft}
+\end{table}
+
+\subsubsection{Topologies Tables}
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|p{4cm}|p{8cm}|}
+			\hline
+			\textbf{Topology} & \textbf{Description} \\
+			\hline
+			Anchor Area & Area associated to each hovering information, defined as a
+			circular area with center into the \emph{anchor location} and radius the
+			\emph{anchor radius}.\\
+			\hline
+			Communication Range & The maximum effective distance of a \emph{p2p}
+			mobile node communication. \\
+			\hline
+		\end{tabular}
+	\caption{Topology table $(C)Top_t$}
+	\label{tab:ctopt}
+\end{table}
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|p{4cm}|p{8cm}|}
+			\hline
+			\textbf{Task} & \textbf{Topology} \\
+			\hline
+			list\_information & Anchor Area, Communication Range. \\
+			\hline
+			access\_information& Anchor Area, Communication Range.\\
+			\hline
+			create\_information & Anchor Area, Communication Range.\\
+			\hline
+		\end{tabular}
+		\caption{Task-Topology table $(C)TTop_t$}
+	\label{tab:cttopt}
+\end{table}
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|p{4cm}|p{8cm}|}
+			\hline
+			\textbf{Function} & \textbf{Description} \\
+			\hline
+			communicate\_data & Communication Range.\\
+			\hline
+			discover\_neighbor & Communication Range.\\
+			\hline
+			insert\_information & Communication Range. \\
+			\hline
+		\end{tabular}
+	\caption{Function table $(C)F_t$}
+	\label{tab:cft}
+\end{table}
+
+
+\subsubsection{Dependency Tables}
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|p{4cm}|p{8cm}|}
+			\hline
+			\textbf{Dependency} & \textbf{Description} \\
+			\hline
+			SimulatorDataDep & access to all information about hovering system
+			components. \\
+			\hline
+		\end{tabular}
+	\caption{Dependency table $(C)D_t$}
+	\label{tab:cdt}
+\end{table}
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|p{5cm}|p{7cm}|}
+			\hline
+			\textbf{Task} & \textbf{Dependency} \\
+			\hline
+			obtain\_nodes\_information & SimulatorDataDep.\\
+			\hline
+			obtain\_hovering\_information & SimulatorDataDep.\\
+			\hline
+			obtain\_communication\_links & SimulatorDataDep.\\
+			\hline
+		\end{tabular}
+	\caption{Task-Dependency table $(C)TD_t$}
+	\label{tab:ctdt}
+\end{table}
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|p{5cm}|p{7cm}|}
+			\hline
+			\textbf{Function} & \textbf{Description} \\
+			\hline
+			communicate\_data & SimulatorDataDep.\\
+			\hline
+			discover\_neighbor & SimulatorDataDep.\\
+			\hline
+			insert\_information & SimulatorDataDep.\\
+			\hline
+			inquire\_node & SimulatorDataDep.\\
+			\hline
+			inquire\_hovering\_information & SimulatorDataDep.\\
+			\hline
+		\end{tabular}
+	\caption{Function-Dependency table $(C)FD_t$}
+	\label{tab:cfdt}
+\end{table}
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|p{4cm}|p{8cm}|}
+			\hline
+			\textbf{Topology} & \textbf{Dependency} \\
+			\hline
+			Anchor Area & SimulatorDataDep\\
+			\hline
+			Communication Range & SimulatorDataDep. \\
+			\hline
+		\end{tabular}
+	\caption{TopologyDependency table $(C)TopD_t$}
+	\label{tab:ctopdt}
+\end{table}
+
 \subsection{Architectural Design}
 
 \subsection{Detailed Design}
