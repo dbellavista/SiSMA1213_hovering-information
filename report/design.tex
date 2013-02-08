@@ -638,5 +638,306 @@ System}, already present in the environment.
 
 \subsection{Architectural Design}
 
+\subsubsection*{Transition Tables}
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|p{4cm}|p{8cm}|}
+			\hline
+			\textbf{Role} & \textbf{Task} \\
+			\hline
+		\end{tabular}
+	\caption{Transition Role-Task table $(C)TRT_t$}
+	\label{tab:ctrtt}
+\end{table}
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|p{4cm}|p{8cm}|}
+			\hline
+			\textbf{Task} & \textbf{Action} \\
+			\hline
+		\end{tabular}
+	\caption{Transition Task-Role table $(C)TTA_t$}
+	\label{tab:cttat}
+\end{table}
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|p{4cm}|p{8cm}|}
+			\hline
+			\textbf{Resource} & \textbf{Function} \\
+			\hline
+		\end{tabular}
+	\caption{Transition Resource-Function table $(C)TRF_t$}
+	\label{tab:ctrft}
+\end{table}
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|p{4cm}|p{8cm}|}
+			\hline
+			\textbf{Function} & \textbf{Operation} \\
+			\hline
+		\end{tabular}
+	\caption{Transition Function-Operation table $(C)TFO_t$}
+	\label{tab:ctfot}
+\end{table}
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|p{4cm}|p{8cm}|}
+			\hline
+			\textbf{Dependency} & \textbf{Interaction} \\
+			\hline
+		\end{tabular}
+	\caption{Transition Dependency-Interaction table $(C)TDI_t$}
+	\label{tab:ctdit}
+\end{table}
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|p{4cm}|p{8cm}|}
+			\hline
+			\textbf{Dependency} & \textbf{Rule} \\
+			\hline
+		\end{tabular}
+	\caption{Transition Dependency-Rule table $(C)TDRu_t$}
+	\label{tab:ctdrut}
+\end{table}
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|p{4cm}|p{8cm}|}
+			\hline
+			\textbf{Topology} & \textbf{Space} \\
+			\hline
+		\end{tabular}
+	\caption{Transition Topology-Space table $(C)TTopS_t$}
+	\label{tab:cttopst}
+\end{table}
+
+\subsubsection*{Entities Tables}
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|p{4cm}|p{8cm}|}
+			\hline
+			\textbf{Action} & \textbf{Description} \\
+			\hline
+		\end{tabular}
+	\caption{Action table $(C)A_t$}
+	\label{tab:cat}
+\end{table}
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|p{4cm}|p{8cm}|}
+			\hline
+			\textbf{Operation} & \textbf{Description} \\
+			\hline
+		\end{tabular}
+	\caption{Operation table $(C)O_t$}
+	\label{tab:cot}
+\end{table}
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|p{4cm}|p{8cm}|}
+			\hline
+			\textbf{Role} & \textbf{Action} \\
+			\hline
+		\end{tabular}
+	\caption{Role-Action table $(C)RA_t$}
+	\label{tab:rat}
+\end{table}
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|p{4cm}|p{8cm}|}
+			\hline
+			\textbf{Resource} & \textbf{Operation} \\
+			\hline
+		\end{tabular}
+	\caption{Resource-Operation table $(C)RO_t$}
+	\label{tab:crot}
+\end{table}
+
+\subsubsection*{Interactions Tables}
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|p{4cm}|p{8cm}|}
+			\hline
+			\textbf{Interaction} & \textbf{Description} \\
+			\hline
+		\end{tabular}
+	\caption{Interaction table $(C)I_t$}
+	\label{tab:cit}
+\end{table}
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|p{4cm}|p{8cm}|}
+			\hline
+			\textbf{Action} & \textbf{Interaction} \\
+			\hline
+		\end{tabular}
+	\caption{Action-Interaction table $(C)AcI_t$}
+	\label{tab:cacit}
+\end{table}
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|p{4cm}|p{8cm}|}
+			\hline
+			\textbf{Operation} & \textbf{Interaction} \\
+			\hline
+		\end{tabular}
+	\caption{Operation-Interaction table $(C)OpI_t$}
+	\label{tab:opit}
+\end{table}
+
+\subsubsection*{Constraints Tables}
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|p{4cm}|p{8cm}|}
+			\hline
+			\textbf{Rule} & \textbf{Description} \\
+			\hline
+		\end{tabular}
+	\caption{Rule table $(C)Ru_t$}
+	\label{tab:crut}
+\end{table}
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|p{4cm}|p{8cm}|}
+			\hline
+			\textbf{Rule} & \textbf{Interaction} \\
+			\hline
+		\end{tabular}
+	\caption{Rule-Interaction table $(C)IRu_t$}
+	\label{tab:cirut}
+\end{table}
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|p{4cm}|p{8cm}|}
+			\hline
+			\textbf{Resource} & \textbf{Rule} \\
+			\hline
+		\end{tabular}
+	\caption{Resource-Rule table $(C)ReRu_t$}
+	\label{tab:crerut}
+\end{table}
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|p{4cm}|p{8cm}|}
+			\hline
+			\textbf{Role} & \textbf{Rule} \\
+			\hline
+		\end{tabular}
+	\caption{Role-Rule table $(C)RoRu_t$}
+	\label{tab:crorut}
+\end{table}
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|p{4cm}|p{8cm}|}
+			\hline
+			\textbf{Space} & \textbf{Rule} \\
+			\hline
+		\end{tabular}
+	\caption{Space-Rule table $(C)SRu_t$}
+	\label{tab:cot}
+\end{table}
+
+\subsubsection*{Topological Tables}
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|p{4cm}|p{8cm}|}
+			\hline
+			\textbf{Space} & \textbf{Description} \\
+			\hline
+		\end{tabular}
+	\caption{Space table $(C)S_t$}
+	\label{tab:st}
+\end{table}
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|p{4cm}|p{8cm}|}
+			\hline
+			\textbf{Space} & \textbf{Connection} \\
+			\hline
+		\end{tabular}
+	\caption{Space-Connection table $(C)SC_t$}
+	\label{tab:sct}
+\end{table}
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|p{4cm}|p{8cm}|}
+			\hline
+			\textbf{Resource} & \textbf{Space} \\
+			\hline
+		\end{tabular}
+	\caption{Resource-Space table $(C)ReS_t$}
+	\label{tab:crest}
+\end{table}
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|p{4cm}|p{8cm}|}
+			\hline
+			\textbf{Role} & \textbf{Space} \\
+			\hline
+		\end{tabular}
+	\caption{Operation table $(C)RoS_t$}
+	\label{tab:cot}
+\end{table}
+
 \subsection{Detailed Design}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
