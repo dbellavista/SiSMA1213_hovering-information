@@ -66,6 +66,11 @@ System}, already present in the environment.
 			\hline
 			Person & User of a mobile node. \\
 			\hline
+			Mobile node & Hovering information low-level user: discover, access and
+			create the infrastructure for the pieces of hovering information. \\
+			\hline
+			Piece of Hovering Information & Hovering information instance. \\
+			\hline
 		\end{tabular}
 	\caption{Actor table $(C)Ac_t$}
 	\label{tab:cact}
@@ -77,7 +82,8 @@ System}, already present in the environment.
 			\hline
 			\textbf{Requirement} & \textbf{Description} \\
 			\hline
-			Access Information & Access all the information that reside inside an anchor area. \\
+			Access Information & Access all the information that reside inside an
+			anchor area. \\
 			\hline
 			Create Information & Creates a new hovering information. \\
 			\hline
@@ -85,6 +91,18 @@ System}, already present in the environment.
 			etc.) of all the system component. \\
 			\hline
 			Manage Simulation & Manage the simulation. \\
+			\hline
+			Walk & Move into the environment. \\
+			\hline
+			Survive & Stay alive. \\
+			\hline
+			Be available & Be available inside the anchor area. \\
+			\hline
+			Maintain accessibility & Cover the maximum possible area inside the
+			anchor area. \\
+			\hline
+			Define initial parameters & Simulator users should be able to specify
+			initial simulation parameters (environment, people, information) \\
 			\hline
 		\end{tabular}
 	\caption{Requirement table $(C)Re_t$}
@@ -97,9 +115,15 @@ System}, already present in the environment.
 			\hline
 			\textbf{Actor} & \textbf{Requirement} \\
 			\hline
-			Person & Access Information, Create Information. \\
+			Person & Access Information, Create Information, Walk. \\
 			\hline
-			Simulation Analyst & Obtain System Data, Manage Simulation. \\
+			Simulation Analyst & Obtain System Data, Manage Simulation, Define
+			initial parameters. \\
+			\hline
+			Mobile node & Access Information, Create Information. \\
+			\hline
+			Piece of Hovering Information & Survive, Be available, Maintain
+			accessibility. \\
 			\hline
 		\end{tabular}
 	\caption{Actor-Requirement table $(C)AR_t$}
@@ -127,7 +151,7 @@ System}, already present in the environment.
 			\hline
 			\textbf{Legacy System} & \textbf{Description} \\
 			\hline
-			Simulator UI & Simulation interface: show simulation data. \\
+			Simulator UI & Simulation output interface: show simulation data. \\
 			\hline
 		\end{tabular}
 	\caption{Legacy System table $(C)LS_t$}
@@ -142,7 +166,17 @@ System}, already present in the environment.
 			\hline
 			\textbf{Relation} & \textbf{Description} \\
 			\hline
-			Simulator Data & make relevant information available to the Simulator UI. \\
+			Simulator Data & make relevant information available to the Simulator UI.
+			\\
+			\hline
+			Define Before Simulate & initial environment definition should occurs
+			before simulation. \\
+			\hline
+			Create Before Exist & An information has to been created before
+			performing any operation. \\
+			\hline
+			Parameters Input & Simulation parameters have to be inserted into the
+			simulation system. \\
 			\hline
 		\end{tabular}
 	\caption{Relation table $(C)Rel_t$}
@@ -155,13 +189,26 @@ System}, already present in the environment.
 			\hline
 			\textbf{Requirement} & \textbf{Relation} \\
 			\hline
-			Access Information & Simulator Data. \\
+			Access Information & Simulator Data, Define Before Simulate, Create
+			Before Exist. \\
 			\hline
-			Create Information & Simulator Data. \\
+			Create Information & Simulator Data, Define Before Simulate, Create
+			Before Exist. \\
 			\hline
-			Obtain System Data & Simulator Data. \\
+			Obtain System Data & Simulator Data, Define Before Simulate. \\
 			\hline
-			Manage Simulation & Simulator Data. \\
+			Manage Simulation & Simulator Data, Define Before Simulate. \\
+			\hline
+			Walk & Define Before Simulate. \\
+			\hline
+			Survive & Define Before Simulate, Create Before Exist. \\
+			\hline
+			Be available & Define Before Simulate, Create Before Exist. \\
+			\hline
+			Maintain accessibility & Define Before Simulate, Create Before Exist. \\
+			\hline
+			Define initial environment & Define Before Simulate, Create Before
+			Exist, Parameters Input. \\
 			\hline
 		\end{tabular}
 	\caption{Requirement-Relation table $(C)RR_t$}
@@ -195,10 +242,21 @@ System}, already present in the environment.
 			\hline
 			Create Information & create\_information \\
 			\hline
-			Obtain System Data & obtain\_nodes\_information \newline obtain\_hovering\_information \newline
+			Obtain System Data & obtain\_nodes\_information \newline
+			obtain\_hovering\_information \newline
 			obtain\_communication\_links \\
 			\hline
 			Manage Simulation & start\newline stop\newline pause \\
+			\hline
+			Walk & walk\newline. \\
+			\hline
+			Survive & survive. \\
+			\hline
+			Be available & be\_available. \\
+			\hline
+			Maintain accessibility & maintain\_accessibility. \\
+			\hline
+			Define initial parameters & create\_information\newline create\_people. \\
 			\hline
 		\end{tabular}
 	\caption{Reference Requirement-Task table $(C)RRT_t$}
@@ -219,6 +277,16 @@ System}, already present in the environment.
 			\hline
 			Manage Simulation & render \\
 			\hline
+			Walk & detect\_people. \\
+			\hline
+			Survive & replicate\newline jump\newline discover\_neighbor. \\
+			\hline
+			Be available & replicate\newline jump\newline discover\_neighbor. \\
+			\hline
+			Maintain accessibility & replicate\newline jump\newline discover\_neighbor. \\
+			\hline
+			Define initial parameters & accept\_input. \\
+			\hline
 		\end{tabular}
 	\caption{Reference Requirement-Function table $(C)RRF_t$}
 	\label{tab:crrft}
@@ -234,6 +302,12 @@ System}, already present in the environment.
 			\hline
 			Create Information & Anchor Area, Communication Range \\
 			\hline
+			Survive & Anchor Area, Communication Range. \\
+			\hline
+			Be available & Anchor Area, Communication Range. \\
+			\hline
+			Maintain accessibility & Anchor Area, Communication Range. \\
+			\hline
 		\end{tabular}
 	\caption{Reference Requirement-Topology table $(C)RRTo_t$}
 	\label{tab:crrtot}
@@ -245,7 +319,11 @@ System}, already present in the environment.
 			\hline
 			\textbf{Requirement} & \textbf{Dependency} \\
 			\hline
-			 & \\
+			Survive & HoverDep. \\
+			\hline
+			Be available & HoverDep. \\
+			\hline
+			Maintain accessibility & HoverDep. \\
 			\hline
 		\end{tabular}
 		\caption{Reference Requirement-Dependency table $(C)RReqD_t$}
@@ -259,6 +337,8 @@ System}, already present in the environment.
 			\textbf{Legacy System} & \textbf{Function} \\
 			\hline
 			Simulator UI & render. \\
+			\hline
+			Simulator Creator & accept\_input. \\
 			\hline
 		\end{tabular}
 	\caption{Reference Legacy System-Function table $(C)RLSF_t$}
@@ -284,7 +364,13 @@ System}, already present in the environment.
 			\hline
 			\textbf{Relation} & \textbf{Dependency} \\
 			\hline
-			Simulator Data & SimulatorDataDep. \\
+			Simulator Data & SimDataDep \\
+			\hline
+			Define Before Simulate & DefBefSimDep. \\
+			\hline
+			Create Before Exist & CreateInfDep. \\
+			\hline
+			Parameters Input & ParInputDep. \\
 			\hline
 		\end{tabular}
 	\caption{Reference Relation-Dependency table $(C)RRD_t$}
@@ -322,6 +408,19 @@ System}, already present in the environment.
 			\hline
 			pause & Pause the simulation. \\
 			\hline
+			walk & Move around, basing on behaviour and environment. \\
+			\hline
+			survive & Jumps or replicates to mobile nodes in order to keep an high
+			survivability. \\
+			\hline
+			be\_available & Jumps or replicates to mobile nodes in order to keep an
+			high availability. \\
+			\hline
+			maintain\_accessibility & Jumps or replicates to mobile nodes in order to
+			keep an high accessibility. \\
+			\hline
+			create\_people & Create and collocate a new person instance. \\
+			\hline
 		\end{tabular}
 	\caption{Task table $(C)T_t$}
 	\label{tab:ctt}
@@ -348,6 +447,12 @@ System}, already present in the environment.
 			hovering information. \\
 			\hline
 			render & Show the simulation data. \\
+			\hline
+			replicate & Copy an information to another mobile node. \\
+			\hline
+			jump & Move an information to another mobile node. \\
+			\hline
+			accept\_input & Accept initial simulation parameters as user input. \\
 			\hline
 		\end{tabular}
 	\caption{Function table $(C)F_t$}
@@ -386,6 +491,12 @@ System}, already present in the environment.
 			\hline
 			create\_information & Anchor Area, Communication Range.\\
 			\hline
+			survive & Anchor Area, Communication Range. \\
+			\hline
+			be\_available & Anchor Area, Communication Range. \\
+			\hline
+			maintain\_accessibility & Anchor Area, Communication Range. \\
+			\hline
 		\end{tabular}
 		\caption{Task-Topology table $(C)TTop_t$}
 	\label{tab:cttopt}
@@ -395,7 +506,7 @@ System}, already present in the environment.
 	\centering
 	\begin{tabular}{|p{4cm}|p{8cm}|}
 			\hline
-			\textbf{Function} & \textbf{Description} \\
+			\textbf{Function} & \textbf{Topology} \\
 			\hline
 			communicate\_data & Communication Range.\\
 			\hline
@@ -403,9 +514,13 @@ System}, already present in the environment.
 			\hline
 			insert\_information & Communication Range. \\
 			\hline
+			replicate & Anchor Area, Communication Range. \\
+			\hline
+			jump & Anchor Area, Communication Range. \\
+			\hline
 		\end{tabular}
-	\caption{Function table $(C)F_t$}
-	\label{tab:cft}
+	\caption{Function-Topology table $(C)FTop_t$}
+	\label{tab:cftopt}
 \end{table}
 
 
@@ -417,8 +532,19 @@ System}, already present in the environment.
 			\hline
 			\textbf{Dependency} & \textbf{Description} \\
 			\hline
-			SimulatorDataDep & access to all information about hovering system
+			SimDataDep & access to all information about hovering system
 			components. \\
+			\hline
+			DefBefSimDep & define simulation parameters before starting the
+			simulation. \\
+			\hline
+			CreateInfDep & information must be created before performing any
+			operation. \\
+			\hline
+			ParInputDep & Simulation parameters have to be inserted into the
+			simulation system. \\
+			\hline
+			SimStartedDep & Simulation should be started. \\
 			\hline
 		\end{tabular}
 	\caption{Dependency table $(C)D_t$}
@@ -431,11 +557,33 @@ System}, already present in the environment.
 			\hline
 			\textbf{Task} & \textbf{Dependency} \\
 			\hline
-			obtain\_nodes\_information & SimulatorDataDep.\\
+			list\_information & SimDataDep, SimStartedDep.\\
 			\hline
-			obtain\_hovering\_information & SimulatorDataDep.\\
+			access\_information & CreateInfDep, SimStartedDep.\\
 			\hline
-			obtain\_communication\_links & SimulatorDataDep.\\
+			create\_information & CreateInfDep, SimDataDep, ParInputDep. \\
+			\hline
+			obtain\_nodes\_information & SimStartedDep, SimDataDep.\\
+			\hline
+			obtain\_hovering\_information & SimStartedDep, SimDataDep. \\
+			\hline
+			obtain\_communication\_links & SimStartedDep, SimDataDep. \\
+			\hline
+			start & DefBefSimDep, SimStartedDep. \\
+			\hline
+			stop & SimStartedDep. \\
+			\hline
+			pause &SimStartedDep. \\
+			\hline
+			walk & SimStartedDep. \\
+			\hline
+			survive & SimStartedDep, CreateInfDep. \\
+			\hline
+			be\_available & SimStartedDep, CreateInfDep. \\
+			\hline
+			maintain\_accessibility & SimStartedDep, CreateInfDep. \\
+			\hline
+			create\_people & DefBefSimDep, ParInputDep. \\
 			\hline
 		\end{tabular}
 	\caption{Task-Dependency table $(C)TD_t$}
@@ -446,17 +594,27 @@ System}, already present in the environment.
 	\centering
 	\begin{tabular}{|p{5cm}|p{7cm}|}
 			\hline
-			\textbf{Function} & \textbf{Description} \\
+			\textbf{Function} & \textbf{Dependency} \\
 			\hline
-			communicate\_data & SimulatorDataDep.\\
+			communicate\_data & SimStartedDep, SimDataDep.\\
 			\hline
-			discover\_neighbor & SimulatorDataDep.\\
+			discover\_neighbor & SimStartedDep, SimDataDep.\\
 			\hline
-			insert\_information & SimulatorDataDep.\\
+			show\_information & SimStartedDep, CreateInfDep.\\
 			\hline
-			inquire\_node & SimulatorDataDep.\\
+			insert\_information & SimStartedDep, SimDataDep.\\
 			\hline
-			inquire\_hovering\_information & SimulatorDataDep.\\
+			inquire\_node & SimStartedDep, SimDataDep.\\
+			\hline
+			inquire\_hovering\_information & SimStartedDep, SimDataDep, CreateInfDep.\\
+			\hline
+			render & SimStartedDep, SimDataDep. \\
+			\hline
+			replicate & SimStartedDep, CreateInfDep. \\
+			\hline
+			jump & SimStartedDep, CreateInfDep. \\
+			\hline
+			accept\_input & DefBefSimDep. \\
 			\hline
 		\end{tabular}
 	\caption{Function-Dependency table $(C)FD_t$}
@@ -469,12 +627,12 @@ System}, already present in the environment.
 			\hline
 			\textbf{Topology} & \textbf{Dependency} \\
 			\hline
-			Anchor Area & SimulatorDataDep\\
+			Anchor Area & SimDataDep, CreateInfDep.\\
 			\hline
-			Communication Range & SimulatorDataDep. \\
+			Communication Range & SimDataDep. \\
 			\hline
 		\end{tabular}
-	\caption{TopologyDependency table $(C)TopD_t$}
+	\caption{Topology-Dependency table $(C)TopD_t$}
 	\label{tab:ctopdt}
 \end{table}
 
