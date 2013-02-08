@@ -87,6 +87,9 @@ System}, already present in the environment.
 			\hline
 			Create Information & Creates a new hovering information. \\
 			\hline
+			Manage Storage & Manage the information storage into the limited buffer
+			of the mobile device.  \\
+			\hline
 			Obtain System Data & Known the current data (position, information access,
 			etc.) of all the system component. \\
 			\hline
@@ -120,7 +123,7 @@ System}, already present in the environment.
 			Simulation Analyst & Obtain System Data, Manage Simulation, Define
 			initial parameters. \\
 			\hline
-			Mobile node & Access Information, Create Information. \\
+			Mobile node & Access Information, Create Information, Manage Storage. \\
 			\hline
 			Piece of Hovering Information & Survive, Be available, Maintain
 			accessibility. \\
@@ -178,6 +181,9 @@ System}, already present in the environment.
 			Parameters Input & Simulation parameters have to be inserted into the
 			simulation system. \\
 			\hline
+			Node Resources & Hovering information should consider node resources when
+			trying to satisfy their requirements. \\
+			\hline
 		\end{tabular}
 	\caption{Relation table $(C)Rel_t$}
 	\label{tab:crelt}
@@ -195,17 +201,19 @@ System}, already present in the environment.
 			Create Information & Simulator Data, Define Before Simulate, Create
 			Before Exist. \\
 			\hline
+			Manage Storage & Simulator Data, Define Before Simulate, Node Resources.  \\
+			\hline
 			Obtain System Data & Simulator Data, Define Before Simulate. \\
 			\hline
 			Manage Simulation & Simulator Data, Define Before Simulate. \\
 			\hline
 			Walk & Define Before Simulate. \\
 			\hline
-			Survive & Define Before Simulate, Create Before Exist. \\
+			Survive & Node Resources, Define Before Simulate, Create Before Exist. \\
 			\hline
-			Be available & Define Before Simulate, Create Before Exist. \\
+			Be available & Node Resources, Define Before Simulate, Create Before Exist. \\
 			\hline
-			Maintain accessibility & Define Before Simulate, Create Before Exist. \\
+			Maintain accessibility & Node Resources, Define Before Simulate, Create Before Exist. \\
 			\hline
 			Define initial environment & Define Before Simulate, Create Before
 			Exist, Parameters Input. \\
@@ -243,8 +251,9 @@ System}, already present in the environment.
 			Create Information & create\_information \\
 			\hline
 			Obtain System Data & obtain\_nodes\_information \newline
-			obtain\_hovering\_information \newline
-			obtain\_communication\_links \\
+			obtain\_hovering\_information \newline obtain\_communication\_links \\
+			\hline
+			Manage Storage & manage\_storage \\
 			\hline
 			Manage Simulation & start\newline stop\newline pause \\
 			\hline
@@ -275,15 +284,17 @@ System}, already present in the environment.
 			\hline
 			Obtain System Data & inquire\_node\newline inquire\_hovering\_information \\
 			\hline
+			Manage Storage & store\_information\newline remove\_information \\
+			\hline
 			Manage Simulation & render \\
 			\hline
 			Walk & detect\_people. \\
 			\hline
-			Survive & replicate\newline jump\newline discover\_neighbor. \\
+			Survive & communicate\_data \newline discover\_neighbor. \\
 			\hline
-			Be available & replicate\newline jump\newline discover\_neighbor. \\
+			Be available & communicate\_data \newline discover\_neighbor. \\
 			\hline
-			Maintain accessibility & replicate\newline jump\newline discover\_neighbor. \\
+			Maintain accessibility & communicate\_data \newline discover\_neighbor. \\
 			\hline
 			Define initial parameters & accept\_input. \\
 			\hline
@@ -319,11 +330,7 @@ System}, already present in the environment.
 			\hline
 			\textbf{Requirement} & \textbf{Dependency} \\
 			\hline
-			Survive & HoverDep. \\
-			\hline
-			Be available & HoverDep. \\
-			\hline
-			Maintain accessibility & HoverDep. \\
+			 & \\
 			\hline
 		\end{tabular}
 		\caption{Reference Requirement-Dependency table $(C)RReqD_t$}
@@ -372,6 +379,8 @@ System}, already present in the environment.
 			\hline
 			Parameters Input & ParInputDep. \\
 			\hline
+			Node Resources & NodeResDep. \\
+			\hline
 		\end{tabular}
 	\caption{Reference Relation-Dependency table $(C)RRD_t$}
 	\label{tab:crrdt}
@@ -390,6 +399,9 @@ System}, already present in the environment.
 			\hline
 			access\_information & Access the selected information available in the
 			current position.\\
+			\hline
+			manage\_storage & Manage the information storage into the limited buffer
+			of the mobile device. \\
 			\hline
 			create\_information & Create a new hovering information. \\
 			\hline
@@ -448,9 +460,9 @@ System}, already present in the environment.
 			\hline
 			render & Show the simulation data. \\
 			\hline
-			replicate & Copy an information to another mobile node. \\
+			store\_information & Store an information into the node buffer. \\
 			\hline
-			jump & Move an information to another mobile node. \\
+			remove\_information & Remove an information from the node buffer. \\
 			\hline
 			accept\_input & Accept initial simulation parameters as user input. \\
 			\hline
@@ -514,10 +526,6 @@ System}, already present in the environment.
 			\hline
 			insert\_information & Communication Range. \\
 			\hline
-			replicate & Anchor Area, Communication Range. \\
-			\hline
-			jump & Anchor Area, Communication Range. \\
-			\hline
 		\end{tabular}
 	\caption{Function-Topology table $(C)FTop_t$}
 	\label{tab:cftopt}
@@ -546,6 +554,8 @@ System}, already present in the environment.
 			\hline
 			SimStartedDep & Simulation should be started. \\
 			\hline
+			NodeResDep & Hovering information mobility is limited by node resources. \\
+			\hline
 		\end{tabular}
 	\caption{Dependency table $(C)D_t$}
 	\label{tab:cdt}
@@ -563,6 +573,8 @@ System}, already present in the environment.
 			\hline
 			create\_information & CreateInfDep, SimDataDep, ParInputDep. \\
 			\hline
+			manage\_storage & NodeResDep. \\
+			\hline
 			obtain\_nodes\_information & SimStartedDep, SimDataDep.\\
 			\hline
 			obtain\_hovering\_information & SimStartedDep, SimDataDep. \\
@@ -577,11 +589,11 @@ System}, already present in the environment.
 			\hline
 			walk & SimStartedDep. \\
 			\hline
-			survive & SimStartedDep, CreateInfDep. \\
+			survive & SimStartedDep, CreateInfDep, NodeResDep. \\
 			\hline
-			be\_available & SimStartedDep, CreateInfDep. \\
+			be\_available & SimStartedDep, CreateInfDep, NodeResDep. \\
 			\hline
-			maintain\_accessibility & SimStartedDep, CreateInfDep. \\
+			maintain\_accessibility & SimStartedDep, CreateInfDep, NodeResDep. \\
 			\hline
 			create\_people & DefBefSimDep, ParInputDep. \\
 			\hline
@@ -609,10 +621,6 @@ System}, already present in the environment.
 			inquire\_hovering\_information & SimStartedDep, SimDataDep, CreateInfDep.\\
 			\hline
 			render & SimStartedDep, SimDataDep. \\
-			\hline
-			replicate & SimStartedDep, CreateInfDep. \\
-			\hline
-			jump & SimStartedDep, CreateInfDep. \\
 			\hline
 			accept\_input & DefBefSimDep. \\
 			\hline
@@ -646,6 +654,15 @@ System}, already present in the environment.
 			\hline
 			\textbf{Role} & \textbf{Task} \\
 			\hline
+			Simulation Analyst & obtain\_nodes\_information,
+			obtain\_hovering\_information, obtain\_communication\_links.   \\
+			\hline
+			Person & access\_information, create\_information, walk \\
+			\hline
+			Mobile node & access\_information, list\_information, create\_information. \\
+			\hline
+			Piece of Hovering Information & survive, be\_available, maintain\_accessibility. \\
+			\hline
 		\end{tabular}
 	\caption{Transition Role-Task table $(C)TRT_t$}
 	\label{tab:ctrtt}
@@ -657,8 +674,10 @@ System}, already present in the environment.
 			\hline
 			\textbf{Task} & \textbf{Action} \\
 			\hline
+			& \\
+			\hline
 		\end{tabular}
-	\caption{Transition Task-Role table $(C)TTA_t$}
+	\caption{Transition Task-Action table $(C)TTA_t$}
 	\label{tab:cttat}
 \end{table}
 
@@ -668,6 +687,11 @@ System}, already present in the environment.
 			\hline
 			\textbf{Resource} & \textbf{Function} \\
 			\hline
+			MobileCommDevice & communicate\_data, discover\_neighbor. \\
+			\hline
+			MobileInputDevice & insert\_information. \\
+			\hline
+			
 		\end{tabular}
 	\caption{Transition Resource-Function table $(C)TRF_t$}
 	\label{tab:ctrft}
@@ -901,7 +925,9 @@ System}, already present in the environment.
 	\label{tab:cot}
 \end{table}
 
+
 \subsection{Detailed Design}
+
 
 
 
