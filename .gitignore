@@ -31,4 +31,5 @@
 *.vrb
 *.xdy
 *.tdo
+report/main.pdf
 papers/*
