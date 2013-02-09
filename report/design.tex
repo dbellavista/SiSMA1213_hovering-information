@@ -54,7 +54,7 @@ The subsystem \emph{Simulator} doesn't require independent control or
 intelligence, so the simulator interface can be assumed as a \emph{Legacy
 System}, already present in the environment.
 
-\subsubsection*{Requirements Tables}
+\subsubsection{Requirements Tables}
 
 \begin{table}[H]
 	\centering
@@ -95,7 +95,7 @@ System}, already present in the environment.
 			Analyze Simulation & Analyze the system while the simulation is running.
 			\\
 			\hline
-			Walk & Move into the environment. \\
+			Behave & Interact with the social environment. \\
 			\hline
 			Survive & Stay alive. \\
 			\hline
@@ -118,7 +118,7 @@ System}, already present in the environment.
 			\hline
 			\textbf{Actor} & \textbf{Requirement} \\
 			\hline
-			Person & Access Information, Create Information, Walk. \\
+			Person & Access Information, Create Information, Behave. \\
 			\hline
 			Simulator Starter & Initialize Simulation. \\
 			\hline
@@ -134,7 +134,7 @@ System}, already present in the environment.
 	\label{tab:cart}
 \end{table}
 
-\subsubsection*{Domain Tables}
+\subsubsection{Domain Tables}
 
 \begin{table}[H]
 	\centering
@@ -162,7 +162,7 @@ System}, already present in the environment.
 	\label{tab:clst}
 \end{table}
 
-\subsubsection*{Relations Tables}
+\subsubsection{Relations Tables}
 
 \begin{table}[H]
 	\centering
@@ -170,13 +170,12 @@ System}, already present in the environment.
 			\hline
 			\textbf{Relation} & \textbf{Description} \\
 			\hline
-			Simulator Data & Make relevant information available to the Simulator UI.
-			\\
+			GUI & The system should send the information needed by the GUI. \\
 			\hline
 			Define Before Simulate & Initial environment definition should occurs
 			before starting simulation. \\
 			\hline
-			Create Before Exist & An information has to been created before
+			Create Before Exist & An hovering information has to been created before
 			performing any operation. \\
 			\hline
 			Parameters Input & Simulation parameters have to be inserted into the
@@ -196,17 +195,17 @@ System}, already present in the environment.
 			\hline
 			\textbf{Requirement} & \textbf{Relation} \\
 			\hline
-			Access Information & Simulator Data, Define Before Simulate, Create
+			Access Information & Define Before Simulate, Create
 			Before Exist. \\
 			\hline
-			Create Information & Simulator Data, Define Before Simulate, Create
+			Create Information & Define Before Simulate, Create
 			Before Exist. \\
 			\hline
-			Manage Storage & Simulator Data, Define Before Simulate, Node Resources.  \\
+			Manage Storage & Define Before Simulate, Node Resources.  \\
 			\hline
-			Analyze Simulation & Simulator Data, Define Before Simulate. \\
+			Analyze Simulation & Define Before Simulate, GUI. \\
 			\hline
-			Walk & Define Before Simulate. \\
+			Behave & Define Before Simulate. \\
 			\hline
 			Survive & Node Resources, Define Before Simulate, Create Before Exist. \\
 			\hline
@@ -227,7 +226,7 @@ System}, already present in the environment.
 			\hline
 			\textbf{Legacy-System} & \textbf{Relation} \\
 			\hline
-			Simulator UI & Simulator Data. \\
+			Simulator UI & GUI. \\
 			\hline
 		\end{tabular}
 	\caption{Relation-LegacySystem table $(C)RLS_t$}
@@ -236,7 +235,7 @@ System}, already present in the environment.
 
 \subsection{Analysis}
 
-\subsubsection*{References Tables}
+\subsubsection{References Tables}
 
 \begin{table}[H]
 	\centering
@@ -252,7 +251,7 @@ System}, already present in the environment.
 			\hline
 			Manage Storage & manage\_storage \\
 			\hline
-			Walk & walk. \\
+			Behave & behave\_task. \\
 			\hline
 			Survive & survive. \\
 			\hline
@@ -281,7 +280,7 @@ System}, already present in the environment.
 			\hline
 			Manage Storage & manage\_store\_buffer \\
 			\hline
-			Walk & detect\_people. \\
+			Behave & step, sense. \\
 			\hline
 			Survive & manage\_communication. \\
 			\hline
@@ -306,7 +305,7 @@ System}, already present in the environment.
 			\hline
 			Create Information & Anchor Area, Communication Range \\
 			\hline
-			Survive & Anchor Area, Communication Range. \\
+			Survive & Anchor Area, Communication Range, World. \\
 			\hline
 			Be available & Anchor Area, Communication Range. \\
 			\hline
@@ -349,7 +348,7 @@ System}, already present in the environment.
 			\hline
 			\textbf{Legacy System} & \textbf{Topology} \\
 			\hline
-			& \\
+			Simulator UI & World. \\
 			\hline
 		\end{tabular}
 	\caption{Reference Legacy System-Topology table $(C)RLST_t$}
@@ -362,7 +361,7 @@ System}, already present in the environment.
 			\hline
 			\textbf{Relation} & \textbf{Dependency} \\
 			\hline
-			Simulator Data & SimDataDep \\
+			GUI & GUIDep \\
 			\hline
 			Define Before Simulate & DefBefSimDep. \\
 			\hline
@@ -377,7 +376,7 @@ System}, already present in the environment.
 	\label{tab:crrdt}
 \end{table}
 
-\subsubsection*{Responsibilities Tables}
+\subsubsection{Responsibilities Tables}
 
 \begin{table}[H]
 	\centering
@@ -396,7 +395,7 @@ System}, already present in the environment.
 			analyze\_simulation & Analyze information obtained during the
 			simulation.\\
 			\hline
-			walk & Move around, basing on behaviour and environment. \\
+			behave\_task & Act a social behaviour inside the environment. \\
 			\hline
 			survive & Jumps or replicates to mobile nodes in order to keep an high
 			survivability. \\
@@ -435,6 +434,10 @@ System}, already present in the environment.
 			input\_initial\_parameters & Accept initial simulation parameters as
 			input. \\
 			\hline
+			step & Basic movement in the environment. \\
+			\hline
+			sense & Identify other person or point of interest in the environment. \\
+			\hline
 		\end{tabular}
 	\caption{Function table $(C)F_t$}
 	\label{tab:cft}
@@ -455,6 +458,8 @@ System}, already present in the environment.
 			Communication Range & The maximum effective distance of a \emph{p2p}
 			mobile node communication. \\
 			\hline
+			World & The environment. \\
+			\hline
 		\end{tabular}
 	\caption{Topology table $(C)Top_t$}
 	\label{tab:ctopt}
@@ -466,15 +471,17 @@ System}, already present in the environment.
 			\hline
 			\textbf{Task} & \textbf{Topology} \\
 			\hline
-			access\_information& Anchor Area, Communication Range.\\
+			access\_information& Anchor Area, Communication Range, World.\\
 			\hline
-			create\_information & Anchor Area, Communication Range.\\
+			create\_information & Anchor Area, Communication Range, World.\\
 			\hline
-			survive & Anchor Area, Communication Range. \\
+			survive & Anchor Area, Communication Range, World. \\
 			\hline
-			be\_available & Anchor Area, Communication Range. \\
+			be\_available & Anchor Area, Communication Range, World. \\
 			\hline
-			maintain\_accessibility & Anchor Area, Communication Range. \\
+			maintain\_accessibility & Anchor Area, Communication Range, World. \\
+			\hline
+			behave\_task & World. \\
 			\hline
 		\end{tabular}
 		\caption{Task-Topology table $(C)TTop_t$}
@@ -487,7 +494,11 @@ System}, already present in the environment.
 			\hline
 			\textbf{Function} & \textbf{Topology} \\
 			\hline
-			manage\_communication & Communication Range.\\
+			manage\_communication & Communication Range, World.\\
+			\hline
+			step & World.\\
+			\hline
+			sense & World.\\
 			\hline
 		\end{tabular}
 	\caption{Function-Topology table $(C)FTop_t$}
@@ -503,8 +514,7 @@ System}, already present in the environment.
 			\hline
 			\textbf{Dependency} & \textbf{Description} \\
 			\hline
-			SimDataDep & access to all information about hovering system
-			components. \\
+			GUIDep & Make the needed information available for GUI purposes. \\
 			\hline
 			DefBefSimDep & define simulation parameters before starting the
 			simulation. \\
@@ -527,17 +537,17 @@ System}, already present in the environment.
 			\hline
 			\textbf{Task} & \textbf{Dependency} \\
 			\hline
-			access\_information & CreateInfDepm, SimStartedDep, SimDataDep.\\
+			access\_information & CreateInfDepm, SimStartedDep.\\
 			\hline
-			create\_information & CreateInfDep, SimStartedDep, SimDataDep. \\
+			create\_information & CreateInfDep, SimStartedDep. \\
 			\hline
-			manage\_storage & NodeResDep, SimDataDep. \\
+			manage\_storage & NodeResDep, SimStartedDep. \\
 			\hline
-			analyze\_simulation & SimStartedDep, SimDataDep.\\
+			analyze\_simulation & SimStartedDep, GUIDep.\\
 			\hline
 			start\_simulation & DefBefSimDep, SimStartedDep. \\
 			\hline
-			walk & SimStartedDep. \\
+			behave\_task & SimStartedDep. \\
 			\hline
 			survive & SimStartedDep, CreateInfDep, NodeResDep. \\
 			\hline
@@ -562,9 +572,7 @@ System}, already present in the environment.
 			\hline
 			manage\_node\_information & SimStartedDep, CreateInfDep.\\
 			\hline
-			inquire\_node & SimStartedDep, SimDataDep.\\
-			\hline
-			inquire\_hovering\_information & SimStartedDep, SimDataDep, CreateInfDep.\\
+			inquire\_system & SimStartedDep, SimDataDep.\\
 			\hline
 			render & SimStartedDep, SimDataDep. \\
 			\hline
@@ -592,7 +600,7 @@ System}, already present in the environment.
 
 \subsection{Architectural Design}
 
-\subsubsection*{Transition Tables}
+\subsubsection{Transition Tables}
 
 \begin{table}[H]
 	\centering
@@ -747,7 +755,7 @@ System}, already present in the environment.
 	\label{tab:cttopst}
 \end{table}
 
-\subsubsection*{Entities Tables}
+\subsubsection{Entities Tables}
 
 \begin{table}[H]
 	\centering
@@ -815,7 +823,7 @@ System}, already present in the environment.
 	\label{tab:crot}
 \end{table}
 
-\subsubsection*{Interactions Tables}
+\subsubsection{Interactions Tables}
 
 \begin{table}[H]
 	\centering
@@ -850,7 +858,7 @@ System}, already present in the environment.
 	\label{tab:opit}
 \end{table}
 
-\subsubsection*{Constraints Tables}
+\subsubsection{Constraints Tables}
 
 \begin{table}[H]
 	\centering
@@ -907,7 +915,7 @@ System}, already present in the environment.
 	\label{tab:cot}
 \end{table}
 
-\subsubsection*{Topological Tables}
+\subsubsection{Topological Tables}
 
 \begin{table}[H]
 	\centering
