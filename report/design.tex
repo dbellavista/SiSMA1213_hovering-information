@@ -272,23 +272,7 @@ System}, already present in the environment.
 			\hline
 			\textbf{Requirement} & \textbf{Function} \\
 			\hline
-			Access Information & manage\_communication \newline manage\_node\_information \\
-			\hline
-			Create Information & manage\_communication \newline manage\_node\_information \\
-			\hline
-			Analyze Simulation & inquire\_system \\
-			\hline
-			Manage Storage & manage\_store\_buffer \\
-			\hline
-			Behave & step, sense. \\
-			\hline
-			Survive & manage\_communication. \\
-			\hline
-			Be available & manage\_communication. \\
-			\hline
-			Maintain accessibility & manage\_communication. \\
-			\hline
-			Initialize Simulation & input\_initial\_parameters. \\
+			& \\
 			\hline
 		\end{tabular}
 	\caption{Reference Requirement-Function table $(C)RRF_t$}
@@ -421,22 +405,7 @@ System}, already present in the environment.
 			\hline
 			\textbf{Function} & \textbf{Description} \\
 			\hline
-			manage\_communication & Mobile node p2p communication management.\\
-			\hline
-			manage\_node\_information & Manage information from mobile node.\\
-			\hline
-			inquire\_system & Get all the information about the system.\\
-			\hline
 			render & Show a graphical representation of the simulated system. \\
-			\hline
-			manage\_store\_buffer & Manage storage buffer. \\
-			\hline
-			input\_initial\_parameters & Accept initial simulation parameters as
-			input. \\
-			\hline
-			step & Basic movement in the environment. \\
-			\hline
-			sense & Identify other person or point of interest in the environment. \\
 			\hline
 		\end{tabular}
 	\caption{Function table $(C)F_t$}
@@ -494,11 +463,7 @@ System}, already present in the environment.
 			\hline
 			\textbf{Function} & \textbf{Topology} \\
 			\hline
-			manage\_communication & Communication Range, World.\\
-			\hline
-			step & World.\\
-			\hline
-			sense & World.\\
+			render & World.\\
 			\hline
 		\end{tabular}
 	\caption{Function-Topology table $(C)FTop_t$}
@@ -568,15 +533,7 @@ System}, already present in the environment.
 			\hline
 			\textbf{Function} & \textbf{Dependency} \\
 			\hline
-			manage\_communication & SimStartedDep, SimDataDep.\\
-			\hline
-			manage\_node\_information & SimStartedDep, CreateInfDep.\\
-			\hline
-			inquire\_system & SimStartedDep, SimDataDep.\\
-			\hline
 			render & SimStartedDep, SimDataDep. \\
-			\hline
-			accept\_input & DefBefSimDep. \\
 			\hline
 		\end{tabular}
 	\caption{Function-Dependency table $(C)FD_t$}
@@ -608,16 +565,17 @@ System}, already present in the environment.
 			\hline
 			\textbf{Role} & \textbf{Task} \\
 			\hline
-			Simulation Analyst & obtain\_nodes\_information,
-			obtain\_hovering\_information, obtain\_communication\_links.   \\
+			Simulation Analyst & analyze\_simulation.   \\
 			\hline
-			Person & access\_information, create\_information, walk \\
+			Person & access\_information, create\_information, behave\_task \\
 			\hline
-			Mobile node & access\_information, list\_information,
-			create\_information, manage\_storage. \\
+			Mobile node & access\_information, create\_information, manage\_storage.
+			\\
 			\hline
 			Piece of Hovering Information & survive, be\_available,
 			maintain\_accessibility. \\
+			\hline
+			Simulator Starter & define\_initial\_parameters, start\_simulation. \\
 			\hline
 		\end{tabular}
 	\caption{Transition Role-Task table $(C)TRT_t$}
@@ -630,7 +588,27 @@ System}, already present in the environment.
 			\hline
 			\textbf{Task} & \textbf{Action} \\
 			\hline
-			& \\
+			analyze\_simulation & ComputeNetworkProperties, InquireNodes,
+			InquireHoveringInformations \\
+			\hline
+			access\_information & Communicate, DiscoveNeighbour,
+			ListInformation, ShowInformation.\\
+			\hline
+			manage\_storage & InsertData, RemoveData. \\
+			\hline
+			create\_information & InputInformation. \\
+			\hline
+			behave\_task & Step, Sense. \\
+			\hline
+			survive & DiscoverNeighbour, Communicate. \\
+			\hline
+			be\_available & DiscoverNeighbour, Communicate. \\
+			\hline
+			maintain\_accessibility & DiscoverNeighbour, Communicate. \\
+			\hline
+			define\_initial\_parameters & InputInitialParameters. \\
+			\hline
+			start\_simulation & StartSimulation, \\
 			\hline
 		\end{tabular}
 	\caption{Transition Task-Action table $(C)TTA_t$}
@@ -643,19 +621,7 @@ System}, already present in the environment.
 			\hline
 			\textbf{Resource} & \textbf{Function} \\
 			\hline
-			MobileCommIf & communicate\_data, discover\_neighbor. \\
-			\hline
-			MobileInputIf & insert\_information. \\
-			\hline
-			MobileStorageIf & store\_information, remove\_information. \\
-			\hline
-			NodeResource & inquire\_node. \\
-			\hline
-			HoveringInfResource & inquire\_hovering\_information. \\
-			\hline
-			SimulationInitor & accept\_input. \\
-			\hline
-			SimulatorUI & render. \\
+			SimulatorUIRes & render. \\
 			\hline
 		\end{tabular}
 	\caption{Transition Resource-Function table $(C)TRF_t$}
@@ -668,25 +634,7 @@ System}, already present in the environment.
 			\hline
 			\textbf{Function} & \textbf{Operation} \\
 			\hline
-			communicate\_data & send, receive.\\
-			\hline
-			show\_information & show\_information.\\
-			\hline
-			discover\_neighbor & discover\_neighbor.\\
-			\hline
-			insert\_information & insert\_information.\\
-			\hline
-			inquire\_node & inquire\_node.\\
-			\hline
-			inquire\_hovering\_information & inquire\_hovering\_information. \\
-			\hline
-			render & render. \\
-			\hline
-			store\_information & store\_information. \\
-			\hline
-			remove\_information & remove\_information. \\
-			\hline
-			accept\_input & accept\_input. \\
+			render & InitializeUI, RenderWorld. \\
 			\hline
 		\end{tabular}
 	\caption{Transition Function-Operation table $(C)TFO_t$}
@@ -763,6 +711,32 @@ System}, already present in the environment.
 			\hline
 			\textbf{Action} & \textbf{Description} \\
 			\hline
+			Communicate & Mobile node p2p communication management.\\
+			\hline
+			DiscoveNeighbour & Discover peers node inside the communication range. \\
+			\hline
+			ListInformation & List all the information available in the current position.\\
+			\hline
+			ShowInformation & Make information available to mobile node user.\\
+			\hline
+			InquireNodes & Get all the information about mobile nodes.\\
+			\hline
+			InquireHoveringInformation & Get all the information about pieces of
+			hovering information.\\
+			\hline
+			InputInformation & Get the needed information from the mobile user. \\
+			\hline
+			InsertData & Insert data into the node buffer. \\
+			\hline
+			RemoveData & Remove data frome the node buffer. \\
+			\hline
+			InputInitialParameters & Accept from user initial simulation parameters
+			as input. \\
+			\hline
+			Step & Basic movement in the environment. \\
+			\hline
+			Sense & Identify other person or point of interest in the environment. \\
+			\hline
 		\end{tabular}
 	\caption{Action table $(C)A_t$}
 	\label{tab:cat}
@@ -774,27 +748,9 @@ System}, already present in the environment.
 			\hline
 			\textbf{Operation} & \textbf{Description} \\
 			\hline
-			send & Send a message to another mobile node. \\
+			InitializeUI & Initialization of the simulator UI. \\
 			\hline
-			receive & Receive a message from another mobile node. \\
-			\hline
-			show\_information & .\\
-			\hline
-			discover\_neighbor & .\\
-			\hline
-			insert\_information & .\\
-			\hline
-			inquire\_node & .\\
-			\hline
-			inquire\_hovering\_information & . \\
-			\hline
-			render & . \\
-			\hline
-			store\_information & . \\
-			\hline
-			remove\_information & . \\
-			\hline
-			accept\_input & . \\
+			RenderWorld & Render a representation of the world. \\
 			\hline
 		\end{tabular}
 	\caption{Operation table $(C)O_t$}
