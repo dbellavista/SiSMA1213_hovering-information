@@ -62,6 +62,8 @@ System}, already present in the environment.
 			\hline
 			\textbf{Actor} & \textbf{Description} \\
 			\hline
+			Simulator Starter & The simulator initializer. \\
+			\hline
 			Simulation Analyst & The simulation data analyzer. \\
 			\hline
 			Person & User of a mobile node. \\
@@ -82,18 +84,16 @@ System}, already present in the environment.
 			\hline
 			\textbf{Requirement} & \textbf{Description} \\
 			\hline
-			Access Information & Access all the information that reside inside an
-			anchor area. \\
+			Access Information & Access all the information that is available in the
+			current position. \\
 			\hline
-			Create Information & Creates a new hovering information. \\
+			Create Information & Create a new hovering information. \\
 			\hline
-			Manage Storage & Manage the information storage into the limited buffer
+			Manage Storage & Manage the information stored into the limited buffer
 			of the mobile device.  \\
 			\hline
-			Obtain System Data & Known the current data (position, information access,
-			etc.) of all the system component. \\
-			\hline
-			Manage Simulation & Manage the simulation. \\
+			Analyze Simulation & Analyze the system while the simulation is running.
+			\\
 			\hline
 			Walk & Move into the environment. \\
 			\hline
@@ -104,7 +104,7 @@ System}, already present in the environment.
 			Maintain accessibility & Cover the maximum possible area inside the
 			anchor area. \\
 			\hline
-			Define initial parameters & Simulator users should be able to specify
+			Initialize Simulation & Simulator users should be able to specify
 			initial simulation parameters (environment, people, information) \\
 			\hline
 		\end{tabular}
@@ -120,8 +120,9 @@ System}, already present in the environment.
 			\hline
 			Person & Access Information, Create Information, Walk. \\
 			\hline
-			Simulation Analyst & Obtain System Data, Manage Simulation, Define
-			initial parameters. \\
+			Simulator Starter & Initialize Simulation. \\
+			\hline
+			Simulation Analyst & Analyze Simulation. \\
 			\hline
 			Mobile node & Access Information, Create Information, Manage Storage. \\
 			\hline
@@ -154,7 +155,7 @@ System}, already present in the environment.
 			\hline
 			\textbf{Legacy System} & \textbf{Description} \\
 			\hline
-			Simulator UI & Simulation output interface: show simulation data. \\
+			Simulator UI & Simulation output interface that shows simulation data. \\
 			\hline
 		\end{tabular}
 	\caption{Legacy System table $(C)LS_t$}
@@ -169,11 +170,11 @@ System}, already present in the environment.
 			\hline
 			\textbf{Relation} & \textbf{Description} \\
 			\hline
-			Simulator Data & make relevant information available to the Simulator UI.
+			Simulator Data & Make relevant information available to the Simulator UI.
 			\\
 			\hline
-			Define Before Simulate & initial environment definition should occurs
-			before simulation. \\
+			Define Before Simulate & Initial environment definition should occurs
+			before starting simulation. \\
 			\hline
 			Create Before Exist & An information has to been created before
 			performing any operation. \\
@@ -203,9 +204,7 @@ System}, already present in the environment.
 			\hline
 			Manage Storage & Simulator Data, Define Before Simulate, Node Resources.  \\
 			\hline
-			Obtain System Data & Simulator Data, Define Before Simulate. \\
-			\hline
-			Manage Simulation & Simulator Data, Define Before Simulate. \\
+			Analyze Simulation & Simulator Data, Define Before Simulate. \\
 			\hline
 			Walk & Define Before Simulate. \\
 			\hline
@@ -215,8 +214,7 @@ System}, already present in the environment.
 			\hline
 			Maintain accessibility & Node Resources, Define Before Simulate, Create Before Exist. \\
 			\hline
-			Define initial environment & Define Before Simulate, Create Before
-			Exist, Parameters Input. \\
+			Define initial environment & Define Before Simulate, Parameters Input. \\
 			\hline
 		\end{tabular}
 	\caption{Requirement-Relation table $(C)RR_t$}
@@ -246,18 +244,15 @@ System}, already present in the environment.
 			\hline
 			\textbf{Requirement} & \textbf{Task} \\
 			\hline
-			Access Information & list\_information \newline access\_information \\
+			Access Information & access\_information \\
 			\hline
 			Create Information & create\_information \\
 			\hline
-			Obtain System Data & obtain\_nodes\_information \newline
-			obtain\_hovering\_information \newline obtain\_communication\_links \\
+			Analyze Simulation & analyze\_simulation \\
 			\hline
 			Manage Storage & manage\_storage \\
 			\hline
-			Manage Simulation & start\newline stop\newline pause \\
-			\hline
-			Walk & walk\newline. \\
+			Walk & walk. \\
 			\hline
 			Survive & survive. \\
 			\hline
@@ -265,7 +260,7 @@ System}, already present in the environment.
 			\hline
 			Maintain accessibility & maintain\_accessibility. \\
 			\hline
-			Define initial parameters & create\_information\newline create\_people. \\
+			Initialize Simulation & define\_initial\_parameters, start\_simulation. \\
 			\hline
 		\end{tabular}
 	\caption{Reference Requirement-Task table $(C)RRT_t$}
@@ -278,25 +273,23 @@ System}, already present in the environment.
 			\hline
 			\textbf{Requirement} & \textbf{Function} \\
 			\hline
-			Access Information & communicate\_data\newline show\_information\newline discover\_neighbor \\
+			Access Information & manage\_communication \newline manage\_node\_information \\
 			\hline
-			Create Information & communicate\_data\newline insert\_information\newline discover\_neighbor \\
+			Create Information & manage\_communication \newline manage\_node\_information \\
 			\hline
-			Obtain System Data & inquire\_node\newline inquire\_hovering\_information \\
+			Analyze Simulation & inquire\_system \\
 			\hline
-			Manage Storage & store\_information\newline remove\_information \\
-			\hline
-			Manage Simulation & render \\
+			Manage Storage & manage\_store\_buffer \\
 			\hline
 			Walk & detect\_people. \\
 			\hline
-			Survive & communicate\_data \newline discover\_neighbor. \\
+			Survive & manage\_communication. \\
 			\hline
-			Be available & communicate\_data \newline discover\_neighbor. \\
+			Be available & manage\_communication. \\
 			\hline
-			Maintain accessibility & communicate\_data \newline discover\_neighbor. \\
+			Maintain accessibility & manage\_communication. \\
 			\hline
-			Define initial parameters & accept\_input. \\
+			Initialize Simulation & input\_initial\_parameters. \\
 			\hline
 		\end{tabular}
 	\caption{Reference Requirement-Function table $(C)RRF_t$}
@@ -345,8 +338,6 @@ System}, already present in the environment.
 			\hline
 			Simulator UI & render. \\
 			\hline
-			Simulator Creator & accept\_input. \\
-			\hline
 		\end{tabular}
 	\caption{Reference Legacy System-Function table $(C)RLSF_t$}
 	\label{tab:crlsft}
@@ -394,10 +385,7 @@ System}, already present in the environment.
 			\hline
 			\textbf{Task} & \textbf{Description} \\
 			\hline
-			list\_information & List the information available from the current
-			position.\\
-			\hline
-			access\_information & Access the selected information available in the
+			access\_information & Access the needed information available in the
 			current position.\\
 			\hline
 			manage\_storage & Manage the information storage into the limited buffer
@@ -405,20 +393,8 @@ System}, already present in the environment.
 			\hline
 			create\_information & Create a new hovering information. \\
 			\hline
-			obtain\_nodes\_information & Get information of each mobile node of the
-			system.\\
-			\hline
-			obtain\_hovering\_information & Get information of each hovering
-			information of the system. \\
-			\hline
-			obtain\_communication\_links & Get information about current data exchange
-			between mobile nodes. \\
-			\hline
-			start & Start the simulation. \\
-			\hline
-			stop & Stop the simulation. \\
-			\hline
-			pause & Pause the simulation. \\
+			analyze\_simulation & Analyze information obtained during the
+			simulation.\\
 			\hline
 			walk & Move around, basing on behaviour and environment. \\
 			\hline
@@ -431,7 +407,9 @@ System}, already present in the environment.
 			maintain\_accessibility & Jumps or replicates to mobile nodes in order to
 			keep an high accessibility. \\
 			\hline
-			create\_people & Create and collocate a new person instance. \\
+			define\_initial\_parameters & Create initial parameters. \\
+			\hline
+			start\_simulation & Start the simulation. \\
 			\hline
 		\end{tabular}
 	\caption{Task table $(C)T_t$}
@@ -444,27 +422,18 @@ System}, already present in the environment.
 			\hline
 			\textbf{Function} & \textbf{Description} \\
 			\hline
-			communicate\_data & Send data to a mobile node in range.\\
+			manage\_communication & Mobile node p2p communication management.\\
 			\hline
-			show\_information & Output the requested hovering information data.\\
+			manage\_node\_information & Manage information from mobile node.\\
 			\hline
-			discover\_neighbor & Find reachable mobile nodes.\\
+			inquire\_system & Get all the information about the system.\\
 			\hline
-			insert\_information & Input from user data needed for a new hovering
-			information.\\
+			render & Show a graphical representation of the simulated system. \\
 			\hline
-			inquire\_node & Get all the information about a mobile node.\\
+			manage\_store\_buffer & Manage storage buffer. \\
 			\hline
-			inquire\_hovering\_information & Get all the information about a piece of
-			hovering information. \\
-			\hline
-			render & Show the simulation data. \\
-			\hline
-			store\_information & Store an information into the node buffer. \\
-			\hline
-			remove\_information & Remove an information from the node buffer. \\
-			\hline
-			accept\_input & Accept initial simulation parameters as user input. \\
+			input\_initial\_parameters & Accept initial simulation parameters as
+			input. \\
 			\hline
 		\end{tabular}
 	\caption{Function table $(C)F_t$}
@@ -497,8 +466,6 @@ System}, already present in the environment.
 			\hline
 			\textbf{Task} & \textbf{Topology} \\
 			\hline
-			list\_information & Anchor Area, Communication Range. \\
-			\hline
 			access\_information& Anchor Area, Communication Range.\\
 			\hline
 			create\_information & Anchor Area, Communication Range.\\
@@ -520,11 +487,7 @@ System}, already present in the environment.
 			\hline
 			\textbf{Function} & \textbf{Topology} \\
 			\hline
-			communicate\_data & Communication Range.\\
-			\hline
-			discover\_neighbor & Communication Range.\\
-			\hline
-			insert\_information & Communication Range. \\
+			manage\_communication & Communication Range.\\
 			\hline
 		\end{tabular}
 	\caption{Function-Topology table $(C)FTop_t$}
@@ -549,12 +512,9 @@ System}, already present in the environment.
 			CreateInfDep & information must be created before performing any
 			operation. \\
 			\hline
-			ParInputDep & Simulation parameters have to be inserted into the
-			simulation system. \\
-			\hline
 			SimStartedDep & Simulation should be started. \\
 			\hline
-			NodeResDep & Hovering information mobility is limited by node resources. \\
+			NodeResDep & Hovering information needs are limited by node resources. \\
 			\hline
 		\end{tabular}
 	\caption{Dependency table $(C)D_t$}
@@ -567,25 +527,15 @@ System}, already present in the environment.
 			\hline
 			\textbf{Task} & \textbf{Dependency} \\
 			\hline
-			list\_information & SimDataDep, SimStartedDep.\\
+			access\_information & CreateInfDepm, SimStartedDep, SimDataDep.\\
 			\hline
-			access\_information & CreateInfDep, SimStartedDep.\\
+			create\_information & CreateInfDep, SimStartedDep, SimDataDep. \\
 			\hline
-			create\_information & CreateInfDep, SimDataDep, ParInputDep. \\
+			manage\_storage & NodeResDep, SimDataDep. \\
 			\hline
-			manage\_storage & NodeResDep. \\
+			analyze\_simulation & SimStartedDep, SimDataDep.\\
 			\hline
-			obtain\_nodes\_information & SimStartedDep, SimDataDep.\\
-			\hline
-			obtain\_hovering\_information & SimStartedDep, SimDataDep. \\
-			\hline
-			obtain\_communication\_links & SimStartedDep, SimDataDep. \\
-			\hline
-			start & DefBefSimDep, SimStartedDep. \\
-			\hline
-			stop & SimStartedDep. \\
-			\hline
-			pause &SimStartedDep. \\
+			start\_simulation & DefBefSimDep, SimStartedDep. \\
 			\hline
 			walk & SimStartedDep. \\
 			\hline
@@ -595,7 +545,7 @@ System}, already present in the environment.
 			\hline
 			maintain\_accessibility & SimStartedDep, CreateInfDep, NodeResDep. \\
 			\hline
-			create\_people & DefBefSimDep, ParInputDep. \\
+			define\_initial\_parameters & DefBefSimDep. \\
 			\hline
 		\end{tabular}
 	\caption{Task-Dependency table $(C)TD_t$}
@@ -608,13 +558,9 @@ System}, already present in the environment.
 			\hline
 			\textbf{Function} & \textbf{Dependency} \\
 			\hline
-			communicate\_data & SimStartedDep, SimDataDep.\\
+			manage\_communication & SimStartedDep, SimDataDep.\\
 			\hline
-			discover\_neighbor & SimStartedDep, SimDataDep.\\
-			\hline
-			show\_information & SimStartedDep, CreateInfDep.\\
-			\hline
-			insert\_information & SimStartedDep, SimDataDep.\\
+			manage\_node\_information & SimStartedDep, CreateInfDep.\\
 			\hline
 			inquire\_node & SimStartedDep, SimDataDep.\\
 			\hline
