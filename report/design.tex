@@ -659,9 +659,11 @@ System}, already present in the environment.
 			\hline
 			Person & access\_information, create\_information, walk \\
 			\hline
-			Mobile node & access\_information, list\_information, create\_information. \\
+			Mobile node & access\_information, list\_information,
+			create\_information, manage\_storage. \\
 			\hline
-			Piece of Hovering Information & survive, be\_available, maintain\_accessibility. \\
+			Piece of Hovering Information & survive, be\_available,
+			maintain\_accessibility. \\
 			\hline
 		\end{tabular}
 	\caption{Transition Role-Task table $(C)TRT_t$}
@@ -687,11 +689,20 @@ System}, already present in the environment.
 			\hline
 			\textbf{Resource} & \textbf{Function} \\
 			\hline
-			MobileCommDevice & communicate\_data, discover\_neighbor. \\
+			MobileCommIf & communicate\_data, discover\_neighbor. \\
 			\hline
-			MobileInputDevice & insert\_information. \\
+			MobileInputIf & insert\_information. \\
 			\hline
-			
+			MobileStorageIf & store\_information, remove\_information. \\
+			\hline
+			NodeResource & inquire\_node. \\
+			\hline
+			HoveringInfResource & inquire\_hovering\_information. \\
+			\hline
+			SimulationInitor & accept\_input. \\
+			\hline
+			SimulatorUI & render. \\
+			\hline
 		\end{tabular}
 	\caption{Transition Resource-Function table $(C)TRF_t$}
 	\label{tab:ctrft}
@@ -702,6 +713,26 @@ System}, already present in the environment.
 	\begin{tabular}{|p{4cm}|p{8cm}|}
 			\hline
 			\textbf{Function} & \textbf{Operation} \\
+			\hline
+			communicate\_data & send, receive.\\
+			\hline
+			show\_information & show\_information.\\
+			\hline
+			discover\_neighbor & discover\_neighbor.\\
+			\hline
+			insert\_information & insert\_information.\\
+			\hline
+			inquire\_node & inquire\_node.\\
+			\hline
+			inquire\_hovering\_information & inquire\_hovering\_information. \\
+			\hline
+			render & render. \\
+			\hline
+			store\_information & store\_information. \\
+			\hline
+			remove\_information & remove\_information. \\
+			\hline
+			accept\_input & accept\_input. \\
 			\hline
 		\end{tabular}
 	\caption{Transition Function-Operation table $(C)TFO_t$}
@@ -714,16 +745,41 @@ System}, already present in the environment.
 			\hline
 			\textbf{Dependency} & \textbf{Interaction} \\
 			\hline
+			SimDataDep & SimDataInt. \\
+			\hline
+			DefBefSimDep & DefBefSimInt. \\
+			\hline
+			CreateInfDep & CreateInfInt \\
+			\hline
+			ParInputDep & ParInputInt. \\
+			\hline
+			SimStartedDep & SimStartedInt. \\
+			\hline
+			NodeResDep & NodeResInt. \\
+			\hline
 		\end{tabular}
 	\caption{Transition Dependency-Interaction table $(C)TDI_t$}
 	\label{tab:ctdit}
 \end{table}
 
+% TODO: non so se basta una semplice sostituzione :V
 \begin{table}[H]
 	\centering
 	\begin{tabular}{|p{4cm}|p{8cm}|}
 			\hline
 			\textbf{Dependency} & \textbf{Rule} \\
+			\hline
+			SimDataDep & SimDataRule. \\
+			\hline
+			DefBefSimDep & DefBefSimRule. \\
+			\hline
+			CreateInfDep & CreateInfRule \\
+			\hline
+			ParInputDep & ParInputRule. \\
+			\hline
+			SimStartedDep & SimStartedRule. \\
+			\hline
+			NodeResDep & NodeResRule. \\
 			\hline
 		\end{tabular}
 	\caption{Transition Dependency-Rule table $(C)TDRu_t$}
@@ -735,6 +791,10 @@ System}, already present in the environment.
 	\begin{tabular}{|p{4cm}|p{8cm}|}
 			\hline
 			\textbf{Topology} & \textbf{Space} \\
+			\hline
+			Anchor Area & Anchor Area Space.\\
+			\hline
+			Communication Range & Communication Range Space. \\
 			\hline
 		\end{tabular}
 	\caption{Transition Topology-Space table $(C)TTopS_t$}
@@ -759,6 +819,28 @@ System}, already present in the environment.
 	\begin{tabular}{|p{4cm}|p{8cm}|}
 			\hline
 			\textbf{Operation} & \textbf{Description} \\
+			\hline
+			send & Send a message to another mobile node. \\
+			\hline
+			receive & Receive a message from another mobile node. \\
+			\hline
+			show\_information & .\\
+			\hline
+			discover\_neighbor & .\\
+			\hline
+			insert\_information & .\\
+			\hline
+			inquire\_node & .\\
+			\hline
+			inquire\_hovering\_information & . \\
+			\hline
+			render & . \\
+			\hline
+			store\_information & . \\
+			\hline
+			remove\_information & . \\
+			\hline
+			accept\_input & . \\
 			\hline
 		\end{tabular}
 	\caption{Operation table $(C)O_t$}
