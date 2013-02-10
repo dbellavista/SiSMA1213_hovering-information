@@ -641,47 +641,43 @@ System}, already present in the environment.
 	\label{tab:ctfot}
 \end{table}
 
+% represents the acts of the interaction among roles, among
+% resources, and between roles and resources
 \begin{table}[H]
 	\centering
 	\begin{tabular}{|p{4cm}|p{8cm}|}
 			\hline
 			\textbf{Dependency} & \textbf{Interaction} \\
 			\hline
-			SimDataDep & SimDataInt. \\
+			GUIDep & GUI Interaction. \\
 			\hline
-			DefBefSimDep & DefBefSimInt. \\
+			DefBefSimDep & Initial Definition Interaction. \\
 			\hline
-			CreateInfDep & CreateInfInt \\
+			NodeResDep & Node Resource Interaction \\
 			\hline
-			ParInputDep & ParInputInt. \\
-			\hline
-			SimStartedDep & SimStartedInt. \\
-			\hline
-			NodeResDep & NodeResInt. \\
+			CreateInfDep & Information Creation Interaction. \\
 			\hline
 		\end{tabular}
 	\caption{Transition Dependency-Interaction table $(C)TDI_t$}
 	\label{tab:ctdit}
 \end{table}
 
-% TODO: non so se basta una semplice sostituzione :V
+% enables and bounds the entities’ behaviour
 \begin{table}[H]
 	\centering
 	\begin{tabular}{|p{4cm}|p{8cm}|}
 			\hline
 			\textbf{Dependency} & \textbf{Rule} \\
 			\hline
-			SimDataDep & SimDataRule. \\
+			GUIDep & GUI Rule. \\
 			\hline
-			DefBefSimDep & DefBefSimRule. \\
+			DefBefSimDep & Initial Definition Rule. \\
 			\hline
-			CreateInfDep & CreateInfRule \\
+			SimStartedDep & Start Rule. \\
 			\hline
-			ParInputDep & ParInputRule. \\
+			NodeResDep & Node Resource Rule. \\
 			\hline
-			SimStartedDep & SimStartedRule. \\
-			\hline
-			NodeResDep & NodeResRule. \\
+			CreateInfDep & Information Creation Rule. \\
 			\hline
 		\end{tabular}
 	\caption{Transition Dependency-Rule table $(C)TDRu_t$}
