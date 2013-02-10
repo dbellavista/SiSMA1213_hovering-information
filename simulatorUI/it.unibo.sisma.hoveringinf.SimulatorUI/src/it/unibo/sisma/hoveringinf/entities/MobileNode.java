@@ -6,24 +6,24 @@ import java.util.List;
  * Mobile node.
  * 
  * @author Daniele Bellavista
- *
+ * 
  */
 public class MobileNode {
 
 	private int bufferSize;
 	private int bufferUsage;
-	
+
 	private double commRange;
-	
+
 	private double xPos;
 	private double yPos;
-	
+
 	private List<MobileNode> connectedNodes;
-	private List<PieceOfHoveringInformation> hosting;
-	
+	private List<PieceOfHoveringInformation> hosted;
+
 	public MobileNode(int bufferSize, int bufferUsage, double commRange,
 			double xPos, double yPos, List<MobileNode> connectedNodes,
-			List<PieceOfHoveringInformation> hosting) {
+			List<PieceOfHoveringInformation> hosted) {
 		super();
 		this.bufferSize = bufferSize;
 		this.bufferUsage = bufferUsage;
@@ -31,7 +31,12 @@ public class MobileNode {
 		this.xPos = xPos;
 		this.yPos = yPos;
 		this.connectedNodes = connectedNodes;
-		this.hosting = hosting;
+		this.hosted = hosted;
+
+		for (PieceOfHoveringInformation pieceOfHoveringInformation : hosted) {
+			pieceOfHoveringInformation.setHost(this);
+		}
+
 	}
 
 	public int getBufferSize() {
@@ -58,8 +63,8 @@ public class MobileNode {
 		return connectedNodes;
 	}
 
-	public List<PieceOfHoveringInformation> getHosting() {
-		return hosting;
+	public List<PieceOfHoveringInformation> getHosted() {
+		return hosted;
 	}
-	
+
 }

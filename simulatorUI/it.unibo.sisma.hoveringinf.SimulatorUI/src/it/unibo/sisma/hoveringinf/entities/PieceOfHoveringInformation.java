@@ -12,13 +12,15 @@ public class PieceOfHoveringInformation {
 	private HoveringInformation parent;
 	private MobileNode host;
 	
-	public PieceOfHoveringInformation(HoveringInformation parent,
-			MobileNode host) {
-		super();
+	public PieceOfHoveringInformation(HoveringInformation parent) {
 		this.parent = parent;
-		this.host = host;
+		parent.addChild(this);
 	}
 
+	void setHost(MobileNode host) {
+		this.host = host;
+	}
+	
 	public HoveringInformation getParent() {
 		return parent;
 	}
