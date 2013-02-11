@@ -62,7 +62,7 @@ System}, already present in the environment.
 			\hline
 			\textbf{Actor} & \textbf{Description} \\
 			\hline
-			Simulator Starter & The simulator initializer. \\
+			Simulation Manager & The simulation manager. \\
 			\hline
 			Simulation Analyst & The simulation data analyzer. \\
 			\hline
@@ -89,8 +89,8 @@ System}, already present in the environment.
 			\hline
 			Create Information & Create a new hovering information. \\
 			\hline
-			Manage Storage & Manage the information stored into the limited buffer
-			of the mobile device.  \\
+			Manage Device & Manage the mobile node resources such as storage,
+			positioning and communication.  \\
 			\hline
 			Analyze Simulation & Analyze the system while the simulation is running.
 			\\
@@ -104,8 +104,9 @@ System}, already present in the environment.
 			Maintain accessibility & Cover the maximum possible area inside the
 			anchor area. \\
 			\hline
-			Initialize Simulation & Simulator users should be able to specify
-			initial simulation parameters (environment, people, information) \\
+			Manage Simulation & Simulation users should be able to specify initial
+			simulation parameters (environment, people, information) and manage it.
+			\\
 			\hline
 		\end{tabular}
 	\caption{Requirement table $(C)Re_t$}
@@ -120,11 +121,11 @@ System}, already present in the environment.
 			\hline
 			Person & Access Information, Create Information, Behave. \\
 			\hline
-			Simulator Starter & Initialize Simulation. \\
+			Simulation Manager & Manage Simulation. \\
 			\hline
 			Simulation Analyst & Analyze Simulation. \\
 			\hline
-			Mobile node & Access Information, Create Information, Manage Storage. \\
+			Mobile node & Access Information, Create Information, Manage Device. \\
 			\hline
 			Piece of Hovering Information & Survive, Be available, Maintain
 			accessibility. \\
@@ -172,14 +173,11 @@ System}, already present in the environment.
 			\hline
 			GUI & The system should send the information needed by the GUI. \\
 			\hline
-			Define Before Simulate & Initial environment definition should occurs
-			before starting simulation. \\
+			Simulation Started & System analysis must be performed after the system
+			is started. \\
 			\hline
 			Create Before Exist & An hovering information has to been created before
 			performing any operation. \\
-			\hline
-			Parameters Input & Simulation parameters have to be inserted into the
-			simulation system. \\
 			\hline
 			Node Resources & Hovering information should consider node resources when
 			trying to satisfy their requirements. \\
@@ -195,25 +193,23 @@ System}, already present in the environment.
 			\hline
 			\textbf{Requirement} & \textbf{Relation} \\
 			\hline
-			Access Information & Define Before Simulate, Create
-			Before Exist. \\
+			Access Information & Create Before Exist. \\
 			\hline
-			Create Information & Define Before Simulate, Create
-			Before Exist. \\
+			Create Information & Create Before Exist. \\
 			\hline
-			Manage Storage & Define Before Simulate, Node Resources.  \\
+			Manage Device & Node Resources.  \\
 			\hline
-			Analyze Simulation & Define Before Simulate, GUI. \\
+			Analyze Simulation & Simulation Started. \\
 			\hline
-			Behave & Define Before Simulate. \\
+			Behave & \\
 			\hline
-			Survive & Node Resources, Define Before Simulate, Create Before Exist. \\
+			Survive & Node Resources. \\
 			\hline
-			Be available & Node Resources, Define Before Simulate, Create Before Exist. \\
+			Be available & Node Resources. \\
 			\hline
-			Maintain accessibility & Node Resources, Define Before Simulate, Create Before Exist. \\
+			Maintain accessibility & Node Resources. \\
 			\hline
-			Define initial environment & Define Before Simulate, Parameters Input. \\
+			Manage Simulation & Simulation Started, GUI. \\
 			\hline
 		\end{tabular}
 	\caption{Requirement-Relation table $(C)RR_t$}
@@ -249,7 +245,7 @@ System}, already present in the environment.
 			\hline
 			Analyze Simulation & analyze\_simulation \\
 			\hline
-			Manage Storage & manage\_storage \\
+			Manage Device & manage\_device \\
 			\hline
 			Behave & behave\_task. \\
 			\hline
@@ -259,7 +255,7 @@ System}, already present in the environment.
 			\hline
 			Maintain accessibility & maintain\_accessibility. \\
 			\hline
-			Initialize Simulation & define\_initial\_parameters, start\_simulation. \\
+			Manage Simulation & define\_initial\_parameters, start\_simulation, show\_simulation. \\
 			\hline
 		\end{tabular}
 	\caption{Reference Requirement-Task table $(C)RRT_t$}
@@ -272,7 +268,7 @@ System}, already present in the environment.
 			\hline
 			\textbf{Requirement} & \textbf{Function} \\
 			\hline
-			& \\
+			Anayze Simulaton & inquire\_world \\
 			\hline
 		\end{tabular}
 	\caption{Reference Requirement-Function table $(C)RRF_t$}
@@ -285,15 +281,19 @@ System}, already present in the environment.
 			\hline
 			\textbf{Requirement} & \textbf{Topology} \\
 			\hline
-			Access Information & Anchor Area, Communication Range \\
+			Access Information & Anchor Area, Communication Range, Node Position. \\
 			\hline
-			Create Information & Anchor Area, Communication Range \\
+			Create Information & Anchor Area, Communication Range, Node Position. \\
+			\hline
+			Manage Device & Communication Range, Node Position. \\
 			\hline
 			Survive & Anchor Area, Communication Range, World. \\
 			\hline
 			Be available & Anchor Area, Communication Range. \\
 			\hline
 			Maintain accessibility & Anchor Area, Communication Range. \\
+			\hline
+			Manage Simulation & World. \\
 			\hline
 		\end{tabular}
 	\caption{Reference Requirement-Topology table $(C)RRTo_t$}
@@ -347,11 +347,9 @@ System}, already present in the environment.
 			\hline
 			GUI & GUIDep \\
 			\hline
-			Define Before Simulate & DefBefSimDep. \\
+			Simulaton Started & SimStartedDep. \\
 			\hline
 			Create Before Exist & CreateInfDep. \\
-			\hline
-			Parameters Input & ParInputDep. \\
 			\hline
 			Node Resources & NodeResDep. \\
 			\hline
@@ -371,8 +369,8 @@ System}, already present in the environment.
 			access\_information & Access the needed information available in the
 			current position.\\
 			\hline
-			manage\_storage & Manage the information storage into the limited buffer
-			of the mobile device. \\
+			manage\_device & Manage the mobile node device, e.g\. information storage
+			system, communication, positioning. \\
 			\hline
 			create\_information & Create a new hovering information. \\
 			\hline
@@ -394,6 +392,8 @@ System}, already present in the environment.
 			\hline
 			start\_simulation & Start the simulation. \\
 			\hline
+			show\_simulation & Show the simulation. \\
+			\hline
 		\end{tabular}
 	\caption{Task table $(C)T_t$}
 	\label{tab:ctt}
@@ -407,6 +407,8 @@ System}, already present in the environment.
 			\hline
 			render & Show a graphical representation of the simulated system. \\
 			\hline
+			inquire\_world & Get all the needed information of the world to analyze.
+			\\
 		\end{tabular}
 	\caption{Function table $(C)F_t$}
 	\label{tab:cft}
@@ -419,6 +421,8 @@ System}, already present in the environment.
 	\begin{tabular}{|p{4cm}|p{8cm}|}
 			\hline
 			\textbf{Topology} & \textbf{Description} \\
+			\hline
+			Node Position & Position of a mobile node.
 			\hline
 			Anchor Area & Area associated to each hovering information, defined as a
 			circular area with center into the \emph{anchor location} and radius the
@@ -440,9 +444,11 @@ System}, already present in the environment.
 			\hline
 			\textbf{Task} & \textbf{Topology} \\
 			\hline
-			access\_information& Anchor Area, Communication Range, World.\\
+			access\_information& Node Position, Anchor Area, Communication Range, World.\\
 			\hline
-			create\_information & Anchor Area, Communication Range, World.\\
+			create\_information & Node Position, Anchor Area, Communication Range, World.\\
+			\hline
+			manage\_device & Node Position. \\	
 			\hline
 			survive & Anchor Area, Communication Range, World. \\
 			\hline
@@ -451,6 +457,8 @@ System}, already present in the environment.
 			maintain\_accessibility & Anchor Area, Communication Range, World. \\
 			\hline
 			behave\_task & World. \\
+			\hline
+			show\_simulation & World. \\
 			\hline
 		\end{tabular}
 		\caption{Task-Topology table $(C)TTop_t$}
@@ -464,6 +472,8 @@ System}, already present in the environment.
 			\textbf{Function} & \textbf{Topology} \\
 			\hline
 			render & World.\\
+			\hline
+			inquire\_world & World.\\
 			\hline
 		\end{tabular}
 	\caption{Function-Topology table $(C)FTop_t$}
@@ -481,15 +491,17 @@ System}, already present in the environment.
 			\hline
 			GUIDep & Make the needed information available for GUI purposes. \\
 			\hline
-			DefBefSimDep & define simulation parameters before starting the
-			simulation. \\
-			\hline
 			CreateInfDep & information must be created before performing any
 			operation. \\
 			\hline
-			SimStartedDep & Simulation should be started. \\
+			DefineInitialDep & Simulation can be started after the insertion of the
+			initial parameter. \\
+			\hline
+			SimStartedDep & Simulation should be started before analysis and showing. \\
 			\hline
 			NodeResDep & Hovering information needs are limited by node resources. \\
+			\hline
+			InquireDep & Get system information for analysis purposes. \\
 			\hline
 		\end{tabular}
 	\caption{Dependency table $(C)D_t$}
@@ -502,25 +514,27 @@ System}, already present in the environment.
 			\hline
 			\textbf{Task} & \textbf{Dependency} \\
 			\hline
-			access\_information & CreateInfDepm, SimStartedDep.\\
+			access\_information & CreateInfDep.\\
 			\hline
-			create\_information & CreateInfDep, SimStartedDep. \\
+			create\_information & CreateInfDep. \\
 			\hline
-			manage\_storage & NodeResDep, SimStartedDep. \\
+			manage\_device & NodeResDep. \\
 			\hline
-			analyze\_simulation & SimStartedDep, GUIDep.\\
+			analyze\_simulation & SimStartedDep, InquireDep. \\
 			\hline
-			start\_simulation & DefBefSimDep, SimStartedDep. \\
+			start\_simulation & SimStartedDep, DefineInitialDep. \\
 			\hline
-			behave\_task & SimStartedDep. \\
+			behave\_task & \\
 			\hline
-			survive & SimStartedDep, CreateInfDep, NodeResDep. \\
+			survive & NodeResDep. \\
 			\hline
-			be\_available & SimStartedDep, CreateInfDep, NodeResDep. \\
+			be\_available & NodeResDep. \\
 			\hline
-			maintain\_accessibility & SimStartedDep, CreateInfDep, NodeResDep. \\
+			maintain\_accessibility & NodeResDep. \\
 			\hline
-			define\_initial\_parameters & DefBefSimDep. \\
+			define\_initial\_parameters & DefineInitialDep. \\
+			\hline
+			show\_simulation & GUIDep, SimStartedDep. \\
 			\hline
 		\end{tabular}
 	\caption{Task-Dependency table $(C)TD_t$}
@@ -533,7 +547,9 @@ System}, already present in the environment.
 			\hline
 			\textbf{Function} & \textbf{Dependency} \\
 			\hline
-			render & SimStartedDep, SimDataDep. \\
+			render & SimStartedDep, GUIDep. \\
+			\hline
+			inquire\_world & SimStartedDep, InquireDep. \\
 			\hline
 		\end{tabular}
 	\caption{Function-Dependency table $(C)FD_t$}
@@ -549,6 +565,8 @@ System}, already present in the environment.
 			Anchor Area & SimDataDep, CreateInfDep.\\
 			\hline
 			Communication Range & SimDataDep. \\
+			\hline
+			World & InquireDep, GUIDep. \\
 			\hline
 		\end{tabular}
 	\caption{Topology-Dependency table $(C)TopD_t$}
@@ -575,7 +593,7 @@ System}, already present in the environment.
 			Piece of Hovering Information & survive, be\_available,
 			maintain\_accessibility. \\
 			\hline
-			Simulator Starter & define\_initial\_parameters, start\_simulation. \\
+			Simulation Manager & define\_initial\_parameters, start\_simulation, show\_simulation. \\
 			\hline
 		\end{tabular}
 	\caption{Transition Role-Task table $(C)TRT_t$}
@@ -588,27 +606,27 @@ System}, already present in the environment.
 			\hline
 			\textbf{Task} & \textbf{Action} \\
 			\hline
-			analyze\_simulation & ComputeNetworkProperties, InquireNodes,
-			InquireHoveringInformations \\
+			analyze\_simulation & AnalyzeSimulation. \\
 			\hline
-			access\_information & Communicate, DiscoveNeighbour,
-			ListInformation, ShowInformation.\\
+			access\_information & Communicate, DiscoveNeighbour, ListInformation, ShowInformation.\\
 			\hline
 			manage\_storage & InsertData, RemoveData. \\
 			\hline
-			create\_information & InputInformation. \\
+			create\_information & InputInformation, Communicate, DiscoverNeighbour. \\
 			\hline
-			behave\_task & Step, Sense. \\
+			behave\_task & Step, Sense, Think, GetInformationList, GetInformation. \\
 			\hline
-			survive & DiscoverNeighbour, Communicate. \\
+			survive & DiscoverNeighbour, Replicate, Move, Communicate. \\
 			\hline
-			be\_available & DiscoverNeighbour, Communicate. \\
+			be\_available & DiscoverNeighbour, Replicate, Move, Communicate. \\
 			\hline
-			maintain\_accessibility & DiscoverNeighbour, Communicate. \\
+			maintain\_accessibility & DiscoverNeighbour, Replicate, Move, Communicate. \\
 			\hline
-			define\_initial\_parameters & InputInitialParameters. \\
+			define\_initial\_parameters & InputInitialParameters, SetInitialParameters. \\
 			\hline
-			start\_simulation & StartSimulation, \\
+			start\_simulation & StartSimulation. \\
+			\hline
+			show\_simulation & ShowSimulation. \\
 			\hline
 		\end{tabular}
 	\caption{Transition Task-Action table $(C)TTA_t$}
@@ -623,6 +641,7 @@ System}, already present in the environment.
 			\hline
 			SimulatorUIRes & render. \\
 			\hline
+			SimulatorInquisitor & inquire\_world. \\
 		\end{tabular}
 	\caption{Transition Resource-Function table $(C)TRF_t$}
 	\label{tab:ctrft}
@@ -635,6 +654,8 @@ System}, already present in the environment.
 			\textbf{Function} & \textbf{Operation} \\
 			\hline
 			render & InitializeUI, RenderWorld. \\
+			\hline
+			inquire\_world & InquireNodes, InquireHoveringInformations, InquireEnvironment. \\
 			\hline
 		\end{tabular}
 	\caption{Transition Function-Operation table $(C)TFO_t$}
@@ -656,6 +677,8 @@ System}, already present in the environment.
 			NodeResDep & Node Resource Interaction \\
 			\hline
 			CreateInfDep & Information Creation Interaction. \\
+			\hline
+			InquireDep & Inquisition Interaction. \\
 			\hline
 		\end{tabular}
 	\caption{Transition Dependency-Interaction table $(C)TDI_t$}
@@ -707,20 +730,24 @@ System}, already present in the environment.
 			\hline
 			\textbf{Action} & \textbf{Description} \\
 			\hline
+			Replicate & Make a copy of the hovering information to be transferred to
+			another mobile node. \\
+			\hline
+			Move & Transfer the hovering information to another mobile node. \\
+			\hline
 			Communicate & Mobile node p2p communication management.\\
 			\hline
 			DiscoveNeighbour & Discover peers node inside the communication range. \\
 			\hline
-			ListInformation & List all the information available in the current position.\\
+			ListInformation & Get all the information available in the current position.\\
 			\hline
 			ShowInformation & Make information available to mobile node user.\\
 			\hline
-			InquireNodes & Get all the information about mobile nodes.\\
+			AnalyzeSimulation & Analyze the system properties such as hovering
+			information requirements and complex network parameters. \\
 			\hline
-			InquireHoveringInformation & Get all the information about pieces of
-			hovering information.\\
-			\hline
-			InputInformation & Get the needed information from the mobile user. \\
+			InputInformation & When creating an hovering information, mobile users have to
+			input the required data to the mobile node. \\
 			\hline
 			InsertData & Insert data into the node buffer. \\
 			\hline
@@ -729,9 +756,21 @@ System}, already present in the environment.
 			InputInitialParameters & Accept from user initial simulation parameters
 			as input. \\
 			\hline
+			SetInitialParameters & Configure the system using the input simulation parameters. \\
+			\hline
+			StartSimulation & Start the simulation using the initial parameters. \\
+			\hline
+			ShowSimulation & Show a simulation representation to the GUI. \\
+			\hline
 			Step & Basic movement in the environment. \\
 			\hline
 			Sense & Identify other person or point of interest in the environment. \\
+			\hline
+			Think & Apply behavioural rules. \\
+			\hline
+			GetInformationList & Obtain a list of all accessible hovering information. \\
+			\hline
+			GetInformation & Obtain a specific hovering information. \\
 			\hline
 		\end{tabular}
 	\caption{Action table $(C)A_t$}
@@ -748,6 +787,13 @@ System}, already present in the environment.
 			\hline
 			RenderWorld & Render a representation of the world. \\
 			\hline
+			InquireNodes & Get all the information about mobile nodes.\\
+			\hline
+			InquireHoveringInformation & Get all the information about pieces of
+			hovering information.\\
+			\hline
+			InquireEnvironment & Get extra information about environment.\\
+			\hline
 		\end{tabular}
 	\caption{Operation table $(C)O_t$}
 	\label{tab:cot}
@@ -759,6 +805,19 @@ System}, already present in the environment.
 			\hline
 			\textbf{Role} & \textbf{Action} \\
 			\hline
+			Simulation Analyst & AnalyzeSimulation. \\
+			\hline
+			Person & Communicate, DiscoveNeighbour, GetInformationList, GetInformation,
+			InputInformation, Step, Sense \\
+			\hline
+			Mobile node & Communicate, DiscoveNeighbour, ListInformation,
+			ShowInformation, InputInformation, InsertData, RemoveData.  \\
+			\hline
+			Piece of Hovering Information & Replicate, Move, Communicate, DiscoverNeighbour. \\
+			\hline
+			Simulation Manager & InputInitialParameters, SetInitialParameters,
+			StartSimulation, ShowSimulation. \\
+			\hline
 		\end{tabular}
 	\caption{Role-Action table $(C)RA_t$}
 	\label{tab:rat}
@@ -769,6 +828,8 @@ System}, already present in the environment.
 	\begin{tabular}{|p{4cm}|p{8cm}|}
 			\hline
 			\textbf{Resource} & \textbf{Operation} \\
+			\hline
+			SimulatorUIRes & InitializeUI, RenderWorld. \\
 			\hline
 		\end{tabular}
 	\caption{Resource-Operation table $(C)RO_t$}
@@ -783,6 +844,20 @@ System}, already present in the environment.
 			\hline
 			\textbf{Interaction} & \textbf{Description} \\
 			\hline
+			GUI Interaction & The system should access the GUI for graphical output
+			purposes. \\
+			\hline
+			Node Interfacing Interaction & People have to interface with the mobile node
+			device. \\
+			\hline
+			Node Resource Interaction & Hovering information have to access to node
+			resources. \\
+			\hline
+			Mobile Interface Interaction & Mobile users' action are based on mobile
+			low-level actions. \\
+			\hline
+			Inquisition & World inquisition for analysis purposes. \\
+			\hline
 		\end{tabular}
 	\caption{Interaction table $(C)I_t$}
 	\label{tab:cit}
@@ -794,6 +869,44 @@ System}, already present in the environment.
 			\hline
 			\textbf{Action} & \textbf{Interaction} \\
 			\hline
+			Replicate & Node Resource Interaction. \\
+			\hline
+			Move & Node Resource Interaction. \\
+			\hline
+			Communicate & Node Resource Interaction.\\
+			\hline
+			DiscoveNeighbour & Node Resource Interaction. \\
+			\hline
+			ListInformation & Mobile Interface Interaction.\\
+			\hline
+			ShowInformation & Node Interfacing Interaction.\\
+			\hline
+			AnalyzeSimulation & Inquisition. \\
+			\hline
+			InputInformation & Node Interfacing Interaction. \\
+			\hline
+			InsertData & \\
+			\hline
+			RemoveData & \\
+			\hline
+			InputInitialParameters & \\
+			\hline
+			SetInitialParameters & \\
+			\hline
+			StartSimulation & \\
+			\hline
+			ShowSimulation & GUI Interaction. \\
+			\hline
+			Step & \\
+			\hline
+			Sense & \\
+			\hline
+			Think & \\
+			\hline
+			GetInformationList & Mobile Interface Interaction. \\
+			\hline
+			GetInformation & Mobile Interface Interaction. \\
+			\hline
 		\end{tabular}
 	\caption{Action-Interaction table $(C)AcI_t$}
 	\label{tab:cacit}
@@ -804,6 +917,16 @@ System}, already present in the environment.
 	\begin{tabular}{|p{4cm}|p{8cm}|}
 			\hline
 			\textbf{Operation} & \textbf{Interaction} \\
+			\hline
+			InitializeUI & GUI Interaction. \\
+			\hline
+			RenderWorld & GUI Interaction. \\
+			\hline
+			InquireNodes & Inquisition. \\
+			\hline
+			InquireHoveringInformation & Inquisition. \\
+			\hline
+			InquireEnvironment & Inquisition. \\
 			\hline
 		\end{tabular}
 	\caption{Operation-Interaction table $(C)OpI_t$}
@@ -817,6 +940,8 @@ System}, already present in the environment.
 	\begin{tabular}{|p{4cm}|p{8cm}|}
 			\hline
 			\textbf{Rule} & \textbf{Description} \\
+			\hline
+			GUI Rule & Simulation have to be started in order to boh.\\
 			\hline
 		\end{tabular}
 	\caption{Rule table $(C)Ru_t$}
