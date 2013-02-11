@@ -1150,42 +1150,410 @@ System}, already present in the environment.
 
 \subsection{Detailed Design}
 
+\subsubsection{Carving Diagram}
 
+\subsubsection{Mapping Tables}
 
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|p{4cm}|p{8cm}|}
+			\hline
+			\textbf{Agent} & \textbf{Role} \\
+			\hline
+			\hline
+		\end{tabular}
+	\caption{Mapping Agent-Role table $(C)MAR_t$}
+	\label{tab:cmart}
+\end{table}
 
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|p{4cm}|p{8cm}|}
+			\hline
+			\textbf{Society} & \textbf{Role} \\
+			\hline
+			\hline
+		\end{tabular}
+	\caption{Mapping Society-Role table $(C)MSR_t$}
+	\label{tab:cmsrt}
+\end{table}
 
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|p{4cm}|p{8cm}|}
+			\hline
+			\textbf{Artifact} & \textbf{Action} \\
+			\hline
+			\hline
+		\end{tabular}
+	\caption{Mapping Artifact-Action table $(C)MAAc_t$}
+	\label{tab:cmaact}
+\end{table}
 
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|p{4cm}|p{8cm}|}
+			\hline
+			\textbf{Artifact} & \textbf{Resource} \\
+			\hline
+			\hline
+		\end{tabular}
+	\caption{Mapping Artifact-Resource table $(C)MArR_t$}
+	\label{tab:cmarrt}
+\end{table}
 
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|p{4cm}|p{8cm}|}
+			\hline
+			\textbf{Aggregate} & \textbf{Resource} \\
+			\hline
+			\hline
+		\end{tabular}
+	\caption{Mapping Aggregate-Resource table $(C)MAggR_t$}
+	\label{tab:cmaggrt}
+\end{table}
 
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|p{4cm}|p{8cm}|}
+			\hline
+			\textbf{Artifact} & \textbf{Operation} \\
+			\hline
+			\hline
+		\end{tabular}
+	\caption{Mapping Artifact-Operation table $(C)MArOp_t$}
+	\label{tab:cmaropt}
+\end{table}
 
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|p{4cm}|p{8cm}|}
+			\hline
+			\textbf{Artifact} & \textbf{Rule} \\
+			\hline
+			\hline
+		\end{tabular}
+	\caption{Mapping Artifact-Rule table $(C)MArRu_t$}
+	\label{tab:cmarrut}
+\end{table}
 
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|p{4cm}|p{8cm}|}
+			\hline
+			\textbf{Space} & \textbf{Workspace} \\
+			\hline
+			\hline
+		\end{tabular}
+	\caption{Mapping Space-Workspace table $(C)MSW_t$}
+	\label{tab:cmsrt}
+\end{table}
 
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|p{4cm}|p{8cm}|}
+			\hline
+			\textbf{Interaction} & \textbf{Use} \\
+			\hline
+			\hline
+		\end{tabular}
+	\caption{Mapping Interaction-Use table $(C)MIU_t$}
+	\label{tab:cmiut}
+\end{table}
 
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|p{4cm}|p{8cm}|}
+			\hline
+			\textbf{Interaction} & \textbf{Manifest} \\
+			\hline
+			\hline
+		\end{tabular}
+	\caption{Mapping Interaction-Manifest table $(C)MIM_t$}
+	\label{tab:cmimt}
+\end{table}
 
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|p{4cm}|p{8cm}|}
+			\hline
+			\textbf{Interaction} & \textbf{SpeakTo} \\
+			\hline
+			\hline
+		\end{tabular}
+	\caption{Mapping Interaction-SpeakTo table $(C)MISp_t$}
+	\label{tab:cmispt}
+\end{table}
 
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|p{4cm}|p{8cm}|}
+			\hline
+			\textbf{Interaction} & \textbf{LinkedTo} \\
+			\hline
+			\hline
+		\end{tabular}
+	\caption{Mapping Interaction-LinkedTo table $(C)MIL_t$}
+	\label{tab:cmilt}
+\end{table}
 
+\subsubsection{Agent/Society Design Tables}
 
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|p{4cm}|p{8cm}|}
+			\hline
+			\textbf{Agent} & \textbf{Artifact} \\
+			\hline
+			\hline
+		\end{tabular}
+	\caption{Agent-Artifact table $(C)AA_t$}
+	\label{tab:caat}
+\end{table}
 
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|p{4cm}|p{8cm}|}
+			\hline
+			\textbf{Society} & \textbf{Agent} \\
+			\hline
+			\hline
+		\end{tabular}
+	\caption{Society-Agent table $(C)SA_t$}
+	\label{tab:csat}
+\end{table}
 
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|p{4cm}|p{8cm}|}
+			\hline
+			\textbf{Society} & \textbf{Artifact} \\
+			\hline
+			\hline
+		\end{tabular}
+	\caption{Society-Artifact table $(C)SAr_t$}
+	\label{tab:csart}
+\end{table}
 
+\subsubsection{Environment Design Tables}
 
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|p{4cm}|p{8cm}|}
+			\hline
+			\textbf{Artifact} & \textbf{UsageInterface} \\
+			\hline
+			\hline
+		\end{tabular}
+	\caption{Artifact-UsageInterface table $(C)AUI_t$}
+	\label{tab:cauit}
+\end{table}
 
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|p{4cm}|p{8cm}|}
+			\hline
+			\textbf{Aggregate} & \textbf{Artifact} \\
+			\hline
+			\hline
+		\end{tabular}
+	\caption{Aggregate-Artifact table $(C)AggArt_t$}
+	\label{tab:caggartt}
+\end{table}
 
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|p{4cm}|p{8cm}|}
+			\hline
+			\textbf{Aggregate} & \textbf{Artifact} \\
+			\hline
+			\hline
+		\end{tabular}
+	\caption{Aggregate-Artifact table $(C)AggArt_t$}
+	\label{tab:caggartt}
+\end{table}
 
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|p{4cm}|p{8cm}|}
+			\hline
+			\textbf{Aggregate} & \textbf{Agent} \\
+			\hline
+			\hline
+		\end{tabular}
+	\caption{Aggregate-Agent table $(C)AggAge_t$}
+	\label{tab:caggaget}
+\end{table}
 
+\subsubsection{Interaction Detailed Design Tables}
 
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|p{4cm}|p{8cm}|}
+			\hline
+			\textbf{Use} & \textbf{Protocol} \\
+			\hline
+			\hline
+		\end{tabular}
+	\caption{Use-Protocol table $(C)UP_t$}
+	\label{tab:cupt}
+\end{table}
 
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|p{4cm}|p{8cm}|}
+			\hline
+			\textbf{Agent} & \textbf{Use} \\
+			\hline
+			\hline
+		\end{tabular}
+	\caption{Agent-Use table $(C)AgeU_t$}
+	\label{tab:cageut}
+\end{table}
 
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|p{4cm}|p{8cm}|}
+			\hline
+			\textbf{Artifact} & \textbf{Use} \\
+			\hline
+			\hline
+		\end{tabular}
+	\caption{Artifact-Use table $(C)ArtU_t$}
+	\label{tab:cartut}
+\end{table}
 
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|p{4cm}|p{8cm}|}
+			\hline
+			\textbf{SpeakTo} & \textbf{Protocol} \\
+			\hline
+			\hline
+		\end{tabular}
+	\caption{SpeakTo-Protocol table $(C)SP_t$}
+	\label{tab:cspt}
+\end{table}
 
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|p{4cm}|p{8cm}|}
+			\hline
+			\textbf{Agent} & \textbf{SpeakTo} \\
+			\hline
+			\hline
+		\end{tabular}
+	\caption{Agent-SpeakTo table $(C)AgeSp_t$}
+	\label{tab:cagespt}
+\end{table}
 
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|p{4cm}|p{8cm}|}
+			\hline
+			\textbf{Manifest} & \textbf{Protocol} \\
+			\hline
+			\hline
+		\end{tabular}
+	\caption{Manifest-Protocol table $(C)MP_t$}
+	\label{tab:cmpt}
+\end{table}
 
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|p{4cm}|p{8cm}|}
+			\hline
+			\textbf{Agent} & \textbf{Manifest} \\
+			\hline
+			\hline
+		\end{tabular}
+	\caption{Agent-Manifest table $(C)AgeM_t$}
+	\label{tab:cagemt}
+\end{table}
 
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|p{4cm}|p{8cm}|}
+			\hline
+			\textbf{Artifact} & \textbf{Manifest} \\
+			\hline
+			\hline
+		\end{tabular}
+	\caption{Artifact-Manifest table $(C)ArtM_t$}
+	\label{tab:cartmt}
+\end{table}
 
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|p{4cm}|p{8cm}|}
+			\hline
+			\textbf{LinkedTo} & \textbf{Protocol} \\
+			\hline
+			\hline
+		\end{tabular}
+	\caption{LinkedTo-Protocol table $(C)LP_t$}
+	\label{tab:clpt}
+\end{table}
 
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|p{4cm}|p{8cm}|}
+			\hline
+			\textbf{Artifact} & \textbf{LinkedTo} \\
+			\hline
+			\hline
+		\end{tabular}
+	\caption{Artifact-LinkedTo table $(C)ArtL_t$}
+	\label{tab:cartlt}
+\end{table}
 
+\subsubsection{Workspace Design Tables}
 
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|p{4cm}|p{8cm}|}
+			\hline
+			\textbf{Workspace} & \textbf{Description} \\
+			\hline
+			\hline
+		\end{tabular}
+	\caption{Workspace table $(C)W_t$}
+	\label{tab:cwt}
+\end{table}
 
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|p{4cm}|p{8cm}|}
+			\hline
+			\textbf{Workspace} & \textbf{Connection} \\
+			\hline
+			\hline
+		\end{tabular}
+	\caption{Workspace-Connection table $(C)WC_t$}
+	\label{tab:cwct}
+\end{table}
 
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|p{4cm}|p{8cm}|}
+			\hline
+			\textbf{Workspace} & \textbf{Artifact} \\
+			\hline
+			\hline
+		\end{tabular}
+	\caption{Workspace-Artifact table $(C)WArt_t$}
+	\label{tab:cwartt}
+\end{table}
 
-
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|p{4cm}|p{8cm}|}
+			\hline
+			\textbf{Workspace} & \textbf{Agent} \\
+			\hline
+			\hline
+		\end{tabular}
+	\caption{Workspace-Agent table $(C)WA_t$}
+	\label{tab:cwat}
+\end{table}
