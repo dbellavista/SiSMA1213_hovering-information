@@ -93,12 +93,8 @@ System}, already present in the environment.
 			\hline
 			Behave & Interact with the social environment. \\
 			\hline
-			Survive & Stay alive. \\
-			\hline
-			Be available & Be available inside the anchor area. \\
-			\hline
-			Maintain accessibility & Cover the maximum possible area inside the
-			anchor area. \\
+			Hover & Move and replicate in order to guarantee survivability, availability
+			and accessibility.
 			\hline
 			Manage Simulation & Simulation users should be able to specify initial
 			simulation parameters (environment, people, information) and manage it.
@@ -123,8 +119,7 @@ System}, already present in the environment.
 			\hline
 			Mobile node & Access Information, Create Information, Manage Device. \\
 			\hline
-			Piece of Hovering Information & Survive, Be available, Maintain
-			accessibility. \\
+			Piece of Hovering Information & Hover. \\
 			\hline
 		\end{tabular}
 	\caption{Actor-Requirement table $(C)AR_t$}
@@ -179,6 +174,8 @@ System}, already present in the environment.
 			\hline
 			Knowledge Relation & A person may decide to create or access information. \\
 			\hline
+			Node Interface & A person needs a node interface in order to use it. \\
+			\hline
 		\end{tabular}
 	\caption{Relation table $(C)Rel_t$}
 	\label{tab:crelt}
@@ -190,21 +187,17 @@ System}, already present in the environment.
 			\hline
 			\textbf{Requirement} & \textbf{Relation} \\
 			\hline
-			Access Information & Knowledge Relation  \\
+			Access Information & Knowledge Relation, Node Interface.  \\
 			\hline
-			Create Information & Knowledge Relation  \\
+			Create Information & Knowledge Relation, Node Interface.  \\
 			\hline
-			Manage Device & Node Resources.  \\
+			Manage Device & Node Resources, Node Interface.  \\
 			\hline
 			Analyze Simulation & Simulation Started. \\
 			\hline
+			Hover & Node Resources. \\
+			\hline
 			Behave & Vital Space Respect, Knowledge Relation. \\
-			\hline
-			Survive & Node Resources. \\
-			\hline
-			Be available & Node Resources. \\
-			\hline
-			Maintain accessibility & Node Resources. \\
 			\hline
 			Manage Simulation & Simulation Started, GUI. \\
 			\hline
@@ -224,6 +217,88 @@ System}, already present in the environment.
 		\end{tabular}
 	\caption{Relation-LegacySystem table $(C)RLS_t$}
 	\label{tab:crlst}
+\end{table}
+
+\subsubsection{Layering C+1}
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|p{4cm}|p{8cm}|}
+			\hline
+			\textbf{Layer $C$} & \textbf{Layer $C+1$} \\
+			\hline
+			Manage Device & Manage Communication, Manage Storage, Manage
+			UI. \\
+			\hline
+			Hover & Survive, Be Available, Maintain Accessibility. \\
+			\hline
+		\end{tabular}
+	\caption{Zooming Table $\left( \left( C \right)Z_t \right)$: Manage
+	Device and Hover in-zoom $(C)Z_t$}
+	\label{tab:czt}
+\end{table}
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|p{4cm}|p{8cm}|}
+			\hline
+			\textbf{Requirement} & \textbf{Description} \\
+			\hline
+			Survive & Stay alive. \\
+			\hline
+			Be available & Be available inside the anchor area. \\
+			\hline
+			Maintain accessibility & Cover the maximum possible area inside the
+			anchor area. \\
+			\hline
+			Manage Communication & Manage the mobile node communication system. \\
+			\hline
+			Manage Storage & Manage the mobile node storage system. \\
+			\hline
+			Manage UI & Manage the mobile node user interface. \\
+			\hline
+		\end{tabular}
+	\caption{Requirement table $(C+1)Re_t$}
+	\label{tab:cp1act}
+\end{table}
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|p{4cm}|p{8cm}|}
+			\hline
+			\textbf{Actor} & \textbf{Requirement} \\
+			\hline
+			+Mobile node & Manage Communication, Manage Storage, Manage UI. \\
+			\hline
+			+Piece of Hovering Information & Survive, Be Available, Maintain
+			Accessibility. \\
+			\hline
+		\end{tabular}
+	\caption{Actor-Requirement table $(C+1)AR_t$}
+	\label{tab:cp1art}
+\end{table}
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|p{4cm}|p{8cm}|}
+			\hline
+			\textbf{Requirement} & \textbf{Relation} \\
+			\hline
+			Survive & +Node Resources. \\
+			\hline
+			Be available & +Node Resources. \\
+			\hline
+			Maintain accessibility & +Node Resources. \\
+			\hline
+			Manage Communication & +Node Resources. \\
+			\hline
+			Manage Storage & +Node Resources. \\
+			\hline
+			Manage UI &  +Node Interface.\\
+			\hline
+		\end{tabular}
+	\caption{Requirement-Relation table $(C+1)RR_t$}
+	\label{tab:cp1rrt}
 \end{table}
 
 \subsection{Analysis}
@@ -1152,6 +1227,9 @@ System}, already present in the environment.
 
 \subsubsection{Carving Diagram}
 
+For now there aren't zooming layers, so Agent Society and Aggregation of
+Artifacts are not expected.
+
 \subsubsection{Mapping Tables}
 
 \begin{table}[H]
@@ -1160,6 +1238,15 @@ System}, already present in the environment.
 			\hline
 			\textbf{Agent} & \textbf{Role} \\
 			\hline
+			Simulation Analyst & AnalystAgent. \\
+			\hline
+			Person & PersonAgent. \\
+			\hline
+			Mobile node & MobileNodeAgent.  \\
+			\hline
+			Piece of Hovering Information & HoveringAgent. \\
+			\hline
+			Simulation Manager & SimulationAgent. \\
 			\hline
 		\end{tabular}
 	\caption{Mapping Agent-Role table $(C)MAR_t$}
@@ -1172,6 +1259,7 @@ System}, already present in the environment.
 			\hline
 			\textbf{Society} & \textbf{Role} \\
 			\hline
+			& \\
 			\hline
 		\end{tabular}
 	\caption{Mapping Society-Role table $(C)MSR_t$}
@@ -1196,6 +1284,9 @@ System}, already present in the environment.
 			\hline
 			\textbf{Artifact} & \textbf{Resource} \\
 			\hline
+			SimulatorUI Artifact & SimulatorUIRes. \\
+			\hline
+			SimulatorInquisitor Artifact & SimulatorInquisitor. \\
 			\hline
 		\end{tabular}
 	\caption{Mapping Artifact-Resource table $(C)MArR_t$}
@@ -1208,6 +1299,7 @@ System}, already present in the environment.
 			\hline
 			\textbf{Aggregate} & \textbf{Resource} \\
 			\hline
+			& \\
 			\hline
 		\end{tabular}
 	\caption{Mapping Aggregate-Resource table $(C)MAggR_t$}
@@ -1220,6 +1312,10 @@ System}, already present in the environment.
 			\hline
 			\textbf{Artifact} & \textbf{Operation} \\
 			\hline
+			SimulatorUI Artifact & InitializeUI, RenderWorld. \\
+			\hline
+			SimulatorInquisitor Artifact & InquireNodes, InquireHoveringInformations,
+			InquireEnvironment. \\
 			\hline
 		\end{tabular}
 	\caption{Mapping Artifact-Operation table $(C)MArOp_t$}
