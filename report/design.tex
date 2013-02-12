@@ -94,7 +94,7 @@ System}, already present in the environment.
 			Behave & Interact with the social environment. \\
 			\hline
 			Hover & Move and replicate in order to guarantee survivability, availability
-			and accessibility.
+			and accessibility. \\
 			\hline
 			Manage Simulation & Simulation users should be able to specify initial
 			simulation parameters (environment, people, information) and manage it.
@@ -624,7 +624,7 @@ System}, already present in the environment.
 			\hline
 			NodeResDep & Hovering information needs are limited by node resources. \\
 			\hline
-			NodeIfDep & A person needs a node interface in order to use it.
+			NodeIfDep & A person needs a node interface in order to use it. \\
 			\hline
 			InquireDep & Get system information for analysis purposes. \\
 			\hline
@@ -816,8 +816,7 @@ System}, already present in the environment.
 			Mobile node & access\_information, create\_information, manage\_device.
 			\\
 			\hline
-			Piece of Hovering Information & survive, be\_available,
-			maintain\_accessibility. \\
+			Piece of Hovering Information & hover\_task. \\
 			\hline
 			Simulation Manager & define\_initial\_parameters, start\_simulation, show\_simulation. \\
 			\hline
@@ -837,18 +836,13 @@ System}, already present in the environment.
 			access\_information & Communicate, DiscoveNeighbour, ListInformation,
 			ShowInformation, AccessInformation, FindInformation.\\
 			\hline
-			manage\_device & ManageStorage, Communicate, DiscoveNeighbour,
-			ObtainPosition. \\
+			manage\_device & ManageDevice. \\
 			\hline
 			create\_information & InputInformation, Communicate, DiscoverNeighbour. \\
 			\hline
 			behave\_task & Step, Sense, Think. \\
 			\hline
-			survive & DiscoverNeighbour, Replicate, Move, Communicate. \\
-			\hline
-			be\_available & DiscoverNeighbour, Replicate, Move, Communicate. \\
-			\hline
-			maintain\_accessibility & DiscoverNeighbour, Replicate, Move, Communicate. \\
+			hover\_task & Move, Replicate. \\
 			\hline
 			define\_initial\_parameters & InputInitialParameters, SetInitialParameters. \\
 			\hline
@@ -905,6 +899,8 @@ System}, already present in the environment.
 			\hline
 			NodeResDep & Node Resource Interaction \\
 			\hline
+			NodeIfDep & Node Interface Interaction \\
+			\hline
 			CreateInfDep & Information Creation Interaction. \\
 			\hline
 			InquireDep & Inquisition Interaction. \\
@@ -927,7 +923,7 @@ System}, already present in the environment.
 			\hline
 			DefineInitialDep & Initial Definition Rule. \\
 			\hline
-			NodeResDep & Storage Rule, Communication Rule. \\
+			NodeResDep & Node Resource Rule. \\
 			\hline
 			InquireDep & Inquisition Rule. \\
 			\hline
@@ -963,6 +959,48 @@ System}, already present in the environment.
 	\label{tab:cttopst}
 \end{table}
 
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|p{4cm}|p{8cm}|}
+			\hline
+			\textbf{Role} & \textbf{Task} \\
+			+Mobile node & manage\_storage, manage\_communication,
+			manage\_positioning, manage\_ui.  \\
+			\hline
+			+Piece of Hovering Information & survive, be\_available, maintain\_accessibility. \\
+			\hline
+		\end{tabular}
+	\caption{Transition Role-Task table $(C+1)TRT_t$}
+	\label{tab:cp1trtt}
+\end{table}
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|p{4cm}|p{8cm}|}
+			\hline
+			\textbf{Task} & \textbf{Action} \\
+			\hline
+			survive & DiscoverNeighbour, +Replicate, +Move, Communicate.
+			\\
+			\hline
+			be\_available & DiscoverNeighbour, +Replicate, +Move,
+			Communicate. \\
+			\hline
+			maintain\_accessibility & DiscoverNeighbour,
+			+Replicate, +Move, Communicate. \\
+			\hline
+			manage\_storage & InsertData, RemoveData, GetRemainingSpace,
+			GetMaximumSize. \\
+			\hline
+			manage\_communication & Communicate, DiscoveNeighbour. \\
+			\hline
+			manage\_positioning & ObtainPosition. \\
+			\hline
+		\end{tabular}
+	\caption{Transition Task-Action table $(C+1)TTA_t$}
+	\label{tab:cp1ttat}
+\end{table}
+
 \subsubsection{Entities Tables}
 
 \begin{table}[H]
@@ -976,13 +1014,7 @@ System}, already present in the environment.
 			\hline
 			Move & Transfer the hovering information to another mobile node. \\
 			\hline
-			Communicate & Mobile node p2p communication management.\\
-			\hline
-			DiscoveNeighbour & Discover peers node inside the communication range. \\
-			\hline
-			ManageStorage & Manage the mobile node buffer. \\
-			\hline
-			ObtainPosition & Obtain the current node position using some location device. \\
+			ManageDevice & Manage device systems and make them accessible to users. \\
 			\hline
 			FindInformation & Get all the information available in the current position.\\
 			\hline
@@ -1115,11 +1147,7 @@ System}, already present in the environment.
 			\hline
 			Move & Node Resource Interaction. \\
 			\hline
-			Communicate & Node Resource Interaction.\\
-			\hline
-			DiscoveNeighbour & Node Resource Interaction. \\
-			\hline
-			ManageStorage & Node Resource Interaction. \\
+			ManageDevice & Node Resource Interaction. \\
 			\hline
 			ShowInformation & Thirst of Knowledge Interaction.\\
 			\hline
@@ -1186,23 +1214,14 @@ System}, already present in the environment.
 			Inquisition Rule & Inquisition can be performed after the simulation is
 			started.\\
 			\hline
-			Storage Rule & A mobile node cannot store more information than its
-			buffer permits. \\
-			\hline
-			Communication Rule & Communication and DiscoverNeighbour actions are
-			possible only within the communication range. \\
-			\hline
 			Movement Duplicate Rule & If a neighbour mobile node doesn't contain the same
 			hovering information, movement or replication is allowed. \\
 			\hline
 			Movement Storage Rule & If the destination mobile node can't store the hovering
 			information, the movement isn't possible. \\
 			\hline
-			Survival Rule & When the hovering information exits it's anchor area, has
-			to prioritize the survival behaviour.\\
-			\hline
-			QoS Rule & When inside the Anchor Area, an Hovering Information has to
-			maximize the availability and accessibility.\\
+			Hovering Rule & Hovering information movement must guarantee survival,
+			maximize availability and accessibility. \\
 			\hline
 			Thirst For Knowledge Rule & Inside an anchor area, if an hovering
 			information is available, it can be accessed.\\
@@ -1256,10 +1275,8 @@ System}, already present in the environment.
 			\hline
 			Person & Thirst For Knowledge Rule, Bounded World Rule, Vital Space Rule. \\
 			\hline
-			Mobile node & Storage Rule, Communication Rule. \\
-			\hline
 			Piece of Hovering Information & Movement Storage Rule, Movement Duplicate
-			Rule, Survival Rule, QoS Rule. \\
+			Rule, Hovering Rule. \\
 			\hline
 			Simulation Manager & Initial Definition Rule\\
 			\hline
@@ -1274,13 +1291,13 @@ System}, already present in the environment.
 			\hline
 			\textbf{Space} & \textbf{Rule} \\
 			\hline
-			Anchor Area Space & Thirst For Knowledge Rule, QoS Rule, Survival Rule. \\
+			Anchor Area Space & Thirst For Knowledge Rule, Hovering Rule. \\
 			\hline
-			Communication Range Space & Thirst For Knowledge Rule, Communication Rule. \\
+			Communication Range Space & Thirst For Knowledge Rule, Hovering Rule. \\
 			\hline
-			Node Position Space & Thirst For Knowledge Rule, Communication Rule. \\
+			Node Position Space & Thirst For Knowledge Rule, Hovering Rule. \\
 			\hline
-			World Space & Bounded World Rule. \\
+			World Space & Bounded World Rule, Hovering Rule. \\
 			\hline
 			Vital Space Space & Vital Space Rule. \\
 			\hline
@@ -1364,6 +1381,122 @@ System}, already present in the environment.
 	\label{tab:cost}
 \end{table}
 
+\subsubsection{Layering C+1}
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|p{4cm}|p{8cm}|}
+			\hline
+			\textbf{Layer $C$} & \textbf{Layer $C+1$} \\
+			\hline
+			ManageDevice & Communicate, DiscoverNeighbour, InsertData,
+			RemoveData, GetRemainingSpace, GetMaximumSize, ObtainPosition. \\
+			\hline
+			Hovering Rule & Survival Rule, QoS Rule. \\	
+			\hline
+		\end{tabular}
+	\caption{Zooming Table $\left( \left( C \right)Z_t \right)$: ManageDevice action and Hovering Rule rule. $(C)Z_t$}
+	\label{tab:czt}
+\end{table}
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|p{4cm}|p{8cm}|}
+			\hline
+			\textbf{Action} & \textbf{Description} \\
+			\hline
+			Communicate & Mobile node p2p communication management.\\
+			\hline
+			DiscoveNeighbour & Discover peers node inside the communication range. \\
+			\hline
+			InsertData & Insert a data into the mobile node buffer. \\
+			\hline
+			RemoveData & Remove a data from the mobile node buffer. \\
+			\hline
+			GetRemainingSpace & Obtain the space left of the mobile node buffer. \\
+			\hline
+			GetMaximumSize & Obtain the total space of the mobile node buffer. \\
+			\hline
+			ObtainPosition & Obtain the current node position using some location device. \\
+			\hline
+		\end{tabular}
+	\caption{Action table $(C+1)A_t$}
+	\label{tab:cp1at}
+\end{table}
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|p{4cm}|p{8cm}|}
+			\hline
+			\textbf{Action} & \textbf{Interaction} \\
+			\hline
+			Communicate & +Node Resource Interaction.\\
+			\hline
+			DiscoveNeighbour & +Node Resource Interaction. \\
+			\hline
+			ManageStorage & +Node Resource Interaction. \\
+			\hline
+		\end{tabular}
+	\caption{Action-Interaction table $(C+1)AcI_t$}
+	\label{tab:cp1acit}
+\end{table}
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|p{4cm}|p{8cm}|}
+			\hline
+			\textbf{Rule} & \textbf{Description} \\
+			\hline
+			Survival Rule & When the hovering information exits it's anchor area, has
+			to prioritize the survival behaviour.\\
+			\hline
+			QoS Rule & When inside the Anchor Area, an Hovering Information has to
+			maximize the availability and accessibility.\\
+			\hline
+			Storage Rule & A mobile node cannot store more information than its
+			buffer permits. \\
+			\hline
+			Communication Rule & Communication and DiscoverNeighbour actions are
+			possible only within the communication range. \\
+			\hline
+		\end{tabular}
+	\caption{Rule table $(C+1)Ru_t$}
+	\label{tab:cp1rut}
+\end{table}
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|p{4cm}|p{8cm}|}
+			\hline
+			\textbf{Role} & \textbf{Rule} \\
+			\hline
+			+Piece of Hovering Information & Survival Rule, QoS Rule. \\
+			\hline
+			+Mobile Node & Storage Rule, Communication Rule. \\
+			\hline
+		\end{tabular}
+	\caption{Role-Rule table $(C+1)RoRu_t$}
+	\label{tab:cp1rorut}
+\end{table}
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|p{4cm}|p{8cm}|}
+			\hline
+			\textbf{Space} & \textbf{Rule} \\
+			\hline
+			+Anchor Area Space & Survival Rule, QoS Rule. \\
+			\hline
+			+Communication Range Space & Survival Rule, QoS Rule, Communication Rule. \\
+			\hline
+			+Node Position Space & Communication Rule, Survival Rule, QoS Rule. \\
+			\hline
+			+World Space & Survival Rule, QoS Rule. \\
+			\hline
+		\end{tabular}
+	\caption{Space-Rule table $(C)SRu_t$}
+	\label{tab:cot}
+\end{table}
 
 \subsection{Detailed Design}
 
