@@ -235,7 +235,7 @@ System}, already present in the environment.
 		\end{tabular}
 	\caption{Zooming Table $\left( \left( C \right)Z_t \right)$: Manage
 	Device and Hover in-zoom $(C)Z_t$}
-	\label{tab:czt}
+	\label{tab:arczt}
 \end{table}
 
 \begin{table}[H]
@@ -720,7 +720,7 @@ System}, already present in the environment.
 		\end{tabular}
 	\caption{Zooming Table $\left( \left( C \right)Z_t \right)$: Manage
 	Device and Hover Tasks in-zoom $(C)Z_t$}
-	\label{tab:czt}
+	\label{tab:aczt}
 \end{table}
 
 \begin{table}[H]
@@ -1079,11 +1079,10 @@ System}, already present in the environment.
 			\hline
 			Simulation Analyst & AnalyzeSimulation. \\
 			\hline
-			Person & AccessInformation, ListInformation, InputInformation, Step,
+			Person & AccessInformation, FindInformation, InputInformation, Step,
 			Sense, Think. \\
 			\hline
-			Mobile node & Communicate, DiscoveNeighbour, ShowInformation,
-			ManageStorage, ObtainPosition.  \\
+			Mobile node & ManageDevice, ShowInformation.  \\
 			\hline
 			Piece of Hovering Information & Replicate, Move. \\
 			\hline
@@ -1396,7 +1395,7 @@ System}, already present in the environment.
 			\hline
 		\end{tabular}
 	\caption{Zooming Table $\left( \left( C \right)Z_t \right)$: ManageDevice action and Hovering Rule rule. $(C)Z_t$}
-	\label{tab:czt}
+	\label{tab:adczt}
 \end{table}
 
 \begin{table}[H]
@@ -1502,8 +1501,9 @@ System}, already present in the environment.
 
 \subsubsection{Carving Diagram}
 
-For now there aren't zooming layers, so Agent Society and Aggregation of
-Artifacts are not expected.
+From the architectural design zomming table~\ref{tab:adczt},
+\emph{ManageDevice} and \emph{Hovering Rule} where detailed, thus
+\emph{ManageDevice} can be modelled as an Aggregate.
 
 \subsubsection{Mapping Tables}
 
@@ -1541,12 +1541,30 @@ Artifacts are not expected.
 	\label{tab:cmsrt}
 \end{table}
 
+% TODO: What to do with Think-Sense-Step?
 \begin{table}[H]
 	\centering
 	\begin{tabular}{|p{4cm}|p{8cm}|}
 			\hline
 			\textbf{Artifact} & \textbf{Action} \\
 			\hline
+			Hovering Artifact & Replicate, Move. \\
+			\hline
+			User Artifact & FindInformation, AccessInformation, InputInformation. \\
+			\hline
+			Communication Artifact & Communicate, DiscoveNeighbour. \\
+			\hline
+			Storage Artifact & InsertData, RemoveData, GetRemainingSpace,
+			GetMaximumSize. \\
+			\hline
+			Positioning Artifact & ObtainPosition. \\
+			\hline
+			MobileUI Artifact & ShowInformation. \\
+			\hline
+			Simulation Management Artifact & InputIntialParameter,
+			SetInitialParameters, StartSimulation, ShowSimulation. \\
+			\hline
+			Analyzer Artifact & AnalyzeSimulation. \\
 			\hline
 		\end{tabular}
 	\caption{Mapping Artifact-Action table $(C)MAAc_t$}
@@ -1603,6 +1621,27 @@ Artifacts are not expected.
 			\hline
 			\textbf{Artifact} & \textbf{Rule} \\
 			\hline
+			% TODO: is it right?
+			Hovering Artifact & Survival Rule, QoS Rule, Movement Duplicate Rule,
+			Movement Storage Rule. \\
+			\hline
+			User Artifact & Thirst For Knowledge Rule. \\
+			\hline
+			Communication Artifact & Communicaton Rule. \\
+			\hline
+			Storage Artifact & Storage Rule. \\
+			\hline
+			Positioning Artifact & \\
+			\hline
+			MobileUI Artifact & \\
+			\hline
+			Simulation Management Artifact & Initial Definition Rule. \\
+			\hline
+			Analyzer Artifact & \\
+			\hline
+			SimulatorUI Artifact & GUI Rule. \\
+			\hline
+			SimulatorInquisitor Artifact & Inquisition Rule. \\
 			\hline
 		\end{tabular}
 	\caption{Mapping Artifact-Rule table $(C)MArRu_t$}
@@ -1615,6 +1654,15 @@ Artifacts are not expected.
 			\hline
 			\textbf{Space} & \textbf{Workspace} \\
 			\hline
+			Node Position Space & Node Position. \\
+			\hline
+			Anchor Area Space & Anchor Area. \\
+			\hline
+			Communication Range Space & Communication Range.\\
+			\hline
+			World Space & World. \\
+			\hline
+			Vital Space Space & Vital Space. \\
 			\hline
 		\end{tabular}
 	\caption{Mapping Space-Workspace table $(C)MSW_t$}
@@ -1719,18 +1767,6 @@ Artifacts are not expected.
 		\end{tabular}
 	\caption{Artifact-UsageInterface table $(C)AUI_t$}
 	\label{tab:cauit}
-\end{table}
-
-\begin{table}[H]
-	\centering
-	\begin{tabular}{|p{4cm}|p{8cm}|}
-			\hline
-			\textbf{Aggregate} & \textbf{Artifact} \\
-			\hline
-			\hline
-		\end{tabular}
-	\caption{Aggregate-Artifact table $(C)AggArt_t$}
-	\label{tab:caggartt}
 \end{table}
 
 \begin{table}[H]
