@@ -227,8 +227,8 @@ System}, already present in the environment.
 			\hline
 			\textbf{Layer $C$} & \textbf{Layer $C+1$} \\
 			\hline
-			Manage Device & Manage Communication, Manage Storage, Manage
-			UI. \\
+			Manage Device & Manage Communication, Manage Storage, Manage Positioning,
+			Manage UI. \\
 			\hline
 			Hover & Survive, Be Available, Maintain Accessibility. \\
 			\hline
@@ -255,6 +255,8 @@ System}, already present in the environment.
 			\hline
 			Manage Storage & Manage the mobile node storage system. \\
 			\hline
+			Manage Positioning & Manage the mobile node positioning system. \\
+			\hline
 			Manage UI & Manage the mobile node user interface. \\
 			\hline
 		\end{tabular}
@@ -268,7 +270,8 @@ System}, already present in the environment.
 			\hline
 			\textbf{Actor} & \textbf{Requirement} \\
 			\hline
-			+Mobile node & Manage Communication, Manage Storage, Manage UI. \\
+			+Mobile node & Manage Communication, Manage Storage, Manage UI, Manage
+			Positioning. \\
 			\hline
 			+Piece of Hovering Information & Survive, Be Available, Maintain
 			Accessibility. \\
@@ -293,6 +296,8 @@ System}, already present in the environment.
 			Manage Communication & +Node Resources. \\
 			\hline
 			Manage Storage & +Node Resources. \\
+			\hline
+			Manage Positioning & +Node Resources. \\
 			\hline
 			Manage UI &  +Node Interface.\\
 			\hline
@@ -321,11 +326,7 @@ System}, already present in the environment.
 			\hline
 			Behave & behave\_task. \\
 			\hline
-			Survive & survive. \\
-			\hline
-			Be available & be\_available. \\
-			\hline
-			Maintain accessibility & maintain\_accessibility. \\
+			Hover & hover\_task. \\
 			\hline
 			Manage Simulation & define\_initial\_parameters, start\_simulation, show\_simulation. \\
 			\hline
@@ -359,11 +360,7 @@ System}, already present in the environment.
 			\hline
 			Manage Device & Communication Range, Node Position. \\
 			\hline
-			Survive & Anchor Area, Communication Range, World. \\
-			\hline
-			Be available & Anchor Area, Communication Range. \\
-			\hline
-			Maintain accessibility & Anchor Area, Communication Range. \\
+			Hover & Anchor Area, Communication Range. \\
 			\hline
 			Manage Simulation & World. \\
 			\hline
@@ -429,9 +426,70 @@ System}, already present in the environment.
 			\hline
 			Vital Space Respect & VitalSpaceDep. \\
 			\hline
+			Node Interface & NodeIfDep. \\
+			\hline
 		\end{tabular}
 	\caption{Reference Relation-Dependency table $(C)RRD_t$}
 	\label{tab:crrdt}
+\end{table}
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|p{4cm}|p{8cm}|}
+			\hline
+			\textbf{Requirement} & \textbf{Task} \\
+			\hline
+			Survive & survive. \\
+			\hline
+			Be available & be\_available. \\
+			\hline
+			Maintain accessibility & maintain\_accessibility. \\
+			\hline
+			Manage Communication & manage\_communication. \\
+			\hline
+			Manage Storage & manage\_storage. \\
+			\hline
+			Manage Positioning & manage\_positioning. \\
+			\hline
+			Manage UI & manage\_ui. \\
+			\hline
+		\end{tabular}
+	\caption{Reference Requirement-Topology table $(C+1)RRTo_t$}
+	\label{tab:cp1rrtot}
+\end{table}
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|p{4cm}|p{8cm}|}
+			\hline
+			\textbf{Requirement} & \textbf{Topology} \\
+			\hline
+			Survive & Anchor Area, Communication Range, World. \\
+			\hline
+			Be available & Anchor Area, Communication Range. \\
+			\hline
+			Maintain accessibility & Anchor Area, Communication Range. \\
+			\hline
+			Manage Communication & Communication Range, Node Position. \\
+			\hline
+			Manage Positioning & Node Position, World. \\
+			\hline
+		\end{tabular}
+	\caption{Reference Requirement-Task table $(C+1)RRT_t$}
+	\label{tab:cp1rrtt}
+\end{table}
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|p{4cm}|p{8cm}|}
+			\hline
+			\textbf{Requirement} & \textbf{Dependency} \\
+			\hline
+			 & \\
+			\hline
+		\end{tabular}
+		\caption{Reference Requirement-Dependency table $(C+1)RReqD_t$}
+	\label{tab:cp1rreqdt}
 \end{table}
 
 \subsubsection{Responsibilities Tables}
@@ -455,14 +513,8 @@ System}, already present in the environment.
 			\hline
 			behave\_task & Act a social behaviour inside the environment. \\
 			\hline
-			survive & Jumps or replicates to mobile nodes in order to keep an high
-			survivability. \\
-			\hline
-			be\_available & Jumps or replicates to mobile nodes in order to keep an
-			high availability. \\
-			\hline
-			maintain\_accessibility & Jumps or replicates to mobile nodes in order to
-			keep an high accessibility. \\
+			hover\_task & Move and replicate in order to guarantee survivability, availability
+			and accessibility. \\
 			\hline
 			define\_initial\_parameters & Create initial parameters. \\
 			\hline
@@ -528,11 +580,7 @@ System}, already present in the environment.
 			\hline
 			manage\_device & Node Position. \\	
 			\hline
-			survive & Anchor Area, Communication Range, World. \\
-			\hline
-			be\_available & Anchor Area, Communication Range, World. \\
-			\hline
-			maintain\_accessibility & Anchor Area, Communication Range, World. \\
+			hover & Anchor Area, Communication Range, World. \\
 			\hline
 			behave\_task & World, Vital Space. \\
 			\hline
@@ -576,6 +624,8 @@ System}, already present in the environment.
 			\hline
 			NodeResDep & Hovering information needs are limited by node resources. \\
 			\hline
+			NodeIfDep & A person needs a node interface in order to use it.
+			\hline
 			InquireDep & Get system information for analysis purposes. \\
 			\hline
 			KnowledgeDep & A person may decide to use mobile node features in order
@@ -600,19 +650,15 @@ System}, already present in the environment.
 			\hline
 			create\_information & KnowledgeDep. \\
 			\hline
-			manage\_device & NodeResDep. \\
+			manage\_device & NodeResDep, NodeIfDep. \\
 			\hline
 			analyze\_simulation & SimStartedDep, InquireDep. \\
 			\hline
 			start\_simulation & SimStartedDep, DefineInitialDep. \\
 			\hline
-			behave\_task & KnowledgeDep, VitalSpaceDep, BoundedWorldDep. \\
+			behave\_task & KnowledgeDep, VitalSpaceDep, BoundedWorldDep, NodeIfDep. \\
 			\hline
-			survive & NodeResDep. \\
-			\hline
-			be\_available & NodeResDep. \\
-			\hline
-			maintain\_accessibility & NodeResDep. \\
+			hover & NodeResDep. \\
 			\hline
 			define\_initial\_parameters & DefineInitialDep. \\
 			\hline
@@ -655,6 +701,102 @@ System}, already present in the environment.
 		\end{tabular}
 	\caption{Topology-Dependency table $(C)TopD_t$}
 	\label{tab:ctopdt}
+\end{table}
+
+\subsubsection{Layering C+1}
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|p{4cm}|p{8cm}|}
+			\hline
+			\textbf{Layer $C$} & \textbf{Layer $C+1$} \\
+			\hline
+			manage\_device & manage\_communication, manage\_storage, manage\_positioning,
+			manage\_ui. \\
+			\hline
+			hover\_task & survive\_task, be\_available\_task,
+			maintain\_accessibility\_task. \\
+			\hline
+		\end{tabular}
+	\caption{Zooming Table $\left( \left( C \right)Z_t \right)$: Manage
+	Device and Hover Tasks in-zoom $(C)Z_t$}
+	\label{tab:czt}
+\end{table}
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|p{5cm}|p{7cm}|}
+			\hline
+			\textbf{Task} & \textbf{Description} \\
+			\hline
+			survive & Jumps or replicates to mobile nodes in order to keep an high
+			survivability. \\
+			\hline
+			be\_available & Jumps or replicates to mobile nodes in order to keep an
+			high availability. \\
+			\hline
+			maintain\_accessibility & Jumps or replicates to mobile nodes in order to
+			keep an high accessibility. \\
+			\hline
+			manage\_communication & Manage mobile node communication system. \\
+			\hline
+			manage\_storage & Manage mobile node storage resource. \\
+			\hline
+			manage\_positioning & Manage mobile node positioning system. \\
+			\hline
+			manage\_ui & Manage mobile node user interface. \\
+			\hline
+		\end{tabular}
+	\caption{Task table $(C+1)T_t$}
+	\label{tab:cp1tt}
+\end{table}
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|p{4cm}|p{8cm}|}
+			\hline
+			\textbf{Task} & \textbf{Topology} \\
+			\hline
+			survive & +Anchor Area, +Communication Range, +World. \\
+			\hline
+			be\_available & +Anchor Area, +Communication Range, +World. \\
+			\hline
+			maintain\_accessibility & +Anchor Area, +Communication Range, +World. \\
+			\hline
+			manage\_communication & +Communication Range, +World, +Node Positioning. \\
+			\hline
+			manage\_positioning & +World, +Node Positioning. \\
+			\hline
+		\end{tabular}
+		\caption{Task-Topology table $(C+1)TTop_t$}
+	\label{tab:cp1ttopt}
+\end{table}
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|p{5cm}|p{7cm}|}
+			\hline
+			\textbf{Task} & \textbf{Dependency} \\
+			\hline
+			survive & +NodeResDep. \\
+			\hline
+			be\_available & +NodeResDep. \\
+			\hline
+			maintain\_accessibility & +NodeResDep. \\
+			\hline
+			maintain\_accessibility & +NodeResDep. \\
+			\hline
+			manage\_communication & +NodeResDep. \\
+			\hline
+			manage\_storage & +NodeResDep. \\
+			\hline
+			manage\_positioning & +NodeResDep. \\
+			\hline
+			manage\_ui & +NodeIfDep. \\
+			\hline
+		\end{tabular}
+	\caption{Task-Dependency table $(C+1)TD_t$}
+	\label{tab:cp1tdt}
 \end{table}
 
 \subsection{Architectural Design}
