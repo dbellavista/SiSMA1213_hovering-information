@@ -1225,7 +1225,7 @@ System}, already present in the environment.
 			\hline
 			Bounded World Rule & People cannot move outside the world. \\
 			\hline
-			Living Space Rule & A person cannot occupy other person's vital space. \\
+			Living Space Rule & A person cannot move inside other person's vital space. \\
 			\hline
 		\end{tabular}
 	\caption{Rule table $(C)Ru_t$}
@@ -1454,7 +1454,7 @@ System}, already present in the environment.
 			List UI Interaction & User can command and see the mobile node list
 			information operation. \\
 			\hline
-			Crate UI Interaction & User can insert the information required in order
+			Create UI Interaction & User can insert the information required in order
 			to create an hovering information. \\
 			\hline
 			LowLevel Access Interaction & High level access information action relays
@@ -1575,9 +1575,6 @@ System}, already present in the environment.
 
 \subsubsection{Carving Diagram}
 
-From the architectural design zomming table~\ref{tab:adczt},
-\emph{ManageDevice} and \emph{Hovering Rule} where detailed, thus
-\emph{ManageDevice} can be modelled as an Aggregate.
 
 \subsubsection{Mapping Tables}
 
@@ -1621,9 +1618,11 @@ From the architectural design zomming table~\ref{tab:adczt},
 			\hline
 			\textbf{Artifact} & \textbf{Action} \\
 			\hline
-			Hovering Artifact & Replicate, Move. \\
+			Hovering Artifact & Replicate, Jump. \\
 			\hline
-			User Artifact & ListInformation, AccessInformation, InputInformation. \\
+			Legs Artifact & MoveAction. \\
+			\hline
+			NodeUser Artifact & UserAccessInformation, UserCreateInformation. \\
 			\hline
 			Communication Artifact & Communicate, DiscoveNeighbour. \\
 			\hline
@@ -1632,7 +1631,7 @@ From the architectural design zomming table~\ref{tab:adczt},
 			\hline
 			Positioning Artifact & ObtainPosition. \\
 			\hline
-			MobileUI Artifact & ShowInformation. \\
+			MobileUI Artifact & ShowInformation, ShowInformationList, InputInformation. \\
 			\hline
 			Simulation Management Artifact & InputIntialParameter,
 			SetInitialParameters, StartSimulation, ShowSimulation. \\
@@ -1688,17 +1687,19 @@ From the architectural design zomming table~\ref{tab:adczt},
 	\label{tab:cmaropt}
 \end{table}
 
+% TODO: Survival and QoS rules may not be correct.
 \begin{table}[H]
 	\centering
 	\begin{tabular}{|p{4cm}|p{8cm}|}
 			\hline
 			\textbf{Artifact} & \textbf{Rule} \\
 			\hline
-			% TODO: is it right?
 			Hovering Artifact & Survival Rule, QoS Rule, Movement Duplicate Rule,
 			Movement Storage Rule. \\
 			\hline
-			User Artifact & Thirst For Knowledge Rule. \\
+			Legs Artifact & Bounded World Rule, Living Space Rule. \\
+			\hline
+			User Artifact &  \\
 			\hline
 			Communication Artifact & Communicaton Rule. \\
 			\hline
@@ -1708,13 +1709,13 @@ From the architectural design zomming table~\ref{tab:adczt},
 			\hline
 			MobileUI Artifact & \\
 			\hline
-			Simulation Management Artifact & Initial Definition Rule. \\
+			Simulation Management Artifact & InSimBefSet Rule, SetBefStart Rule. \\
 			\hline
 			Analyzer Artifact & \\
 			\hline
-			SimulatorUI Artifact & GUI Rule. \\
+			SimulatorUI Artifact & StartBefGUI Rule. \\
 			\hline
-			SimulatorInquisitor Artifact & Inquisition Rule. \\
+			SimulatorInquisitor Artifact & StartBefInq Rule. \\
 			\hline
 		\end{tabular}
 	\caption{Mapping Artifact-Rule table $(C)MArRu_t$}
@@ -1742,18 +1743,23 @@ From the architectural design zomming table~\ref{tab:adczt},
 	\label{tab:cmsrt}
 \end{table}
 
+% Agents -> Artifacts
 \begin{table}[H]
 	\centering
 	\begin{tabular}{|p{4cm}|p{8cm}|}
 			\hline
 			\textbf{Interaction} & \textbf{Use} \\
 			\hline
+			GUI Interaction & GUI Use \\
+			\hline
+			Inquisition & Inquisition Use \\
 			\hline
 		\end{tabular}
 	\caption{Mapping Interaction-Use table $(C)MIU_t$}
 	\label{tab:cmiut}
 \end{table}
 
+% Artifacts -> Agents
 \begin{table}[H]
 	\centering
 	\begin{tabular}{|p{4cm}|p{8cm}|}
@@ -1766,6 +1772,7 @@ From the architectural design zomming table~\ref{tab:adczt},
 	\label{tab:cmimt}
 \end{table}
 
+% Agents -> Agents
 \begin{table}[H]
 	\centering
 	\begin{tabular}{|p{4cm}|p{8cm}|}
@@ -1778,12 +1785,24 @@ From the architectural design zomming table~\ref{tab:adczt},
 	\label{tab:cmispt}
 \end{table}
 
+% Artifact -> Artifact
 \begin{table}[H]
 	\centering
 	\begin{tabular}{|p{4cm}|p{8cm}|}
 			\hline
 			\textbf{Interaction} & \textbf{LinkedTo} \\
 			\hline
+			LowLevel Access Interaction & LowLevel Access Link\\
+			\hline
+			LowLevel List Interaction & LowLevel List Link \\
+			\hline
+			LowLevel Create Interaction & LowLevel Create Link \\
+			\hline
+			Access UI Interaction & Access UI Link\\
+			\hline
+			List UI Interaction & List UI Link\\
+			\hline
+			Crate UI Interaction & Create UI Link\\
 			\hline
 		\end{tabular}
 	\caption{Mapping Interaction-LinkedTo table $(C)MIL_t$}
