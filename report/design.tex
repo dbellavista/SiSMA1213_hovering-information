@@ -91,7 +91,7 @@ System}, already present in the environment.
 			Analyze Simulation & Analyze the system while the simulation is running.
 			\\
 			\hline
-			Behave & Interact with the social environment. \\
+			Move & Move within the social environment. \\
 			\hline
 			Hover & Move and replicate in order to guarantee survivability, availability
 			and accessibility. \\
@@ -111,7 +111,7 @@ System}, already present in the environment.
 			\hline
 			\textbf{Actor} & \textbf{Requirement} \\
 			\hline
-			Person & Access Information, Create Information, Behave. \\
+			Person & Access Information, Create Information, Move. \\
 			\hline
 			Simulation Manager & Manage Simulation. \\
 			\hline
@@ -167,14 +167,13 @@ System}, already present in the environment.
 			Simulation Started & System analysis must be performed after the system
 			is started. \\
 			\hline
-			Node Resources & Hovering information should consider node resources when
-			trying to satisfy their requirements. \\
+			Node Resources & High Level operations may require or depend from
+			low-level node resources. \\
 			\hline
 			Vital Space Respect & A person cannot invade other people's vital spaces. \\
 			\hline
-			Knowledge Relation & A person may decide to create or access information. \\
-			\hline
-			Node Interface & A person needs a node interface in order to use it. \\
+			Node Interface & A person needs a node interface in order to use it for
+			accessing or creating information. \\
 			\hline
 		\end{tabular}
 	\caption{Relation table $(C)Rel_t$}
@@ -187,9 +186,9 @@ System}, already present in the environment.
 			\hline
 			\textbf{Requirement} & \textbf{Relation} \\
 			\hline
-			Access Information & Knowledge Relation, Node Interface.  \\
+			Access Information & Node Resources, Node Interface.  \\
 			\hline
-			Create Information & Knowledge Relation, Node Interface.  \\
+			Create Information & Node Resources, Node Interface.  \\
 			\hline
 			Manage Device & Node Resources, Node Interface.  \\
 			\hline
@@ -197,7 +196,7 @@ System}, already present in the environment.
 			\hline
 			Hover & Node Resources. \\
 			\hline
-			Behave & Vital Space Respect, Knowledge Relation. \\
+			Move & Vital Space Respect, Node Interface. \\
 			\hline
 			Manage Simulation & Simulation Started, GUI. \\
 			\hline
@@ -324,7 +323,7 @@ System}, already present in the environment.
 			\hline
 			Manage Device & manage\_device \\
 			\hline
-			Behave & behave\_task. \\
+			Move & move\_task. \\
 			\hline
 			Hover & hover\_task. \\
 			\hline
@@ -364,7 +363,7 @@ System}, already present in the environment.
 			\hline
 			Manage Simulation & World. \\
 			\hline
-			Behave & World, Vital Space. \\
+			Move & World, Vital Space. \\
 			\hline
 		\end{tabular}
 	\caption{Reference Requirement-Topology table $(C)RRTo_t$}
@@ -421,8 +420,6 @@ System}, already present in the environment.
 			Simulaton Started & SimStartedDep. \\
 			\hline
 			Node Resources & NodeResDep. \\
-			\hline
-			Knwoledge Relation & KnowledgeDep. \\
 			\hline
 			Vital Space Respect & VitalSpaceDep. \\
 			\hline
@@ -511,7 +508,7 @@ System}, already present in the environment.
 			analyze\_simulation & Analyze information obtained during the
 			simulation.\\
 			\hline
-			behave\_task & Act a social behaviour inside the environment. \\
+			move\_task & Move with a certain behaviour inside the environment. \\
 			\hline
 			hover\_task & Move and replicate in order to guarantee survivability, availability
 			and accessibility. \\
@@ -537,6 +534,7 @@ System}, already present in the environment.
 			\hline
 			inquire\_world & Get all the needed information of the world to analyze.
 			\\
+			\hline
 		\end{tabular}
 	\caption{Function table $(C)F_t$}
 	\label{tab:cft}
@@ -582,7 +580,7 @@ System}, already present in the environment.
 			\hline
 			hover & Anchor Area, Communication Range, World. \\
 			\hline
-			behave\_task & World, Vital Space. \\
+			world\_task & World, Vital Space. \\
 			\hline
 			show\_simulation & World. \\
 			\hline
@@ -622,14 +620,13 @@ System}, already present in the environment.
 			\hline
 			SimStartedDep & Simulation should be started before analysis and showing. \\
 			\hline
-			NodeResDep & Hovering information needs are limited by node resources. \\
+			NodeResDep & High level operations may use or be limited by node
+			resources. \\
 			\hline
-			NodeIfDep & A person needs a node interface in order to use it. \\
+			NodeIfDep & A person needs a node interface in order to use it for access
+			or creating hovering information. \\
 			\hline
 			InquireDep & Get system information for analysis purposes. \\
-			\hline
-			KnowledgeDep & A person may decide to use mobile node features in order
-			to access or list available information. \\
 			\hline
 			VitalSpaceDep & A person must not invade other people's vital space. \\
 			\hline
@@ -646,9 +643,9 @@ System}, already present in the environment.
 			\hline
 			\textbf{Task} & \textbf{Dependency} \\
 			\hline
-			access\_information & KnowledgeDep. \\
+			access\_information & NodeResDep. \\
 			\hline
-			create\_information & KnowledgeDep. \\
+			create\_information & NodeResDep. \\
 			\hline
 			manage\_device & NodeResDep, NodeIfDep. \\
 			\hline
@@ -656,7 +653,7 @@ System}, already present in the environment.
 			\hline
 			start\_simulation & SimStartedDep, DefineInitialDep. \\
 			\hline
-			behave\_task & KnowledgeDep, VitalSpaceDep, BoundedWorldDep, NodeIfDep. \\
+			move\_task & VitalSpaceDep, BoundedWorldDep, NodeIfDep. \\
 			\hline
 			hover & NodeResDep. \\
 			\hline
@@ -690,7 +687,7 @@ System}, already present in the environment.
 			\hline
 			\textbf{Topology} & \textbf{Dependency} \\
 			\hline
-			Anchor Area & SimDataDep, CreateInfDep.\\
+			Anchor Area & SimDataDep.\\
 			\hline
 			Communication Range & SimDataDep. \\
 			\hline
@@ -792,7 +789,7 @@ System}, already present in the environment.
 			\hline
 			manage\_positioning & +NodeResDep. \\
 			\hline
-			manage\_ui & +NodeIfDep. \\
+			manage\_ui & +NodeIfDep, +NodeResDep. \\
 			\hline
 		\end{tabular}
 	\caption{Task-Dependency table $(C+1)TD_t$}
@@ -811,7 +808,7 @@ System}, already present in the environment.
 			\hline
 			Simulation Analyst & analyze\_simulation.   \\
 			\hline
-			Person & access\_information, create\_information, behave\_task \\
+			Person & access\_information, create\_information, move\_task \\
 			\hline
 			Mobile node & access\_information, create\_information, manage\_device.
 			\\
@@ -833,16 +830,16 @@ System}, already present in the environment.
 			\hline
 			analyze\_simulation & AnalyzeSimulation. \\
 			\hline
-			access\_information & Communicate, DiscoveNeighbour, ListInformation,
-			ShowInformation, AccessInformation, FindInformation.\\
+			access\_information & UserAccessInformation, AccessInformation,
+			ListInformation.\\
+			\hline
+			create\_information & UserCreateInformation, CreateInformation. \\
 			\hline
 			manage\_device & ManageDevice. \\
 			\hline
-			create\_information & InputInformation, Communicate, DiscoverNeighbour. \\
+			move\_task & MoveAction. \\
 			\hline
-			behave\_task & Step, Sense, Think. \\
-			\hline
-			hover\_task & Move, Replicate. \\
+			hover\_task & Jump, Replicate. \\
 			\hline
 			define\_initial\_parameters & InputInitialParameters, SetInitialParameters. \\
 			\hline
@@ -897,15 +894,11 @@ System}, already present in the environment.
 			\hline
 			DefineInitialDep & Initial Definition Interaction. \\
 			\hline
-			NodeResDep & Node Resource Interaction \\
+			NodeResDep & HoverInf Resource Interaction, Node Resource Interaction. \\
 			\hline
-			NodeIfDep & Node Interface Interaction \\
-			\hline
-			CreateInfDep & Information Creation Interaction. \\
+			NodeIfDep & Interface Access Interaction, Interface Create Interaction \\
 			\hline
 			InquireDep & Inquisition Interaction. \\
-			\hline
-			KnowledgeDep & Thirst of Knowledge Interaction. \\
 			\hline
 		\end{tabular}
 	\caption{Transition Dependency-Interaction table $(C)TDI_t$}
@@ -919,15 +912,12 @@ System}, already present in the environment.
 			\hline
 			\textbf{Dependency} & \textbf{Rule} \\
 			\hline
-			GUIDep & GUI Rule. \\
+			SimStartedDep & StartBefGUI Rule, StartBefInq Rule. \\
 			\hline
-			DefineInitialDep & Initial Definition Rule. \\
+			DefineInitialDep & InSimBefSet Rule, SetBefStart Rule. \\
 			\hline
-			NodeResDep & Node Resource Rule. \\
-			\hline
-			InquireDep & Inquisition Rule. \\
-			\hline
-			KnowledgeDep & Thirst of Knowledge Rule. \\
+			NodeResDep & Node Resource Rule, Movement Duplicate Rule, Movement
+			Storage Rule. \\
 			\hline
 			VitalSpaceDep & Vital Space Rule. \\
 			\hline
@@ -964,6 +954,7 @@ System}, already present in the environment.
 	\begin{tabular}{|p{4cm}|p{8cm}|}
 			\hline
 			\textbf{Role} & \textbf{Task} \\
+			\hline
 			+Mobile node & manage\_storage, manage\_communication,
 			manage\_positioning, manage\_ui.  \\
 			\hline
@@ -980,14 +971,14 @@ System}, already present in the environment.
 			\hline
 			\textbf{Task} & \textbf{Action} \\
 			\hline
-			survive & DiscoverNeighbour, +Replicate, +Move, Communicate.
+			survive & DiscoverNeighbour, +Replicate, +Jump, Communicate.
 			\\
 			\hline
-			be\_available & DiscoverNeighbour, +Replicate, +Move,
+			be\_available & DiscoverNeighbour, +Replicate, +Jump,
 			Communicate. \\
 			\hline
 			maintain\_accessibility & DiscoverNeighbour,
-			+Replicate, +Move, Communicate. \\
+			+Replicate, +Jump, Communicate. \\
 			\hline
 			manage\_storage & InsertData, RemoveData, GetRemainingSpace,
 			GetMaximumSize. \\
@@ -995,6 +986,8 @@ System}, already present in the environment.
 			manage\_communication & Communicate, DiscoveNeighbour. \\
 			\hline
 			manage\_positioning & ObtainPosition. \\
+			\hline
+			manage\_ui & ShowInformation, InputInformation, ShowInformationList. \\
 			\hline
 		\end{tabular}
 	\caption{Transition Task-Action table $(C+1)TTA_t$}
@@ -1012,19 +1005,15 @@ System}, already present in the environment.
 			Replicate & Make a copy of the hovering information to be transferred to
 			another mobile node. \\
 			\hline
-			Move & Transfer the hovering information to another mobile node. \\
+			Jump & Transfer the hovering information to another mobile node. \\
 			\hline
 			ManageDevice & Manage device systems and make them accessible to users. \\
 			\hline
-			FindInformation & Get all the information available in the current position.\\
+			ListInformation & Get all the information available in the current position.\\
 			\hline
 			AccessInformation & Obtain a specific hovering information. \\
 			\hline
-			ShowInformation & Make information data or information list available to
-			mobile node user.\\
-			\hline
-			InputInformation & When creating an hovering information, mobile users have to
-			input the required data to the mobile node. \\
+			CreateInformation & Create a new hovering information. \\
 			\hline
 			AnalyzeSimulation & Analyze the system properties such as hovering
 			information requirements and complex network parameters. \\
@@ -1032,17 +1021,20 @@ System}, already present in the environment.
 			InputInitialParameters & Accept from user initial simulation parameters
 			as input. \\
 			\hline
-			SetInitialParameters & Configure the system using the input simulation parameters. \\
+			SetInitialParameters & Configure the system using the input simulation
+			parameters. \\
 			\hline
 			StartSimulation & Start the simulation using the initial parameters. \\
 			\hline
 			ShowSimulation & Show a simulation representation to the GUI. \\
 			\hline
-			Step & Basic movement in the environment. \\
+			MoveAction & Basic movement in the environment. \\
 			\hline
-			Sense & Identify other person or point of interest in the environment. \\
+			UserAccessInformation & Use the mobile node in order to access hovering
+			information. \\
 			\hline
-			Think & Apply behavioural rules. \\
+			UserCreateInformation & Use the mobile node in order to create hovering
+			information. \\
 			\hline
 		\end{tabular}
 	\caption{Action table $(C)A_t$}
@@ -1079,12 +1071,12 @@ System}, already present in the environment.
 			\hline
 			Simulation Analyst & AnalyzeSimulation. \\
 			\hline
-			Person & AccessInformation, FindInformation, InputInformation, Step,
-			Sense, Think. \\
+			Person & MoveAction, UserAccessInformation, UserCreateInformation. \\
 			\hline
-			Mobile node & ManageDevice, ShowInformation.  \\
+			Mobile node & ManageDevice, AccessInformation, ListInformation,
+			CreateInformation.  \\
 			\hline
-			Piece of Hovering Information & Replicate, Move. \\
+			Piece of Hovering Information & Replicate, Jump. \\
 			\hline
 			Simulation Manager & InputInitialParameters, SetInitialParameters,
 			StartSimulation, ShowSimulation. \\
@@ -1120,14 +1112,17 @@ System}, already present in the environment.
 			GUI Interaction & The system should access the GUI for graphical output
 			purposes. \\
 			\hline
-			Node Interfacing Interaction & People have to interface with the mobile node
-			device. \\
+			Node Resource Interaction & High-Level mobile operation (such as access
+			and creation) must use low-level node resources. \\
 			\hline
-			Node Resource Interaction & Hovering information have to access to node
-			resources. \\
+			HoverInf Resource Interaction & Hovering information have to access to
+			node resources. \\
 			\hline
-			Thirst of Knowledge Interaction & Mobile users' action are based on mobile
-			low-level actions. \\
+			Interface Create Interaction & Mobile users have to interface with the
+			mobile node device in order to create information. \\
+			\hline
+			Interface Access Interaction & Mobile users have to interface with the
+			mobile node device in order to access information. \\
 			\hline
 			Inquisition & World inquisition for analysis purposes. \\
 			\hline
@@ -1142,35 +1137,34 @@ System}, already present in the environment.
 			\hline
 			\textbf{Action} & \textbf{Interaction} \\
 			\hline
-			Replicate & Node Resource Interaction. \\
+			Replicate & HoverInf Resource Interaction. \\
 			\hline
-			Move & Node Resource Interaction. \\
+			Jump & HoverInf Resource Interaction. \\
 			\hline
-			ManageDevice & Node Resource Interaction. \\
+			ManageDevice & HoverInf Resource Interaction, Interface Access Interaction,
+			Interface Create Interaction, Mobile UI Interaction. \\
 			\hline
-			ShowInformation & Thirst of Knowledge Interaction.\\
+			ListInformation & Node Resource Interaction. \\
+			\hline
+			CreateInformation & Node Resource Interaction. \\
+			\hline
+			AccessInformation & Node Resources Interaction. \\
 			\hline
 			AnalyzeSimulation & Inquisition. \\
 			\hline
 			InputInitialParameters & \\
 			\hline
-			SetInitialParameters & \\
+			SetInitialParameters &  \\
 			\hline
-			StartSimulation & \\
+			StartSimulation &  \\
 			\hline
 			ShowSimulation & GUI Interaction. \\
 			\hline
-			Step & \\
+			MoveAction & \\
 			\hline
-			Sense & \\
+			UserCreateInformation & Interface Create Interaction. \\
 			\hline
-			Think & Thirst of Knowledge Interaction \\
-			\hline
-			ListInformation & Thirst of Knowledge Interaction \\
-			\hline
-			AccessInformation & Thirst of Knowledge Interaction \\
-			\hline
-			InputInformation & Thirst of Knowledge Interaction \\
+			UserAccessInformation & Interface Access Interaction. \\
 			\hline
 		\end{tabular}
 	\caption{Action-Interaction table $(C)AcI_t$}
@@ -1206,12 +1200,19 @@ System}, already present in the environment.
 			\hline
 			\textbf{Rule} & \textbf{Description} \\
 			\hline
-			GUI Rule & Simulation have to be started before showing it.\\
+			StartBefGUI Rule & Simulation have to be started before showing it.\\
 			\hline
-			Initial Definition Rule & Simulation can be started after parameter definition.\\
-			\hline
-			Inquisition Rule & Inquisition can be performed after the simulation is
+			StartBefInq Rule & Inquisition can be performed after the simulation is
 			started.\\
+			\hline
+			InSimBefSet Rule & Input initial simulation parameters before setting
+			them.  \\
+			\hline
+			SetBefStart Rule & Set initial simulation parameters before starting the
+			simulation.  \\
+			\hline
+			Node Resource Rule & High-Level mobile operation (such as access
+			and creation) depends on low-level node resources rules. \\
 			\hline
 			Movement Duplicate Rule & If a neighbour mobile node doesn't contain the same
 			hovering information, movement or replication is allowed. \\
@@ -1221,9 +1222,6 @@ System}, already present in the environment.
 			\hline
 			Hovering Rule & Hovering information movement must guarantee survival,
 			maximize availability and accessibility. \\
-			\hline
-			Thirst For Knowledge Rule & Inside an anchor area, if an hovering
-			information is available, it can be accessed.\\
 			\hline
 			Bounded World Rule & People cannot move outside the world. \\
 			\hline
@@ -1240,9 +1238,11 @@ System}, already present in the environment.
 			\hline
 			\textbf{Interaction} & \textbf{Rule} \\
 			\hline
-			Inquisition & Inquisition Rule. \\
+			Node Resource Interaction & Node Resource Rule. \\
 			\hline
-			GUI Interaction & GUI Rule. \\
+			Inquisition & StartBefInq Rule. \\
+			\hline
+			GUI Interaction & StartBefGUI Rule. \\
 			\hline
 		\end{tabular}
 	\caption{Interaction-Rule table $(C)IRu_t$}
@@ -1255,9 +1255,9 @@ System}, already present in the environment.
 			\hline
 			\textbf{Resource} & \textbf{Rule} \\
 			\hline
-			SimulatorUIRes & GUI Rule. \\
+			SimulatorUIRes & StartBefGUI Rule. \\
 			\hline
-			SimulatorInquisitor & Inquisition Rule. \\
+			SimulatorInquisitor & StartBefInq Rule. \\
 			\hline
 		\end{tabular}
 	\caption{Resource-Rule table $(C)ReRu_t$}
@@ -1270,14 +1270,16 @@ System}, already present in the environment.
 			\hline
 			\textbf{Role} & \textbf{Rule} \\
 			\hline
-			Simulation Analyst & Inquistion Rule. \\
+			Simulation Analyst & StartBefInq Rule. \\
 			\hline
-			Person & Thirst For Knowledge Rule, Bounded World Rule, Vital Space Rule. \\
+			Person & Bounded World Rule, Vital Space Rule. \\
 			\hline
 			Piece of Hovering Information & Movement Storage Rule, Movement Duplicate
 			Rule, Hovering Rule. \\
 			\hline
-			Simulation Manager & Initial Definition Rule\\
+			Simulation Manager & InSimBefSet Rule, SetBefStart Rule, StartBefGUI Rule. \\
+			\hline
+			Mobile Node & Node Resource Rule. \\
 			\hline
 		\end{tabular}
 	\caption{Role-Rule table $(C)RoRu_t$}
@@ -1290,13 +1292,13 @@ System}, already present in the environment.
 			\hline
 			\textbf{Space} & \textbf{Rule} \\
 			\hline
-			Anchor Area Space & Thirst For Knowledge Rule, Hovering Rule. \\
+			Anchor Area Space & Hovering Rule. \\
 			\hline
-			Communication Range Space & Thirst For Knowledge Rule, Hovering Rule. \\
+			Communication Range Space & Hovering Rule. \\
 			\hline
-			Node Position Space & Thirst For Knowledge Rule, Hovering Rule. \\
+			Node Position Space & Hovering Rule. \\
 			\hline
-			World Space & Bounded World Rule, Hovering Rule. \\
+			World Space & Bounded World Rule. \\
 			\hline
 			Vital Space Space & Vital Space Rule. \\
 			\hline
@@ -1389,12 +1391,19 @@ System}, already present in the environment.
 			\textbf{Layer $C$} & \textbf{Layer $C+1$} \\
 			\hline
 			ManageDevice & Communicate, DiscoverNeighbour, InsertData,
-			RemoveData, GetRemainingSpace, GetMaximumSize, ObtainPosition. \\
+			RemoveData, GetRemainingSpace, GetMaximumSize, ObtainPosition,
+			ShowInformation, InputInformation, ShowInformationList. \\
+			\hline
+			Node Resource Interaction & Access UI Interaction, List UI Interaction,
+			Create UI Interaction, LowLevel Creation Interaction, LowLevel Access
+			Interaction, LowLevel List Interaction. \\
 			\hline
 			Hovering Rule & Survival Rule, QoS Rule. \\	
 			\hline
+			Node Resource Rule & Storage Rule, Communication Rule. \\
+			\hline
 		\end{tabular}
-	\caption{Zooming Table $\left( \left( C \right)Z_t \right)$: ManageDevice action and Hovering Rule rule. $(C)Z_t$}
+	\caption{Zooming Table $\left( \left( C \right)Z_t \right)$ $(C)Z_t$}
 	\label{tab:adczt}
 \end{table}
 
@@ -1416,7 +1425,17 @@ System}, already present in the environment.
 			\hline
 			GetMaximumSize & Obtain the total space of the mobile node buffer. \\
 			\hline
-			ObtainPosition & Obtain the current node position using some location device. \\
+			ObtainPosition & Obtain the current node position using some location
+			device. \\
+			\hline
+			ShowInformation & Show a selected hovering information to mobile node
+			user.\\
+			\hline
+			ShowInformationList & Show the current list of available hovering
+			information to mobile node user.\\
+			\hline
+			InputInformation & When creating an hovering information, mobile users have to
+			input the required data to the mobile node. \\
 			\hline
 		\end{tabular}
 	\caption{Action table $(C+1)A_t$}
@@ -1427,13 +1446,51 @@ System}, already present in the environment.
 	\centering
 	\begin{tabular}{|p{4cm}|p{8cm}|}
 			\hline
+			\textbf{Interaction} & \textbf{Description} \\
+			\hline
+			Access UI Interaction & User can command and see the mobile node access
+			information operation. \\
+			\hline
+			List UI Interaction & User can command and see the mobile node list
+			information operation. \\
+			\hline
+			Crate UI Interaction & User can insert the information required in order
+			to create an hovering information. \\
+			\hline
+			LowLevel Access Interaction & High level access information action relays
+			on low-level communication and storage resources. \\
+			\hline
+			LowLevel List Interaction & High level list information action relays
+			on low-level communication and storage resources. \\
+			\hline
+			LowLevel Create Interaction & High level create information action relays
+			on low-level communication and storage resources. \\
+			\hline
+		\end{tabular}
+	\caption{Interaction table $(C+1)I_t$}
+	\label{tab:cp1it}
+\end{table}
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|p{4cm}|p{8cm}|}
+			\hline
 			\textbf{Action} & \textbf{Interaction} \\
 			\hline
-			Communicate & +Node Resource Interaction.\\
+			Communicate & +HoverInf Resource Interaction, LowLevel Access
+			Interaction, LowLevel List Interaction, LowLevel Create Interaction.\\
 			\hline
-			DiscoveNeighbour & +Node Resource Interaction. \\
+			DiscoveNeighbour & +HoverInf Resource Interaction, LowLevel Access
+			Interaction, LowLevel List Interaction, LowLevel Create Interaction. \\
 			\hline
-			ManageStorage & +Node Resource Interaction. \\
+			ManageStorage & +HoverInf Resource Interaction, LowLevel Access
+			Interaction, LowLevel List Interaction, LowLevel Create Interaction. \\
+			\hline
+			+ListInformation & LowLevel List Interaction, List UI Interaction. \\
+			\hline
+			+CreateInformation & LowLevel Create Interaction, Create UI Interaction. \\
+			\hline
+			+AccessInformation & LowLevel Access Interaction. Create UI Interaction. \\
 			\hline
 		\end{tabular}
 	\caption{Action-Interaction table $(C+1)AcI_t$}
@@ -1461,6 +1518,23 @@ System}, already present in the environment.
 		\end{tabular}
 	\caption{Rule table $(C+1)Ru_t$}
 	\label{tab:cp1rut}
+\end{table}
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|p{4cm}|p{8cm}|}
+			\hline
+			\textbf{Interaction} & \textbf{Rule} \\
+			\hline
+			LowLevel Access Interaction & Communication Rule. \\
+			\hline
+			LowLevel List Interaction & Communication Rule. \\
+			\hline
+			LowLevel Create Interaction & Communication Rule. \\
+			\hline
+		\end{tabular}
+	\caption{Interaction-Rule table $(C+1)IRu_t$}
+	\label{tab:cp1irut}
 \end{table}
 
 \begin{table}[H]
@@ -1541,7 +1615,6 @@ From the architectural design zomming table~\ref{tab:adczt},
 	\label{tab:cmsrt}
 \end{table}
 
-% TODO: What to do with Think-Sense-Step?
 \begin{table}[H]
 	\centering
 	\begin{tabular}{|p{4cm}|p{8cm}|}
@@ -1550,7 +1623,7 @@ From the architectural design zomming table~\ref{tab:adczt},
 			\hline
 			Hovering Artifact & Replicate, Move. \\
 			\hline
-			User Artifact & FindInformation, AccessInformation, InputInformation. \\
+			User Artifact & ListInformation, AccessInformation, InputInformation. \\
 			\hline
 			Communication Artifact & Communicate, DiscoveNeighbour. \\
 			\hline
