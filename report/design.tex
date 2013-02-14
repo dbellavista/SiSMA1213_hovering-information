@@ -830,10 +830,9 @@ System}, already present in the environment.
 			\hline
 			analyze\_simulation & AnalyzeSimulation. \\
 			\hline
-			access\_information & UserAccessInformation, AccessInformation,
-			ListInformation.\\
+			access\_information & AccessInformation, ListInformation, AccessViaUI.\\
 			\hline
-			create\_information & UserCreateInformation, CreateInformation. \\
+			create\_information & CreateInformation, CreateViaUI. \\
 			\hline
 			manage\_device & ManageDevice. \\
 			\hline
@@ -882,8 +881,6 @@ System}, already present in the environment.
 	\label{tab:ctfot}
 \end{table}
 
-% represents the acts of the interaction among roles, among
-% resources, and between roles and resources
 \begin{table}[H]
 	\centering
 	\begin{tabular}{|p{4cm}|p{8cm}|}
@@ -896,7 +893,8 @@ System}, already present in the environment.
 			\hline
 			NodeResDep & HoverInf Resource Interaction, Node Resource Interaction. \\
 			\hline
-			NodeIfDep & Interface Access Interaction, Interface Create Interaction \\
+			NodeIfDep & User Access Interaction, User List Interaction, User Create
+			Interaction. \\
 			\hline
 			InquireDep & Inquisition Interaction. \\
 			\hline
@@ -905,7 +903,6 @@ System}, already present in the environment.
 	\label{tab:ctdit}
 \end{table}
 
-% enables and bounds the entities’ behaviour
 \begin{table}[H]
 	\centering
 	\begin{tabular}{|p{4cm}|p{8cm}|}
@@ -987,7 +984,7 @@ System}, already present in the environment.
 			\hline
 			manage\_positioning & ObtainPosition. \\
 			\hline
-			manage\_ui & ShowInformation, InputInformation, ShowInformationList. \\
+			manage\_ui & ShowInformation, ShowInformationList. \\
 			\hline
 		\end{tabular}
 	\caption{Transition Task-Action table $(C+1)TTA_t$}
@@ -1015,6 +1012,12 @@ System}, already present in the environment.
 			\hline
 			CreateInformation & Create a new hovering information. \\
 			\hline
+			AccessViaUI & A mobile user can access an hovering information using the
+			mobile UI. \\
+			\hline
+			CreateViaUI & A mobile user can create an hovering information using the
+			mobile UI. \\
+			\hline
 			AnalyzeSimulation & Analyze the system properties such as hovering
 			information requirements and complex network parameters. \\
 			\hline
@@ -1029,12 +1032,6 @@ System}, already present in the environment.
 			ShowSimulation & Show a simulation representation to the GUI. \\
 			\hline
 			MoveAction & Basic movement in the environment. \\
-			\hline
-			UserAccessInformation & Use the mobile node in order to access hovering
-			information. \\
-			\hline
-			UserCreateInformation & Use the mobile node in order to create hovering
-			information. \\
 			\hline
 		\end{tabular}
 	\caption{Action table $(C)A_t$}
@@ -1071,7 +1068,7 @@ System}, already present in the environment.
 			\hline
 			Simulation Analyst & AnalyzeSimulation. \\
 			\hline
-			Person & MoveAction, UserAccessInformation, UserCreateInformation. \\
+			Person & MoveAction, AccessViaUI, CreateViaUI. \\
 			\hline
 			Mobile node & ManageDevice, AccessInformation, ListInformation,
 			CreateInformation.  \\
@@ -1118,13 +1115,17 @@ System}, already present in the environment.
 			HoverInf Resource Interaction & Hovering information have to access to
 			node resources. \\
 			\hline
-			Interface Create Interaction & Mobile users have to interface with the
-			mobile node device in order to create information. \\
+			User Create Interaction & Mobile users have to communicate with the
+			mobile node in order to create information. \\
 			\hline
-			Interface Access Interaction & Mobile users have to interface with the
-			mobile node device in order to access information. \\
+			User Access Interaction & Mobile users have to communicate with the
+			mobile node in order to access information. \\
 			\hline
 			Inquisition & World inquisition for analysis purposes. \\
+			\hline
+			Jump Interaction & Jump from a mobile node to another.
+			\hline
+			Replication Interaction & Replicate to another mobile node.
 			\hline
 		\end{tabular}
 	\caption{Interaction table $(C)I_t$}
@@ -1137,18 +1138,21 @@ System}, already present in the environment.
 			\hline
 			\textbf{Action} & \textbf{Interaction} \\
 			\hline
-			Replicate & HoverInf Resource Interaction. \\
+			Replicate & HoverInf Resource Interaction, Replication Interaction. \\
 			\hline
-			Jump & HoverInf Resource Interaction. \\
+			Jump & HoverInf Resource Interaction, Jump Interaction. \\
 			\hline
-			ManageDevice & HoverInf Resource Interaction, Interface Access Interaction,
-			Interface Create Interaction, Mobile UI Interaction. \\
+			ManageDevice & HoverInf Resource Interaction. \\
 			\hline
 			ListInformation & Node Resource Interaction. \\
 			\hline
 			CreateInformation & Node Resource Interaction. \\
 			\hline
 			AccessInformation & Node Resources Interaction. \\
+			\hline
+			CreateViaUI & User Access Interaction. \\
+			\hline
+			AccessViaUI & User Create Interaction. \\
 			\hline
 			AnalyzeSimulation & Inquisition. \\
 			\hline
@@ -1161,10 +1165,6 @@ System}, already present in the environment.
 			ShowSimulation & GUI Interaction. \\
 			\hline
 			MoveAction & \\
-			\hline
-			UserCreateInformation & Interface Create Interaction. \\
-			\hline
-			UserAccessInformation & Interface Access Interaction. \\
 			\hline
 		\end{tabular}
 	\caption{Action-Interaction table $(C)AcI_t$}
@@ -1243,6 +1243,10 @@ System}, already present in the environment.
 			Inquisition & StartBefInq Rule. \\
 			\hline
 			GUI Interaction & StartBefGUI Rule. \\
+			\hline
+			Jump Interaction & Movement Duplicate Rule, Movement Storage Rule. \\
+			\hline
+			Replication Interaction & Movement Duplicate Rule, Movement Storage Rule. \\
 			\hline
 		\end{tabular}
 	\caption{Interaction-Rule table $(C)IRu_t$}
@@ -1394,9 +1398,7 @@ System}, already present in the environment.
 			RemoveData, GetRemainingSpace, GetMaximumSize, ObtainPosition,
 			ShowInformation, InputInformation, ShowInformationList. \\
 			\hline
-			Node Resource Interaction & Access UI Interaction, List UI Interaction,
-			Create UI Interaction, LowLevel Creation Interaction, LowLevel Access
-			Interaction, LowLevel List Interaction. \\
+			Node Resource Interaction & ShowInfo Interaction, ShowList Interaction. \\
 			\hline
 			Hovering Rule & Survival Rule, QoS Rule. \\	
 			\hline
@@ -1448,23 +1450,13 @@ System}, already present in the environment.
 			\hline
 			\textbf{Interaction} & \textbf{Description} \\
 			\hline
-			Access UI Interaction & User can command and see the mobile node access
-			information operation. \\
+			ShowInfo Interaction & Show to the mobile UI an accessed hovering
+			information. \\
 			\hline
-			List UI Interaction & User can command and see the mobile node list
-			information operation. \\
+			ShowList Interaction & Show to the mobile UI the list of accessible hovering
+			information. \\
 			\hline
-			Create UI Interaction & User can insert the information required in order
-			to create an hovering information. \\
-			\hline
-			LowLevel Access Interaction & High level access information action relays
-			on low-level communication and storage resources. \\
-			\hline
-			LowLevel List Interaction & High level list information action relays
-			on low-level communication and storage resources. \\
-			\hline
-			LowLevel Create Interaction & High level create information action relays
-			on low-level communication and storage resources. \\
+			Storage Interaction & Access to storage resources. \\
 			\hline
 		\end{tabular}
 	\caption{Interaction table $(C+1)I_t$}
@@ -1480,17 +1472,18 @@ System}, already present in the environment.
 			Communicate & +HoverInf Resource Interaction, LowLevel Access
 			Interaction, LowLevel List Interaction, LowLevel Create Interaction.\\
 			\hline
-			DiscoveNeighbour & +HoverInf Resource Interaction, LowLevel Access
-			Interaction, LowLevel List Interaction, LowLevel Create Interaction. \\
+			DiscoveNeighbour & LowLevel Access Interaction, LowLevel List
+			Interaction, LowLevel Create Interaction.  \\
 			\hline
-			ManageStorage & +HoverInf Resource Interaction, LowLevel Access
-			Interaction, LowLevel List Interaction, LowLevel Create Interaction. \\
+			ManageStorage & Storage Interaction. \\
 			\hline
 			+ListInformation & LowLevel List Interaction, List UI Interaction. \\
 			\hline
-			+CreateInformation & LowLevel Create Interaction, Create UI Interaction. \\
+			+CreateInformation & LowLevel Create Interaction.  \\
 			\hline
-			+AccessInformation & LowLevel Access Interaction. Create UI Interaction. \\
+			+AccessInformation & LowLevel Access Interaction. Access UI Interaction. \\
+			\hline
+			ShowInformation & ShowInfo Interaction, ShowList Interaction. \\
 			\hline
 		\end{tabular}
 	\caption{Action-Interaction table $(C+1)AcI_t$}
@@ -1618,11 +1611,7 @@ System}, already present in the environment.
 			\hline
 			\textbf{Artifact} & \textbf{Action} \\
 			\hline
-			Hovering Artifact & Replicate, Jump. \\
-			\hline
 			Legs Artifact & MoveAction. \\
-			\hline
-			NodeUser Artifact & UserAccessInformation, UserCreateInformation. \\
 			\hline
 			Communication Artifact & Communicate, DiscoveNeighbour. \\
 			\hline
@@ -1743,7 +1732,6 @@ System}, already present in the environment.
 	\label{tab:cmsrt}
 \end{table}
 
-% Agents -> Artifacts
 \begin{table}[H]
 	\centering
 	\begin{tabular}{|p{4cm}|p{8cm}|}
@@ -1754,12 +1742,21 @@ System}, already present in the environment.
 			\hline
 			Inquisition & Inquisition Use \\
 			\hline
+			ObtainPosition Interaction & ObtainPosition Use \\	
+			\hline
+			DiscoverNeighbour Interaction & DiscoverNeighbour Use \\	
+			\hline
+			Communication Interaction & Communication Use \\	
+			\hline
+			ShowInfo Interaction & ShowInfo Use \\
+			\hline
+			ShowList Interaction & ShowList Use \\
+			\hline
 		\end{tabular}
 	\caption{Mapping Interaction-Use table $(C)MIU_t$}
 	\label{tab:cmiut}
 \end{table}
 
-% Artifacts -> Agents
 \begin{table}[H]
 	\centering
 	\begin{tabular}{|p{4cm}|p{8cm}|}
@@ -1772,20 +1769,29 @@ System}, already present in the environment.
 	\label{tab:cmimt}
 \end{table}
 
-% Agents -> Agents
 \begin{table}[H]
 	\centering
 	\begin{tabular}{|p{4cm}|p{8cm}|}
 			\hline
 			\textbf{Interaction} & \textbf{SpeakTo} \\
 			\hline
+			Jump Interaction & Jump Speech \\
+			\hline
+			Replication Interaction & Replication Speech \\
+			\hline
+			User Create Interaction & Creation Speech \\
+			\hline
+			User Access Interaction & Access Speech \\
+			\hline
+			List Interaction & List Speech \\
+			\hline
+			Access Interaction & Access Speech \\
 			\hline
 		\end{tabular}
 	\caption{Mapping Interaction-SpeakTo table $(C)MISp_t$}
 	\label{tab:cmispt}
 \end{table}
 
-% Artifact -> Artifact
 \begin{table}[H]
 	\centering
 	\begin{tabular}{|p{4cm}|p{8cm}|}
@@ -1817,6 +1823,17 @@ System}, already present in the environment.
 			\hline
 			\textbf{Agent} & \textbf{Artifact} \\
 			\hline
+			Simulation Analyst & Analyzer Artifact, SimulatorInquisitor Artifact. \\
+			\hline
+			Person & Legs Artifact. \\
+			\hline
+			Mobile node & StorageArtifact, Positioning Artifact, MobileUI Artifact,
+			Communication Artifact. \\
+			\hline
+			Piece of Hovering Information & \\
+			\hline
+			Simulation Manager & Simulation Management Artifact, SimulatorUI
+			Artifact. \\
 			\hline
 		\end{tabular}
 	\caption{Agent-Artifact table $(C)AA_t$}
@@ -1849,12 +1866,31 @@ System}, already present in the environment.
 
 \subsubsection{Environment Design Tables}
 
+% TODO
 \begin{table}[H]
 	\centering
 	\begin{tabular}{|p{4cm}|p{8cm}|}
 			\hline
 			\textbf{Artifact} & \textbf{UsageInterface} \\
 			\hline
+			Legs Artifact & Step. \\
+			\hline
+			Communication Artifact & Communicate, DiscoveNeighbour. \\
+			\hline
+			Storage Artifact & InsertData, RemoveData, GetRemainingSpace, GetMaximumSize. \\
+			\hline
+			Positioning Artifact & ObtainPosition. \\
+			\hline
+			MobileUI Artifact & ShowInformation, ShowInformationList, InputInformation. \\
+			\hline
+			Simulation Management Artifact & InputIntialParameter,
+			SetInitialParameters, StartSimulation, ShowSimulation. \\
+			\hline
+			Analyzer Artifact & AnalyzeSimulation. \\
+			\hline
+			SimulatorUI Artifact & Render. \\
+			\hline
+			SimulatorInquisitor Artifact & InquireNodes, InquireHovering, InquireEnvironment \\
 			\hline
 		\end{tabular}
 	\caption{Artifact-UsageInterface table $(C)AUI_t$}
@@ -1867,6 +1903,8 @@ System}, already present in the environment.
 			\hline
 			\textbf{Aggregate} & \textbf{Artifact} \\
 			\hline
+			Mobile Device Artifact & Storage Artifact, Positioning Artifact, MobileUI
+			Artifact, Communication Artifact. \\
 			\hline
 		\end{tabular}
 	\caption{Aggregate-Artifact table $(C)AggArt_t$}
@@ -1879,6 +1917,7 @@ System}, already present in the environment.
 			\hline
 			\textbf{Aggregate} & \textbf{Agent} \\
 			\hline
+			Mobile Device Artifact & Mobile Node. \\
 			\hline
 		\end{tabular}
 	\caption{Aggregate-Agent table $(C)AggAge_t$}
@@ -1893,6 +1932,20 @@ System}, already present in the environment.
 			\hline
 			\textbf{Use} & \textbf{Protocol} \\
 			\hline
+			GUI Use & Render(world\_representation)\\
+			\hline
+			Inquisition & inquire nodes \newline InquireHovering \newline
+			InquireEnvironment\\
+			\hline
+			ObtainPosition Use & obtain position\\
+			\hline
+			DiscoverNeighbour Use & discover neighbours\\
+			\hline
+			Communication Use & \\
+			\hline
+			ShowInfo Use & \\
+			\hline
+			ShowList Use & \\
 			\hline
 		\end{tabular}
 	\caption{Use-Protocol table $(C)UP_t$}
@@ -1953,6 +2006,7 @@ System}, already present in the environment.
 			\hline
 			\textbf{Manifest} & \textbf{Protocol} \\
 			\hline
+			& \\
 			\hline
 		\end{tabular}
 	\caption{Manifest-Protocol table $(C)MP_t$}
@@ -1965,6 +2019,7 @@ System}, already present in the environment.
 			\hline
 			\textbf{Agent} & \textbf{Manifest} \\
 			\hline
+			& \\
 			\hline
 		\end{tabular}
 	\caption{Agent-Manifest table $(C)AgeM_t$}
@@ -1977,6 +2032,7 @@ System}, already present in the environment.
 			\hline
 			\textbf{Artifact} & \textbf{Manifest} \\
 			\hline
+			& \\
 			\hline
 		\end{tabular}
 	\caption{Artifact-Manifest table $(C)ArtM_t$}
@@ -1989,6 +2045,7 @@ System}, already present in the environment.
 			\hline
 			\textbf{LinkedTo} & \textbf{Protocol} \\
 			\hline
+			& \\
 			\hline
 		\end{tabular}
 	\caption{LinkedTo-Protocol table $(C)LP_t$}
@@ -2001,6 +2058,7 @@ System}, already present in the environment.
 			\hline
 			\textbf{Artifact} & \textbf{LinkedTo} \\
 			\hline
+			& \\
 			\hline
 		\end{tabular}
 	\caption{Artifact-LinkedTo table $(C)ArtL_t$}
@@ -2015,6 +2073,15 @@ System}, already present in the environment.
 			\hline
 			\textbf{Workspace} & \textbf{Description} \\
 			\hline
+			Node Position  & Position of a node. \\
+			\hline
+			Anchor Area  & Area bound to an hovering information. \\
+			\hline
+			Communication Range  & Node communication range. \\
+			\hline
+			World  & Simulation world. \\
+			\hline
+			Vital  Space & Person's vital space.\\
 			\hline
 		\end{tabular}
 	\caption{Workspace table $(C)W_t$}
