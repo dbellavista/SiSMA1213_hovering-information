@@ -46,7 +46,10 @@ Taking the cue from \cite{human} some roles can be defined:
 
 \subsection{Requirements Analysis}
 
-The subsystem \emph{Simulator} doesn't require independent control or
+From the requirements and the preliminary analysis considerations, the
+\emph{SODA} process focuses on analysis and design of the \emph{Hovering
+information system} and the \emph{Social system}, treating them as a single
+system. The subsystem \emph{Simulator} doesn't require independent control or
 intelligence, so the simulator interface can be assumed as a \emph{Legacy
 System}, already present in the environment.
 
@@ -93,8 +96,12 @@ System}, already present in the environment.
 			\hline
 			Move & Move within the social environment. \\
 			\hline
-			Hover & Move and replicate in order to guarantee survivability, availability
-			and accessibility. \\
+			Survive & Stay alive. \\
+			\hline
+			Be available & Be available inside the anchor area. \\
+			\hline
+			Maintain accessibility & Cover the maximum possible area inside the
+			anchor area. \\
 			\hline
 			Manage Simulation & Simulation users should be able to specify initial
 			simulation parameters (environment, people, information) and manage it.
@@ -119,7 +126,8 @@ System}, already present in the environment.
 			\hline
 			Mobile node & Access Information, Create Information, Manage Device. \\
 			\hline
-			Piece of Hovering Information & Hover. \\
+			Piece of Hovering Information & Access Information, Create Information,
+			Survive, Be available, Maintain accessibility. \\
 			\hline
 		\end{tabular}
 	\caption{Actor-Requirement table $(C)AR_t$}
@@ -170,7 +178,7 @@ System}, already present in the environment.
 			Node Resources & High Level operations may require or depend from
 			low-level node resources. \\
 			\hline
-			Vital Space Respect & A person cannot invade other people's vital spaces. \\
+			Living Space Respect & A person cannot invade other people's vital spaces. \\
 			\hline
 			Node Interface & A person needs a node interface in order to use it for
 			accessing or creating information. \\
@@ -194,9 +202,13 @@ System}, already present in the environment.
 			\hline
 			Analyze Simulation & Simulation Started. \\
 			\hline
-			Hover & Node Resources. \\
+			Survive & Node Resources. \\
 			\hline
-			Move & Vital Space Respect. \\
+			Be available & Node Resources. \\
+			\hline
+			Maintain accessibility & Node Resources. \\
+			\hline
+			Move & Living Space Respect. \\
 			\hline
 			Manage Simulation & Simulation Started, GUI. \\
 			\hline
@@ -218,92 +230,6 @@ System}, already present in the environment.
 	\label{tab:crlst}
 \end{table}
 
-\subsubsection{Layering C+1}
-
-\begin{table}[H]
-	\centering
-	\begin{tabular}{|p{4cm}|p{8cm}|}
-			\hline
-			\textbf{Layer $C$} & \textbf{Layer $C+1$} \\
-			\hline
-			Manage Device & Manage Communication, Manage Storage, Manage Positioning,
-			Manage UI. \\
-			\hline
-			Hover & Survive, Be Available, Maintain Accessibility. \\
-			\hline
-		\end{tabular}
-	\caption{Zooming Table $\left( \left( C \right)Z_t \right)$: Manage
-	Device and Hover in-zoom $(C)Z_t$}
-	\label{tab:arczt}
-\end{table}
-
-\begin{table}[H]
-	\centering
-	\begin{tabular}{|p{4cm}|p{8cm}|}
-			\hline
-			\textbf{Requirement} & \textbf{Description} \\
-			\hline
-			Survive & Stay alive. \\
-			\hline
-			Be available & Be available inside the anchor area. \\
-			\hline
-			Maintain accessibility & Cover the maximum possible area inside the
-			anchor area. \\
-			\hline
-			Manage Communication & Manage the mobile node communication system. \\
-			\hline
-			Manage Storage & Manage the mobile node storage system. \\
-			\hline
-			Manage Positioning & Manage the mobile node positioning system. \\
-			\hline
-			Manage UI & Manage the mobile node user interface. \\
-			\hline
-		\end{tabular}
-	\caption{Requirement table $(C+1)Re_t$}
-	\label{tab:cp1act}
-\end{table}
-
-\begin{table}[H]
-	\centering
-	\begin{tabular}{|p{4cm}|p{8cm}|}
-			\hline
-			\textbf{Actor} & \textbf{Requirement} \\
-			\hline
-			+Mobile node & Manage Communication, Manage Storage, Manage UI, Manage
-			Positioning. \\
-			\hline
-			+Piece of Hovering Information & Survive, Be Available, Maintain
-			Accessibility. \\
-			\hline
-		\end{tabular}
-	\caption{Actor-Requirement table $(C+1)AR_t$}
-	\label{tab:cp1art}
-\end{table}
-
-\begin{table}[H]
-	\centering
-	\begin{tabular}{|p{4cm}|p{8cm}|}
-			\hline
-			\textbf{Requirement} & \textbf{Relation} \\
-			\hline
-			Survive & +Node Resources. \\
-			\hline
-			Be available & +Node Resources. \\
-			\hline
-			Maintain accessibility & +Node Resources. \\
-			\hline
-			Manage Communication & +Node Resources. \\
-			\hline
-			Manage Storage & +Node Resources. \\
-			\hline
-			Manage Positioning & +Node Resources. \\
-			\hline
-			Manage UI &  +Node Interface.\\
-			\hline
-		\end{tabular}
-	\caption{Requirement-Relation table $(C+1)RR_t$}
-	\label{tab:cp1rrt}
-\end{table}
 
 \subsection{Analysis}
 
@@ -321,13 +247,13 @@ System}, already present in the environment.
 			\hline
 			Analyze Simulation & analyze\_simulation \\
 			\hline
-			Manage Device & manage\_device \\
+			Survive & survive\_task \\
 			\hline
-			Move & move\_task. \\
+			Be available & be\_available\_task \\
 			\hline
-			Hover & hover\_task. \\
+			Maintain accessibility & maintain\_accessibility\_task\\
 			\hline
-			Manage Simulation & define\_initial\_parameters, start\_simulation, show\_simulation. \\
+			Manage Simulation & define\_initial\_parameters, start\_simulation, show\_simulation \\
 			\hline
 		\end{tabular}
 	\caption{Reference Requirement-Task table $(C)RRT_t$}
@@ -342,6 +268,8 @@ System}, already present in the environment.
 			\hline
 			Anayze Simulaton & inquire\_world \\
 			\hline
+			Manage Device & get\_position, discover\_neighbours, manage\_storage, manage\_ui \\
+			\hline
 		\end{tabular}
 	\caption{Reference Requirement-Function table $(C)RRF_t$}
 	\label{tab:crrft}
@@ -353,17 +281,17 @@ System}, already present in the environment.
 			\hline
 			\textbf{Requirement} & \textbf{Topology} \\
 			\hline
-			Access Information & Anchor Area, Communication Range, Node Position. \\
+			Access Information & Anchor Area, Communication Range, Node Topology. \\
 			\hline
-			Create Information & Anchor Area, Communication Range, Node Position. \\
+			Create Information & Anchor Area, Communication Range, Node Topology. \\
 			\hline
-			Manage Device & Communication Range, Node Position. \\
+			Manage Device & Communication Range, Node Topology. \\
 			\hline
-			Hover & Anchor Area, Communication Range. \\
+			Hover & Anchor Area, Communication Range, Node Topology. \\
 			\hline
 			Manage Simulation & World. \\
 			\hline
-			Move & World, Vital Space. \\
+			Move & World, Living Space. \\
 			\hline
 		\end{tabular}
 	\caption{Reference Requirement-Topology table $(C)RRTo_t$}
@@ -419,74 +347,15 @@ System}, already present in the environment.
 			\hline
 			Simulaton Started & SimStartedDep. \\
 			\hline
-			Node Resources & NodeResDep. \\
+			Node Resources & NeighbourDep, StorageDep, PositionDep, NodeUIDep. \\
 			\hline
-			Vital Space Respect & VitalSpaceDep. \\
+			Living Space Respect & LivingSpaceDep. \\
 			\hline
 			Node Interface & NodeIfDep. \\
 			\hline
 		\end{tabular}
 	\caption{Reference Relation-Dependency table $(C)RRD_t$}
 	\label{tab:crrdt}
-\end{table}
-
-\begin{table}[H]
-	\centering
-	\begin{tabular}{|p{4cm}|p{8cm}|}
-			\hline
-			\textbf{Requirement} & \textbf{Task} \\
-			\hline
-			Survive & survive. \\
-			\hline
-			Be available & be\_available. \\
-			\hline
-			Maintain accessibility & maintain\_accessibility. \\
-			\hline
-			Manage Communication & manage\_communication. \\
-			\hline
-			Manage Storage & manage\_storage. \\
-			\hline
-			Manage Positioning & manage\_positioning. \\
-			\hline
-			Manage UI & manage\_ui. \\
-			\hline
-		\end{tabular}
-	\caption{Reference Requirement-Topology table $(C+1)RRTo_t$}
-	\label{tab:cp1rrtot}
-\end{table}
-
-\begin{table}[H]
-	\centering
-	\begin{tabular}{|p{4cm}|p{8cm}|}
-			\hline
-			\textbf{Requirement} & \textbf{Topology} \\
-			\hline
-			Survive & Anchor Area, Communication Range, World. \\
-			\hline
-			Be available & Anchor Area, Communication Range. \\
-			\hline
-			Maintain accessibility & Anchor Area, Communication Range. \\
-			\hline
-			Manage Communication & Communication Range, Node Position. \\
-			\hline
-			Manage Positioning & Node Position, World. \\
-			\hline
-		\end{tabular}
-	\caption{Reference Requirement-Task table $(C+1)RRT_t$}
-	\label{tab:cp1rrtt}
-\end{table}
-
-\begin{table}[H]
-	\centering
-	\begin{tabular}{|p{4cm}|p{8cm}|}
-			\hline
-			\textbf{Requirement} & \textbf{Dependency} \\
-			\hline
-			 & \\
-			\hline
-		\end{tabular}
-		\caption{Reference Requirement-Dependency table $(C+1)RReqD_t$}
-	\label{tab:cp1rreqdt}
 \end{table}
 
 \subsubsection{Responsibilities Tables}
@@ -500,9 +369,6 @@ System}, already present in the environment.
 			access\_information & Access the needed information available in the
 			current position.\\
 			\hline
-			manage\_device & Manage the mobile node device, e.g\. information storage
-			system, communication, positioning. \\
-			\hline
 			create\_information & Create a new hovering information. \\
 			\hline
 			analyze\_simulation & Analyze information obtained during the
@@ -510,8 +376,14 @@ System}, already present in the environment.
 			\hline
 			move\_task & Move with a certain behaviour inside the environment. \\
 			\hline
-			hover\_task & Move and replicate in order to guarantee survivability, availability
-			and accessibility. \\
+			survive & Jumps or replicates to mobile nodes in order to keep an high
+			survivability. \\
+			\hline
+			be\_available & Jumps or replicates to mobile nodes in order to keep an
+			high availability. \\
+			\hline
+			maintain\_accessibility & Jumps or replicates to mobile nodes in order to
+			keep an high accessibility. \\
 			\hline
 			define\_initial\_parameters & Create initial parameters. \\
 			\hline
@@ -535,6 +407,14 @@ System}, already present in the environment.
 			inquire\_world & Get all the needed information of the world to analyze.
 			\\
 			\hline
+			get\_position & Return the position of a mobile node. \\
+			\hline
+			discover\_neighbours & Return the neighbours of a mobile nodes. \\
+			\hline
+			manage\_storage & Manage mobile node storage resource. \\
+			\hline
+			manage\_ui & Manage mobile node user interface. \\
+			\hline
 		\end{tabular}
 	\caption{Function table $(C)F_t$}
 	\label{tab:cft}
@@ -548,7 +428,8 @@ System}, already present in the environment.
 			\hline
 			\textbf{Topology} & \textbf{Description} \\
 			\hline
-			Node Position & Position of a mobile node. \\
+			Node Topology & The mobile node, positioned inside the world, seen
+			as a topological constraint. \\
 			\hline
 			Anchor Area & Area associated to each hovering information, defined as a
 			circular area with center into the \emph{anchor location} and radius the
@@ -559,7 +440,7 @@ System}, already present in the environment.
 			\hline
 			World & The environment. \\
 			\hline
-			Vital Space & Space owned by a person. \\
+			Living Space & Space owned by a person. \\
 			\hline
 		\end{tabular}
 	\caption{Topology table $(C)Top_t$}
@@ -572,15 +453,17 @@ System}, already present in the environment.
 			\hline
 			\textbf{Task} & \textbf{Topology} \\
 			\hline
-			access\_information& Node Position, Anchor Area, Communication Range, World.\\
+			access\_information& Node Topology, Anchor Area, Communication Range, World.\\
 			\hline
-			create\_information & Node Position, Anchor Area, Communication Range, World.\\
+			create\_information & Node Topology, Anchor Area, Communication Range, World.\\
 			\hline
-			manage\_device & Node Position. \\	
+			survive & Anchor Area, Communication Range, World. \\
 			\hline
-			hover & Anchor Area, Communication Range, World. \\
+			be\_available & Anchor Area, Communication Range, World. \\
 			\hline
-			world\_task & World, Vital Space. \\
+			maintain\_accessibility & Anchor Area, Communication Range, World. \\
+			\hline
+			world\_task & World, Living Space. \\
 			\hline
 			show\_simulation & World. \\
 			\hline
@@ -598,6 +481,14 @@ System}, already present in the environment.
 			render & World.\\
 			\hline
 			inquire\_world & World.\\
+			\hline
+			discover\_neighbour & Communication Range, World, Node Topology. \\
+			\hline
+			get\_position & World, Node Topology. \\
+			\hline
+			manage\_storage & Node Topology. \\
+			\hline
+			manage\_ui & Node Topology. \\
 			\hline
 		\end{tabular}
 	\caption{Function-Topology table $(C)FTop_t$}
@@ -620,15 +511,20 @@ System}, already present in the environment.
 			\hline
 			SimStartedDep & Simulation should be started before analysis and showing. \\
 			\hline
-			NodeResDep & High level operations may use or be limited by node
-			resources. \\
+			NeighbourDep & A mobile node is a neighbour of another if both are in
+			communication range. \\
+			\hline
+			StorageDep & High level operations depends on mobile node storage availability. \\
+			\hline
+			NodeUIDep & A mobile node should show information about the hovering
+			system on the mobile UI. \\
 			\hline
 			NodeIfDep & A person needs a node interface in order to use it for access
 			or creating hovering information. \\
 			\hline
 			InquireDep & Get system information for analysis purposes. \\
 			\hline
-			VitalSpaceDep & A person must not invade other people's vital space. \\
+			LivingSpaceDep & A person must not invade other people's vital space. \\
 			\hline
 			BoundedWorldDep & A person cannot move outside the world. \\
 			\hline
@@ -643,23 +539,25 @@ System}, already present in the environment.
 			\hline
 			\textbf{Task} & \textbf{Dependency} \\
 			\hline
-			access\_information & NodeResDep. \\
+			access\_information & CommDep, PositionDep, NodeIfDep, NoteUIDep. \\
 			\hline
-			create\_information & NodeResDep. \\
+			create\_information & CommDep, PositionDep, StorageDep, NodeIfDep. \\
 			\hline
-			manage\_device & NodeResDep, NodeIfDep. \\
+			survive\_task & NeighbourDep, PositionDep, StorageDep. \\
 			\hline
-			analyze\_simulation & SimStartedDep, InquireDep. \\
+			be\_available\_task &  NeighbourDep, PositionDep, StorageDep. \\
 			\hline
-			start\_simulation & SimStartedDep, DefineInitialDep. \\
+			maintain\_accessibility\_task & CommDep, PositionDep, StorageDep. \\
 			\hline
-			move\_task & VitalSpaceDep, BoundedWorldDep. \\
-			\hline
-			hover & NodeResDep. \\
+			move\_task & LivingSpaceDep, BoundedWorldDep. \\
 			\hline
 			define\_initial\_parameters & DefineInitialDep. \\
 			\hline
 			show\_simulation & GUIDep, SimStartedDep. \\
+			\hline
+			analyze\_simulation & SimStartedDep, InquireDep. \\
+			\hline
+			start\_simulation & SimStartedDep, DefineInitialDep. \\
 			\hline
 		\end{tabular}
 	\caption{Task-Dependency table $(C)TD_t$}
@@ -676,6 +574,14 @@ System}, already present in the environment.
 			\hline
 			inquire\_world & SimStartedDep, InquireDep. \\
 			\hline
+			discover\_neighbours & NeighbourDep. \\
+			\hline
+			manage\_storage & StorageDep. \\
+			\hline
+			get\_position & PositionDep. \\
+			\hline
+			manage\_ui & NodeIfDep, NodeUIDep. \\
+			\hline
 		\end{tabular}
 	\caption{Function-Dependency table $(C)FD_t$}
 	\label{tab:cfdt}
@@ -687,116 +593,29 @@ System}, already present in the environment.
 			\hline
 			\textbf{Topology} & \textbf{Dependency} \\
 			\hline
-			Anchor Area & SimDataDep.\\
+			Node Topology & StorageDep, PositionDep, NodeUIDep, NodeIfDep, NeighbourDep. \\
 			\hline
-			Communication Range & SimDataDep. \\
+			Anchor Area & SimDataDep, PositionDep.\\
+			\hline
+			Communication Range & SimDataDep, NeighbourDep. \\
 			\hline
 			World & InquireDep, GUIDep, BoundedWorldDep. \\
 			\hline
-			Vital Space & VitalSpaceDep. \\
+			Living Space & LivingSpaceDep. \\
 			\hline
 		\end{tabular}
 	\caption{Topology-Dependency table $(C)TopD_t$}
 	\label{tab:ctopdt}
 \end{table}
 
-\subsubsection{Layering C+1}
-
-\begin{table}[H]
-	\centering
-	\begin{tabular}{|p{4cm}|p{8cm}|}
-			\hline
-			\textbf{Layer $C$} & \textbf{Layer $C+1$} \\
-			\hline
-			manage\_device & manage\_communication, manage\_storage, manage\_positioning,
-			manage\_ui. \\
-			\hline
-			hover\_task & survive\_task, be\_available\_task,
-			maintain\_accessibility\_task. \\
-			\hline
-		\end{tabular}
-	\caption{Zooming Table $\left( \left( C \right)Z_t \right)$: Manage
-	Device and Hover Tasks in-zoom $(C)Z_t$}
-	\label{tab:aczt}
-\end{table}
-
-\begin{table}[H]
-	\centering
-	\begin{tabular}{|p{5cm}|p{7cm}|}
-			\hline
-			\textbf{Task} & \textbf{Description} \\
-			\hline
-			survive & Jumps or replicates to mobile nodes in order to keep an high
-			survivability. \\
-			\hline
-			be\_available & Jumps or replicates to mobile nodes in order to keep an
-			high availability. \\
-			\hline
-			maintain\_accessibility & Jumps or replicates to mobile nodes in order to
-			keep an high accessibility. \\
-			\hline
-			manage\_communication & Manage mobile node communication system. \\
-			\hline
-			manage\_storage & Manage mobile node storage resource. \\
-			\hline
-			manage\_positioning & Manage mobile node positioning system. \\
-			\hline
-			manage\_ui & Manage mobile node user interface. \\
-			\hline
-		\end{tabular}
-	\caption{Task table $(C+1)T_t$}
-	\label{tab:cp1tt}
-\end{table}
-
-\begin{table}[H]
-	\centering
-	\begin{tabular}{|p{4cm}|p{8cm}|}
-			\hline
-			\textbf{Task} & \textbf{Topology} \\
-			\hline
-			survive & +Anchor Area, +Communication Range, +World. \\
-			\hline
-			be\_available & +Anchor Area, +Communication Range, +World. \\
-			\hline
-			maintain\_accessibility & +Anchor Area, +Communication Range, +World. \\
-			\hline
-			manage\_communication & +Communication Range, +World, +Node Positioning. \\
-			\hline
-			manage\_positioning & +World, +Node Positioning. \\
-			\hline
-		\end{tabular}
-		\caption{Task-Topology table $(C+1)TTop_t$}
-	\label{tab:cp1ttopt}
-\end{table}
-
-\begin{table}[H]
-	\centering
-	\begin{tabular}{|p{5cm}|p{7cm}|}
-			\hline
-			\textbf{Task} & \textbf{Dependency} \\
-			\hline
-			survive & +NodeResDep. \\
-			\hline
-			be\_available & +NodeResDep. \\
-			\hline
-			maintain\_accessibility & +NodeResDep. \\
-			\hline
-			maintain\_accessibility & +NodeResDep. \\
-			\hline
-			manage\_communication & +NodeResDep. \\
-			\hline
-			manage\_storage & +NodeResDep. \\
-			\hline
-			manage\_positioning & +NodeResDep. \\
-			\hline
-			manage\_ui & +NodeIfDep, +NodeResDep. \\
-			\hline
-		\end{tabular}
-	\caption{Task-Dependency table $(C+1)TD_t$}
-	\label{tab:cp1tdt}
-\end{table}
-
 \subsection{Architectural Design}
+
+In order to ease the project complexity, I assume that two neighbour mobile
+nodes can interact directly, without the explicit use of communication medium.
+Similarly, a person can interact with a mobile node without the explicit use of
+an interface. The system, implemented on a real world, will have different
+communication resource, such as wireless or bluetooth and an interface between
+human being users and the mobile node.
 
 \subsubsection{Transition Tables}
 
@@ -810,12 +629,13 @@ System}, already present in the environment.
 			\hline
 			Person & access\_information, create\_information, move\_task \\
 			\hline
-			Mobile node & access\_information, create\_information, manage\_device.
-			\\
+			Mobile node & access\_information, create\_information.  \\
 			\hline
-			Piece of Hovering Information & hover\_task. \\
+			Piece of Hovering Information & survive\_task, be\_available\_task,
+			maintain\_accessibility\_task. \\
 			\hline
-			Simulation Manager & define\_initial\_parameters, start\_simulation, show\_simulation. \\
+			Simulation Manager & define\_initial\_parameters, start\_simulation,
+			show\_simulation. \\
 			\hline
 		\end{tabular}
 	\caption{Transition Role-Task table $(C)TRT_t$}
@@ -830,15 +650,18 @@ System}, already present in the environment.
 			\hline
 			analyze\_simulation & AnalyzeSimulation. \\
 			\hline
-			access\_information & AccessInformation, ListInformation, AccessViaUI.\\
+			access\_information & AccessInformation, ListInformation, AccessViaUI,
+			AccessInformationData.\\
 			\hline
 			create\_information & CreateInformation, CreateViaUI. \\
 			\hline
-			manage\_device & ManageDevice. \\
-			\hline
 			move\_task & MoveAction. \\
 			\hline
-			hover\_task & Jump, Replicate. \\
+			survive\_task & Jump, Replicate. \\
+			\hline
+			be\_available\_task & Jump, Replicate. \\
+			\hline
+			maintain\_accessibility\_task & Jump, Replicate. \\
 			\hline
 			define\_initial\_parameters & InputInitialParameters, SetInitialParameters. \\
 			\hline
@@ -861,6 +684,9 @@ System}, already present in the environment.
 			\hline
 			SimulatorInquisitor & inquire\_world. \\
 			\hline
+			MobileResource & discover\_neighbour, get\_position, manage\_ui,
+			manage\_storage. \\
+			\hline
 		\end{tabular}
 	\caption{Transition Resource-Function table $(C)TRF_t$}
 	\label{tab:ctrft}
@@ -876,6 +702,15 @@ System}, already present in the environment.
 			\hline
 			inquire\_world & InquireNodes, InquireHoveringInformations, InquireEnvironment. \\
 			\hline
+			manage\_storage & InsertData, RemoveData, GetRemainingSpace,
+			GetMaximumSize. \\
+			\hline
+			discover\_neighbour & DiscoveNeighbour. \\
+			\hline
+			get\_position & ObtainPosition. \\
+			\hline
+			manage\_ui & ShowInformation, ShowInformationList. \\
+			\hline
 		\end{tabular}
 	\caption{Transition Function-Operation table $(C)TFO_t$}
 	\label{tab:ctfot}
@@ -887,16 +722,25 @@ System}, already present in the environment.
 			\hline
 			\textbf{Dependency} & \textbf{Interaction} \\
 			\hline
-			GUIDep & GUI Interaction. \\
+			GUIDep & GUI Interaction \\
 			\hline
-			DefineInitialDep & Initial Definition Interaction. \\
+			DefineInitialDep & \\
 			\hline
-			NodeResDep & HoverInf Resource Interaction, Node Resource Interaction. \\
+			SimStartedDep & \\
 			\hline
-			NodeIfDep & User Access Interaction, User List Interaction, User Create
-			Interaction. \\
+			NeighbourDep & HoverNeighbour Interaction, NodeNeighbour Interaction\\
 			\hline
-			InquireDep & Inquisition Interaction. \\
+			StorageDep & InsertNewPiece Interaction, RemovePiece Interaction \\
+			\hline
+			NodeUIDep & ShowInfo Interaction, ListInfo Interaction \\
+			\hline
+			NodeIfDep & User Create Interaction, User Access Interaction \\
+			\hline
+			InquireDep & Inquisition Interaction\\
+			\hline
+			LivingSpaceDep & \\
+			\hline
+			BoundedWorldDep & \\
 			\hline
 		\end{tabular}
 	\caption{Transition Dependency-Interaction table $(C)TDI_t$}
@@ -909,16 +753,25 @@ System}, already present in the environment.
 			\hline
 			\textbf{Dependency} & \textbf{Rule} \\
 			\hline
-			SimStartedDep & StartBefGUI Rule, StartBefInq Rule. \\
+			GUIDep & \\
 			\hline
-			DefineInitialDep & InSimBefSet Rule, SetBefStart Rule. \\
+			DefineInitialDep & \\
 			\hline
-			NodeResDep & Node Resource Rule, Movement Duplicate Rule, Movement
-			Storage Rule. \\
+			SimStartedDep & StartBefGUI Rule, StartBefInq Rule\\
 			\hline
-			VitalSpaceDep & Vital Space Rule. \\
+			NeighbourDep & Neighbour Rule\\
 			\hline
-			BoundedWorldDep & Bounded World Rule. \\
+			StorageDep & Storage Rule \\
+			\hline
+			NodeUIDep & \\
+			\hline
+			NodeIfDep & \\
+			\hline
+			InquireDep & \\
+			\hline
+			LivingSpaceDep & Living Space Rule\\
+			\hline
+			BoundedWorldDep & Bounded World Rule\\
 			\hline
 		\end{tabular}
 	\caption{Transition Dependency-Rule table $(C)TDRu_t$}
@@ -937,58 +790,13 @@ System}, already present in the environment.
 			\hline
 			World & World Space. \\
 			\hline
-			Node Position & Node Position Space. \\
+			Node Topology & Node Space. \\
 			\hline
-			Vital Space & Vital Space Space. \\
+			Living Space & Living Space Space. \\
 			\hline
 		\end{tabular}
 	\caption{Transition Topology-Space table $(C)TTopS_t$}
 	\label{tab:cttopst}
-\end{table}
-
-\begin{table}[H]
-	\centering
-	\begin{tabular}{|p{4cm}|p{8cm}|}
-			\hline
-			\textbf{Role} & \textbf{Task} \\
-			\hline
-			+Mobile node & manage\_storage, manage\_communication,
-			manage\_positioning, manage\_ui.  \\
-			\hline
-			+Piece of Hovering Information & survive, be\_available, maintain\_accessibility. \\
-			\hline
-		\end{tabular}
-	\caption{Transition Role-Task table $(C+1)TRT_t$}
-	\label{tab:cp1trtt}
-\end{table}
-
-\begin{table}[H]
-	\centering
-	\begin{tabular}{|p{4cm}|p{8cm}|}
-			\hline
-			\textbf{Task} & \textbf{Action} \\
-			\hline
-			survive & DiscoverNeighbour, +Replicate, +Jump, Communicate.
-			\\
-			\hline
-			be\_available & DiscoverNeighbour, +Replicate, +Jump,
-			Communicate. \\
-			\hline
-			maintain\_accessibility & DiscoverNeighbour,
-			+Replicate, +Jump, Communicate. \\
-			\hline
-			manage\_storage & InsertData, RemoveData, GetRemainingSpace,
-			GetMaximumSize. \\
-			\hline
-			manage\_communication & Communicate, DiscoveNeighbour. \\
-			\hline
-			manage\_positioning & ObtainPosition. \\
-			\hline
-			manage\_ui & ShowInformation, ShowInformationList. \\
-			\hline
-		\end{tabular}
-	\caption{Transition Task-Action table $(C+1)TTA_t$}
-	\label{tab:cp1ttat}
 \end{table}
 
 \subsubsection{Entities Tables}
@@ -999,16 +807,11 @@ System}, already present in the environment.
 			\hline
 			\textbf{Action} & \textbf{Description} \\
 			\hline
-			Replicate & Make a copy of the hovering information to be transferred to
-			another mobile node. \\
+			AccessInformation & Find and access to the data of the required
+			information. \\
 			\hline
-			Jump & Transfer the hovering information to another mobile node. \\
-			\hline
-			ManageDevice & Manage device systems and make them accessible to users. \\
-			\hline
-			ListInformation & Get all the information available in the current position.\\
-			\hline
-			AccessInformation & Obtain a specific hovering information. \\
+			ListInformation & Gets all the information available to the mobile node
+			that is valid in the current position.\\
 			\hline
 			CreateInformation & Create a new hovering information. \\
 			\hline
@@ -1017,6 +820,13 @@ System}, already present in the environment.
 			\hline
 			CreateViaUI & A mobile user can create an hovering information using the
 			mobile UI. \\
+			\hline
+			Replicate & Make a copy of the hovering information to be transferred to
+			another mobile node. \\
+			\hline
+			Jump & Transfer the hovering information to another mobile node. \\
+			\hline
+			AccessInformationData & Allow access to the hovering information data. \\
 			\hline
 			AnalyzeSimulation & Analyze the system properties such as hovering
 			information requirements and complex network parameters. \\
@@ -1055,6 +865,25 @@ System}, already present in the environment.
 			\hline
 			InquireEnvironment & Get extra information about environment.\\
 			\hline
+			DiscoveNeighbour & Discover peers node inside the communication range. \\
+			\hline
+			InsertData & Insert a data into the mobile node buffer. \\
+			\hline
+			RemoveData & Remove a data from the mobile node buffer. \\
+			\hline
+			GetRemainingSpace & Obtain the space left of the mobile node buffer. \\
+			\hline
+			GetMaximumSize & Obtain the total space of the mobile node buffer. \\
+			\hline
+			ObtainPosition & Obtain the current node position using some location
+			device. \\
+			\hline
+			ShowInformation & Show a selected hovering information to mobile node
+			user.\\
+			\hline
+			ShowInformationList & Show the current list of available hovering
+			information to mobile node user.\\
+			\hline
 		\end{tabular}
 	\caption{Operation table $(C)O_t$}
 	\label{tab:cot}
@@ -1070,10 +899,9 @@ System}, already present in the environment.
 			\hline
 			Person & MoveAction, AccessViaUI, CreateViaUI. \\
 			\hline
-			Mobile node & ManageDevice, AccessInformation, ListInformation,
-			CreateInformation.  \\
+			Mobile node & ManageDevice, ListInformation, CreateInformation.  \\
 			\hline
-			Piece of Hovering Information & Replicate, Jump. \\
+			Piece of Hovering Information & Replicate, Jump, AccessInformationData. \\
 			\hline
 			Simulation Manager & InputInitialParameters, SetInitialParameters,
 			StartSimulation, ShowSimulation. \\
@@ -1093,6 +921,10 @@ System}, already present in the environment.
 			\hline
 			SimulatorInquisitor & InquireNodes, InquireHoveringInformations, InquireEnvironment. \\
 			\hline
+			MobileResource & InsertData, RemoveData, GetRemainingSpace,
+			GetMaximumSize, DiscoveNeighbour, ObtainPosition, ShowInformation,
+			ShowInformationList. \\
+			\hline
 		\end{tabular}
 	\caption{Resource-Operation table $(C)RO_t$}
 	\label{tab:crot}
@@ -1109,11 +941,31 @@ System}, already present in the environment.
 			GUI Interaction & The system should access the GUI for graphical output
 			purposes. \\
 			\hline
-			Node Resource Interaction & High-Level mobile operation (such as access
-			and creation) must use low-level node resources. \\
+			ShowInfo Interaction & Show to the mobile UI an accessed hovering
+			information. \\
 			\hline
-			HoverInf Resource Interaction & Hovering information have to access to
-			node resources. \\
+			ShowList Interaction & Show to the mobile UI the list of accessible hovering
+			information. \\
+			\hline
+			InsertNewPiece Interaction & Insert if possible a new piece of hovering
+			information inside a mobile node buffer. \\
+			\hline
+			RemovePiece Interaction & Remove a piece of hovering information from the
+			hosting mobile node buffer. \\
+			\hline
+			Access Interaction & Mobile nodes have to communicate together in order to
+			access an hovering information. \\
+			\hline
+			List Interaction & Mobile nodes have to communicate together in order to
+			obtain the list of available hovering information. \\
+			\hline
+			AccessInformationData Interaction & Mobile nodes must interact with Pieces
+			of Hovering Information in order to get their data. \\
+			\hline
+			HoverNeighbour Interaction & Piece of hovering information have to know
+			neighbours of the hosting mobile node. \\
+			\hline
+			NodeNeighbour Interaction & A mobile node have to know its neighbours. \\
 			\hline
 			User Create Interaction & Mobile users have to communicate with the
 			mobile node in order to create information. \\
@@ -1121,11 +973,11 @@ System}, already present in the environment.
 			User Access Interaction & Mobile users have to communicate with the
 			mobile node in order to access information. \\
 			\hline
-			Inquisition & World inquisition for analysis purposes. \\
+			Inquisition Interaction & World inquisition for analysis purposes. \\
 			\hline
-			Jump Interaction & Jump from a mobile node to another.
+			Jump Interaction & Jump from a mobile node to another. \\
 			\hline
-			Replication Interaction & Replicate to another mobile node.
+			Replication Interaction & Replicate to another mobile node. \\
 			\hline
 		\end{tabular}
 	\caption{Interaction table $(C)I_t$}
@@ -1138,31 +990,31 @@ System}, already present in the environment.
 			\hline
 			\textbf{Action} & \textbf{Interaction} \\
 			\hline
-			Replicate & HoverInf Resource Interaction, Replication Interaction. \\
+			AccessInformation & Access Interaction. \\
 			\hline
-			Jump & HoverInf Resource Interaction, Jump Interaction. \\
+			ListInformation & List Interaction. \\
 			\hline
-			ManageDevice & HoverInf Resource Interaction. \\
+			CreateInformation & \\
 			\hline
-			ListInformation & Node Resource Interaction. \\
+			AccessViaUI & User Access Interaction \\
 			\hline
-			CreateInformation & Node Resource Interaction. \\
+			CreateViaUI & User Create Interaction \\
 			\hline
-			AccessInformation & Node Resources Interaction. \\
+			Replicate & Replication Interaction \\
 			\hline
-			CreateViaUI & User Access Interaction. \\
+			Jump & Jump Interaction \\
 			\hline
-			AccessViaUI & User Create Interaction. \\
+			AccessInformationData & AccessInformationData Interaction \\
 			\hline
-			AnalyzeSimulation & Inquisition. \\
+			AnalyzeSimulation & Inquisition Interaction \\
 			\hline
 			InputInitialParameters & \\
 			\hline
-			SetInitialParameters &  \\
+			SetInitialParameters & \\
 			\hline
-			StartSimulation &  \\
+			StartSimulation & \\
 			\hline
-			ShowSimulation & GUI Interaction. \\
+			ShowSimulation & GUI Interaction \\
 			\hline
 			MoveAction & \\
 			\hline
@@ -1181,11 +1033,28 @@ System}, already present in the environment.
 			\hline
 			RenderWorld & GUI Interaction. \\
 			\hline
-			InquireNodes & Inquisition. \\
+			InquireNodes & Inquisition Interaction. \\
 			\hline
-			InquireHoveringInformation & Inquisition. \\
+			InquireHoveringInformation & Inquisition Interaction. \\
 			\hline
-			InquireEnvironment & Inquisition. \\
+			InquireEnvironment & Inquisition Interaction. \\
+			\hline
+			DiscoveNeighbour & HoverNeighbour Interaction, NodeNeighbour Interaction. \\
+			\hline
+			InsertData & InsertNewPiece Interaction. \\
+			\hline
+			RemoveData &  RemovePiece Interaction. \\
+			\hline
+			GetRemainingSpace & InsertNewPiece Interaction, RemovePiece Interaction.  \\
+			\hline
+			GetMaximumSize & InsertNewPiece Interaction, RemovePiece Interaction.  \\
+			\hline
+			ObtainPosition & Jump Interaction, Replicate Interaction, List
+			Interaction, Access Interaction.  \\
+			\hline
+			ShowInformation & ShowInfo Interaction.  \\
+			\hline
+			ShowInformationList & ShowList Interaction.  \\
 			\hline
 		\end{tabular}
 	\caption{Operation-Interaction table $(C)OpI_t$}
@@ -1211,8 +1080,20 @@ System}, already present in the environment.
 			SetBefStart Rule & Set initial simulation parameters before starting the
 			simulation.  \\
 			\hline
-			Node Resource Rule & High-Level mobile operation (such as access
-			and creation) depends on low-level node resources rules. \\
+			Accessible Rule & A mobile node can access an hovering information, if it
+			resides in its anchor area. \\
+			\hline
+			Listing Rule & A mobile node answers to a listing interaction only with
+			information accessible from the sender position. \\
+			\hline
+			Creation Rule & An hovering information can be created from a mobile node
+			residing in the anchor area. \\
+			\hline
+			Storage Rule & A mobile node cannot store more information than its
+			buffer permits. \\
+			\hline
+			Neighbour Rule & A mobile node is reachable (is a neighbour) from
+			another if both are in communication range. \\
 			\hline
 			Movement Duplicate Rule & If a neighbour mobile node doesn't contain the same
 			hovering information, movement or replication is allowed. \\
@@ -1220,12 +1101,12 @@ System}, already present in the environment.
 			Movement Storage Rule & If the destination mobile node can't store the hovering
 			information, the movement isn't possible. \\
 			\hline
-			Hovering Rule & Hovering information movement must guarantee survival,
-			maximize availability and accessibility. \\
-			\hline
 			Bounded World Rule & People cannot move outside the world. \\
 			\hline
 			Living Space Rule & A person cannot move inside other person's vital space. \\
+			\hline
+			Node Location Rule & A mobile node and an hovering information can access
+			only its own mobile resource. \\
 			\hline
 		\end{tabular}
 	\caption{Rule table $(C)Ru_t$}
@@ -1238,15 +1119,33 @@ System}, already present in the environment.
 			\hline
 			\textbf{Interaction} & \textbf{Rule} \\
 			\hline
-			Node Resource Interaction & Node Resource Rule. \\
+			GUI Interaction & StartBefGUI Rule\\
 			\hline
-			Inquisition & StartBefInq Rule. \\
+			ShowInfo Interaction & \\
 			\hline
-			GUI Interaction & StartBefGUI Rule. \\
+			ShowList Interaction & \\
 			\hline
-			Jump Interaction & Movement Duplicate Rule, Movement Storage Rule. \\
+			InsertNewPiece Interaction & Storage Rule, Node Location Rule \\
 			\hline
-			Replication Interaction & Movement Duplicate Rule, Movement Storage Rule. \\
+			Access Interaction & Accessible Rule, Neighbour Rule \\
+			\hline
+			List Interaction & Listing Rule, Neighbour Rule \\
+			\hline
+			AccessInformationData Interaction & Neighbour Rule\\
+			\hline
+			HoverNeighbour Interaction & Neighbour Rule\\
+			\hline
+			NodeNeighbour Interaction & Neighbour Rule\\
+			\hline
+			User Create Interaction & \\
+			\hline
+			User Access Interaction & \\
+			\hline
+			Inquisition Interaction & StartBefInq Rule \\
+			\hline
+			Jump Interaction & Movement Duplicate Rule, Movement Storage Rule, Neighbour Rule \\
+			\hline
+			Replication Interaction & Movement Duplicate Rule, Movement Storage Rule, Neighbour Rule \\
 			\hline
 		\end{tabular}
 	\caption{Interaction-Rule table $(C)IRu_t$}
@@ -1263,6 +1162,8 @@ System}, already present in the environment.
 			\hline
 			SimulatorInquisitor & StartBefInq Rule. \\
 			\hline
+			MobileResource & Node Location Rule. \\
+			\hline
 		\end{tabular}
 	\caption{Resource-Rule table $(C)ReRu_t$}
 	\label{tab:crerut}
@@ -1276,14 +1177,15 @@ System}, already present in the environment.
 			\hline
 			Simulation Analyst & StartBefInq Rule. \\
 			\hline
-			Person & Bounded World Rule, Vital Space Rule. \\
+			Person & Bounded World Rule, Living Space Rule. \\
 			\hline
 			Piece of Hovering Information & Movement Storage Rule, Movement Duplicate
-			Rule, Hovering Rule. \\
+			Rule, Storage Rule, Neighbour Rule. \\
 			\hline
 			Simulation Manager & InSimBefSet Rule, SetBefStart Rule, StartBefGUI Rule. \\
 			\hline
-			Mobile Node & Node Resource Rule. \\
+			Mobile Node & Accessible Rule, Listing Rule, Creation Rule, Neighbour
+			Rule, Node Location Rule. \\
 			\hline
 		\end{tabular}
 	\caption{Role-Rule table $(C)RoRu_t$}
@@ -1296,15 +1198,15 @@ System}, already present in the environment.
 			\hline
 			\textbf{Space} & \textbf{Rule} \\
 			\hline
-			Anchor Area Space & Hovering Rule. \\
+			Anchor Area Space & Accessible Rule, Listing Rule, Creation Rule. \\
 			\hline
-			Communication Range Space & Hovering Rule. \\
+			Communication Range Space & Neighbour Rule. \\
 			\hline
-			Node Position Space & Hovering Rule. \\
+			Node Space & Node Location Rule, Accessible Rule, Listing Rule, Creation Rule. \\
 			\hline
 			World Space & Bounded World Rule. \\
 			\hline
-			Vital Space Space & Vital Space Rule. \\
+			Living Space Space & Living Space Rule. \\
 			\hline
 		\end{tabular}
 	\caption{Space-Rule table $(C)SRu_t$}
@@ -1319,7 +1221,8 @@ System}, already present in the environment.
 			\hline
 			\textbf{Space} & \textbf{Description} \\
 			\hline
-			Node Position Space & Position of a mobile node. \\
+			Node Space & Mobile node space: located in a specific position, holds a
+			mobile resource. \\
 			\hline
 			Anchor Area Space & Area associated to each hovering information, defined as a
 			circular area with center into the \emph{anchor location} and radius the
@@ -1330,7 +1233,7 @@ System}, already present in the environment.
 			\hline
 			World Space & The environment. \\
 			\hline
-			Vital Space Space & Space owned by a person. \\
+			Living Space Space & Space owned by a person. \\
 			\hline
 		\end{tabular}
 	\caption{Space table $(C)S_t$}
@@ -1343,7 +1246,9 @@ System}, already present in the environment.
 			\hline
 			\textbf{Space} & \textbf{Connection} \\
 			\hline
-			Communication Range Space & Node Position Space. \\
+			Communication Range Space & Centered. \\
+			\hline
+			Node Space & Centered. \\
 			\hline
 		\end{tabular}
 	\caption{Space-Connection table $(C)SC_t$}
@@ -1360,6 +1265,8 @@ System}, already present in the environment.
 			\hline
 			SimulatorInquisitor & World Space \\
 			\hline
+			Node Resource & Node Space \\
+			\hline
 		\end{tabular}
 	\caption{Resource-Space table $(C)ReS_t$}
 	\label{tab:crest}
@@ -1373,195 +1280,17 @@ System}, already present in the environment.
 			\hline
 			Simulation Analyst & World Space. \\
 			\hline
-			Person & World Space, Vital Space Space, Anchor Space. \\
+			Person & World Space, Living Space Space, Anchor Space. \\
 			\hline
-			Mobile node & Node Position Space, Anchor Space. \\
+			Mobile node & Node Space, Anchor Space. \\
 			\hline
-			Piece of Hovering Information & Anchor Space, Node Position Space. \\
+			Piece of Hovering Information & Anchor Space, Node Space. \\
 			\hline
 			Simulation Manager & World Space. \\
 			\hline
 		\end{tabular}
 	\caption{Role-Space table $(C)RoS_t$}
 	\label{tab:cost}
-\end{table}
-
-\subsubsection{Layering C+1}
-
-\begin{table}[H]
-	\centering
-	\begin{tabular}{|p{4cm}|p{8cm}|}
-			\hline
-			\textbf{Layer $C$} & \textbf{Layer $C+1$} \\
-			\hline
-			ManageDevice & Communicate, DiscoverNeighbour, InsertData,
-			RemoveData, GetRemainingSpace, GetMaximumSize, ObtainPosition,
-			ShowInformation, InputInformation, ShowInformationList. \\
-			\hline
-			Node Resource Interaction & ShowInfo Interaction, ShowList Interaction. \\
-			\hline
-			Hovering Rule & Survival Rule, QoS Rule. \\	
-			\hline
-			Node Resource Rule & Storage Rule, Communication Rule. \\
-			\hline
-		\end{tabular}
-	\caption{Zooming Table $\left( \left( C \right)Z_t \right)$ $(C)Z_t$}
-	\label{tab:adczt}
-\end{table}
-
-\begin{table}[H]
-	\centering
-	\begin{tabular}{|p{4cm}|p{8cm}|}
-			\hline
-			\textbf{Action} & \textbf{Description} \\
-			\hline
-			Communicate & Mobile node p2p communication management.\\
-			\hline
-			DiscoveNeighbour & Discover peers node inside the communication range. \\
-			\hline
-			InsertData & Insert a data into the mobile node buffer. \\
-			\hline
-			RemoveData & Remove a data from the mobile node buffer. \\
-			\hline
-			GetRemainingSpace & Obtain the space left of the mobile node buffer. \\
-			\hline
-			GetMaximumSize & Obtain the total space of the mobile node buffer. \\
-			\hline
-			ObtainPosition & Obtain the current node position using some location
-			device. \\
-			\hline
-			ShowInformation & Show a selected hovering information to mobile node
-			user.\\
-			\hline
-			ShowInformationList & Show the current list of available hovering
-			information to mobile node user.\\
-			\hline
-			InputInformation & When creating an hovering information, mobile users have to
-			input the required data to the mobile node. \\
-			\hline
-		\end{tabular}
-	\caption{Action table $(C+1)A_t$}
-	\label{tab:cp1at}
-\end{table}
-
-\begin{table}[H]
-	\centering
-	\begin{tabular}{|p{4cm}|p{8cm}|}
-			\hline
-			\textbf{Interaction} & \textbf{Description} \\
-			\hline
-			ShowInfo Interaction & Show to the mobile UI an accessed hovering
-			information. \\
-			\hline
-			ShowList Interaction & Show to the mobile UI the list of accessible hovering
-			information. \\
-			\hline
-			Storage Interaction & Access to storage resources. \\
-			\hline
-		\end{tabular}
-	\caption{Interaction table $(C+1)I_t$}
-	\label{tab:cp1it}
-\end{table}
-
-\begin{table}[H]
-	\centering
-	\begin{tabular}{|p{4cm}|p{8cm}|}
-			\hline
-			\textbf{Action} & \textbf{Interaction} \\
-			\hline
-			Communicate & +HoverInf Resource Interaction, LowLevel Access
-			Interaction, LowLevel List Interaction, LowLevel Create Interaction.\\
-			\hline
-			DiscoveNeighbour & LowLevel Access Interaction, LowLevel List
-			Interaction, LowLevel Create Interaction.  \\
-			\hline
-			ManageStorage & Storage Interaction. \\
-			\hline
-			+ListInformation & LowLevel List Interaction, List UI Interaction. \\
-			\hline
-			+CreateInformation & LowLevel Create Interaction.  \\
-			\hline
-			+AccessInformation & LowLevel Access Interaction. Access UI Interaction. \\
-			\hline
-			ShowInformation & ShowInfo Interaction, ShowList Interaction. \\
-			\hline
-		\end{tabular}
-	\caption{Action-Interaction table $(C+1)AcI_t$}
-	\label{tab:cp1acit}
-\end{table}
-
-\begin{table}[H]
-	\centering
-	\begin{tabular}{|p{4cm}|p{8cm}|}
-			\hline
-			\textbf{Rule} & \textbf{Description} \\
-			\hline
-			Survival Rule & When the hovering information exits it's anchor area, has
-			to prioritize the survival behaviour.\\
-			\hline
-			QoS Rule & When inside the Anchor Area, an Hovering Information has to
-			maximize the availability and accessibility.\\
-			\hline
-			Storage Rule & A mobile node cannot store more information than its
-			buffer permits. \\
-			\hline
-			Communication Rule & Communication and DiscoverNeighbour actions are
-			possible only within the communication range. \\
-			\hline
-		\end{tabular}
-	\caption{Rule table $(C+1)Ru_t$}
-	\label{tab:cp1rut}
-\end{table}
-
-\begin{table}[H]
-	\centering
-	\begin{tabular}{|p{4cm}|p{8cm}|}
-			\hline
-			\textbf{Interaction} & \textbf{Rule} \\
-			\hline
-			LowLevel Access Interaction & Communication Rule. \\
-			\hline
-			LowLevel List Interaction & Communication Rule. \\
-			\hline
-			LowLevel Create Interaction & Communication Rule. \\
-			\hline
-		\end{tabular}
-	\caption{Interaction-Rule table $(C+1)IRu_t$}
-	\label{tab:cp1irut}
-\end{table}
-
-\begin{table}[H]
-	\centering
-	\begin{tabular}{|p{4cm}|p{8cm}|}
-			\hline
-			\textbf{Role} & \textbf{Rule} \\
-			\hline
-			+Piece of Hovering Information & Survival Rule, QoS Rule. \\
-			\hline
-			+Mobile Node & Storage Rule, Communication Rule. \\
-			\hline
-		\end{tabular}
-	\caption{Role-Rule table $(C+1)RoRu_t$}
-	\label{tab:cp1rorut}
-\end{table}
-
-\begin{table}[H]
-	\centering
-	\begin{tabular}{|p{4cm}|p{8cm}|}
-			\hline
-			\textbf{Space} & \textbf{Rule} \\
-			\hline
-			+Anchor Area Space & Survival Rule, QoS Rule. \\
-			\hline
-			+Communication Range Space & Survival Rule, QoS Rule, Communication Rule. \\
-			\hline
-			+Node Position Space & Communication Rule, Survival Rule, QoS Rule. \\
-			\hline
-			+World Space & Survival Rule, QoS Rule. \\
-			\hline
-		\end{tabular}
-	\caption{Space-Rule table $(C)SRu_t$}
-	\label{tab:cot}
 \end{table}
 
 \subsection{Detailed Design}
@@ -1613,14 +1342,9 @@ System}, already present in the environment.
 			\hline
 			Legs Artifact & MoveAction. \\
 			\hline
-			Communication Artifact & Communicate, DiscoveNeighbour. \\
-			\hline
-			Storage Artifact & InsertData, RemoveData, GetRemainingSpace,
-			GetMaximumSize. \\
-			\hline
-			Positioning Artifact & ObtainPosition. \\
-			\hline
-			MobileUI Artifact & ShowInformation, ShowInformationList, InputInformation. \\
+			Mobile Node Artifact & DiscoveNeighbour, InsertData, RemoveData,
+			GetRemainingSpace, GetMaximumSize, ObtainPosition, ShowInformation,
+			ShowInformationList. \\
 			\hline
 			Simulation Management Artifact & InputIntialParameter,
 			SetInitialParameters, StartSimulation, ShowSimulation. \\
@@ -1683,20 +1407,9 @@ System}, already present in the environment.
 			\hline
 			\textbf{Artifact} & \textbf{Rule} \\
 			\hline
-			Hovering Artifact & Survival Rule, QoS Rule, Movement Duplicate Rule,
-			Movement Storage Rule. \\
-			\hline
 			Legs Artifact & Bounded World Rule, Living Space Rule. \\
 			\hline
-			User Artifact &  \\
-			\hline
-			Communication Artifact & Communicaton Rule. \\
-			\hline
-			Storage Artifact & Storage Rule. \\
-			\hline
-			Positioning Artifact & \\
-			\hline
-			MobileUI Artifact & \\
+			Mobile Node Artifact & Storage Rule, Communicaton Rule. \\
 			\hline
 			Simulation Management Artifact & InSimBefSet Rule, SetBefStart Rule. \\
 			\hline
@@ -1725,7 +1438,7 @@ System}, already present in the environment.
 			\hline
 			World Space & World. \\
 			\hline
-			Vital Space Space & Vital Space. \\
+			Living Space Space & Living Space. \\
 			\hline
 		\end{tabular}
 	\caption{Mapping Space-Workspace table $(C)MSW_t$}
@@ -1827,8 +1540,7 @@ System}, already present in the environment.
 			\hline
 			Person & Legs Artifact. \\
 			\hline
-			Mobile node & StorageArtifact, Positioning Artifact, MobileUI Artifact,
-			Communication Artifact. \\
+			Mobile node & Mobile Node Artifact. \\
 			\hline
 			Piece of Hovering Information & \\
 			\hline
@@ -1866,7 +1578,6 @@ System}, already present in the environment.
 
 \subsubsection{Environment Design Tables}
 
-% TODO
 \begin{table}[H]
 	\centering
 	\begin{tabular}{|p{4cm}|p{8cm}|}
@@ -1875,13 +1586,9 @@ System}, already present in the environment.
 			\hline
 			Legs Artifact & Step. \\
 			\hline
-			Communication Artifact & Communicate, DiscoveNeighbour. \\
-			\hline
-			Storage Artifact & InsertData, RemoveData, GetRemainingSpace, GetMaximumSize. \\
-			\hline
-			Positioning Artifact & ObtainPosition. \\
-			\hline
-			MobileUI Artifact & ShowInformation, ShowInformationList, InputInformation. \\
+			Mobile Node Artifact & Communicate, DiscoveNeighbour, InsertData,
+			RemoveData, GetRemainingSpace, GetMaximumSize, ObtainPosition,
+			ShowInformation, ShowInformationList. \\
 			\hline
 			Simulation Management Artifact & InputIntialParameter,
 			SetInitialParameters, StartSimulation, ShowSimulation. \\
@@ -1890,7 +1597,8 @@ System}, already present in the environment.
 			\hline
 			SimulatorUI Artifact & Render. \\
 			\hline
-			SimulatorInquisitor Artifact & InquireNodes, InquireHovering, InquireEnvironment \\
+			SimulatorInquisitor Artifact & InquireNodes, InquireHovering,
+			InquireEnvironment \\
 			\hline
 		\end{tabular}
 	\caption{Artifact-UsageInterface table $(C)AUI_t$}
@@ -1903,8 +1611,7 @@ System}, already present in the environment.
 			\hline
 			\textbf{Aggregate} & \textbf{Artifact} \\
 			\hline
-			Mobile Device Artifact & Storage Artifact, Positioning Artifact, MobileUI
-			Artifact, Communication Artifact. \\
+			& \\
 			\hline
 		\end{tabular}
 	\caption{Aggregate-Artifact table $(C)AggArt_t$}
@@ -1917,7 +1624,7 @@ System}, already present in the environment.
 			\hline
 			\textbf{Aggregate} & \textbf{Agent} \\
 			\hline
-			Mobile Device Artifact & Mobile Node. \\
+			& \\
 			\hline
 		\end{tabular}
 	\caption{Aggregate-Agent table $(C)AggAge_t$}
@@ -2081,7 +1788,7 @@ System}, already present in the environment.
 			\hline
 			World  & Simulation world. \\
 			\hline
-			Vital  Space & Person's vital space.\\
+			Living  Space & Person's livin space.\\
 			\hline
 		\end{tabular}
 	\caption{Workspace table $(C)W_t$}
