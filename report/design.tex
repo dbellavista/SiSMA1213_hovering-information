@@ -728,7 +728,7 @@ human being users and the mobile node.
 			\hline
 			SimStartedDep & \\
 			\hline
-			NeighbourDep & HoverNeighbour Interaction, NodeNeighbour Interaction\\
+			NeighbourDep & DiscoverNeighbour Interaction\\
 			\hline
 			StorageDep & InsertNewPiece Interaction, RemovePiece Interaction \\
 			\hline
@@ -938,6 +938,8 @@ human being users and the mobile node.
 			\hline
 			\textbf{Interaction} & \textbf{Description} \\
 			\hline
+			Inquisition Interaction & World inquisition for analysis purposes. \\
+			\hline
 			GUI Interaction & The system should access the GUI for graphical output
 			purposes. \\
 			\hline
@@ -962,18 +964,14 @@ human being users and the mobile node.
 			AccessInformationData Interaction & Mobile nodes must interact with Pieces
 			of Hovering Information in order to get their data. \\
 			\hline
-			HoverNeighbour Interaction & Piece of hovering information have to know
-			neighbours of the hosting mobile node. \\
-			\hline
-			NodeNeighbour Interaction & A mobile node have to know its neighbours. \\
+			DiscoverNeighbour Interaction & Mobile nodes or piece of hovering
+			information have to know the neighbours. \\
 			\hline
 			User Create Interaction & Mobile users have to communicate with the
 			mobile node in order to create information. \\
 			\hline
 			User Access Interaction & Mobile users have to communicate with the
 			mobile node in order to access information. \\
-			\hline
-			Inquisition Interaction & World inquisition for analysis purposes. \\
 			\hline
 			Jump Interaction & Jump from a mobile node to another. \\
 			\hline
@@ -1039,7 +1037,7 @@ human being users and the mobile node.
 			\hline
 			InquireEnvironment & Inquisition Interaction. \\
 			\hline
-			DiscoveNeighbour & HoverNeighbour Interaction, NodeNeighbour Interaction. \\
+			DiscoveNeighbour & DiscoverNeighbour Interaction. \\
 			\hline
 			InsertData & InsertNewPiece Interaction. \\
 			\hline
@@ -1098,9 +1096,6 @@ human being users and the mobile node.
 			Movement Duplicate Rule & If a neighbour mobile node doesn't contain the same
 			hovering information, movement or replication is allowed. \\
 			\hline
-			Movement Storage Rule & If the destination mobile node can't store the hovering
-			information, the movement isn't possible. \\
-			\hline
 			Bounded World Rule & People cannot move outside the world. \\
 			\hline
 			Living Space Rule & A person cannot move inside other person's vital space. \\
@@ -1133,9 +1128,7 @@ human being users and the mobile node.
 			\hline
 			AccessInformationData Interaction & Neighbour Rule\\
 			\hline
-			HoverNeighbour Interaction & Neighbour Rule\\
-			\hline
-			NodeNeighbour Interaction & Neighbour Rule\\
+			DiscoverNeighbour Interaction & Neighbour Rule\\
 			\hline
 			User Create Interaction & \\
 			\hline
@@ -1143,9 +1136,9 @@ human being users and the mobile node.
 			\hline
 			Inquisition Interaction & StartBefInq Rule \\
 			\hline
-			Jump Interaction & Movement Duplicate Rule, Movement Storage Rule, Neighbour Rule \\
+			Jump Interaction & Movement Duplicate Rule, Neighbour Rule \\
 			\hline
-			Replication Interaction & Movement Duplicate Rule, Movement Storage Rule, Neighbour Rule \\
+			Replication Interaction & Movement Duplicate Rule, Neighbour Rule \\
 			\hline
 		\end{tabular}
 	\caption{Interaction-Rule table $(C)IRu_t$}
@@ -1162,7 +1155,7 @@ human being users and the mobile node.
 			\hline
 			SimulatorInquisitor & StartBefInq Rule. \\
 			\hline
-			MobileResource & Node Location Rule. \\
+			MobileResource & Storage Rule, Neighbour Rule, Node Location Rule. \\
 			\hline
 		\end{tabular}
 	\caption{Resource-Rule table $(C)ReRu_t$}
@@ -1179,7 +1172,7 @@ human being users and the mobile node.
 			\hline
 			Person & Bounded World Rule, Living Space Rule. \\
 			\hline
-			Piece of Hovering Information & Movement Storage Rule, Movement Duplicate
+			Piece of Hovering Information &  Movement Duplicate
 			Rule, Storage Rule, Neighbour Rule. \\
 			\hline
 			Simulation Manager & InSimBefSet Rule, SetBefStart Rule, StartBefGUI Rule. \\
@@ -1246,9 +1239,15 @@ human being users and the mobile node.
 			\hline
 			\textbf{Space} & \textbf{Connection} \\
 			\hline
-			Communication Range Space & Centered. \\
+			Communication Range Space & Centered, Inside. \\
 			\hline
-			Node Space & Centered. \\
+			Node Space & Centered, Inside. \\
+			\hline
+			Anchor Area Space & Inside. \\
+			\hline
+			Living Space Space & Inside. \\
+			\hline
+			World Space & Inside. \\
 			\hline
 		\end{tabular}
 	\caption{Space-Connection table $(C)SC_t$}
@@ -1342,14 +1341,14 @@ human being users and the mobile node.
 			\hline
 			Legs Artifact & MoveAction. \\
 			\hline
-			Mobile Node Artifact & DiscoveNeighbour, InsertData, RemoveData,
-			GetRemainingSpace, GetMaximumSize, ObtainPosition, ShowInformation,
-			ShowInformationList. \\
-			\hline
-			Simulation Management Artifact & InputIntialParameter,
+			SimulationManagement Artifact & InputIntialParameter,
 			SetInitialParameters, StartSimulation, ShowSimulation. \\
 			\hline
 			Analyzer Artifact & AnalyzeSimulation. \\
+			\hline
+			HoveringInformation Artifact & AccessInformationData. \\
+			\hline
+			MobileNode Artifact & CreateInformation \\
 			\hline
 		\end{tabular}
 	\caption{Mapping Artifact-Action table $(C)MAAc_t$}
@@ -1365,6 +1364,10 @@ human being users and the mobile node.
 			SimulatorUI Artifact & SimulatorUIRes. \\
 			\hline
 			SimulatorInquisitor Artifact & SimulatorInquisitor. \\
+			\hline
+			MobileResource Artifact & DiscoveNeighbour, InsertData, RemoveData,
+			GetRemainingSpace, GetMaximumSize, ObtainPosition, ShowInformation,
+			ShowInformationList. \\
 			\hline
 		\end{tabular}
 	\caption{Mapping Artifact-Resource table $(C)MArR_t$}
@@ -1400,7 +1403,6 @@ human being users and the mobile node.
 	\label{tab:cmaropt}
 \end{table}
 
-% TODO: Survival and QoS rules may not be correct.
 \begin{table}[H]
 	\centering
 	\begin{tabular}{|p{4cm}|p{8cm}|}
@@ -1409,7 +1411,8 @@ human being users and the mobile node.
 			\hline
 			Legs Artifact & Bounded World Rule, Living Space Rule. \\
 			\hline
-			Mobile Node Artifact & Storage Rule, Communicaton Rule. \\
+			MobileResource Artifact & Storage Rule, Neighbour Rule, Node Location
+			Rule, Movement Duplicate Rule. \\
 			\hline
 			Simulation Management Artifact & InSimBefSet Rule, SetBefStart Rule. \\
 			\hline
@@ -1430,7 +1433,7 @@ human being users and the mobile node.
 			\hline
 			\textbf{Space} & \textbf{Workspace} \\
 			\hline
-			Node Position Space & Node Position. \\
+			Node Space & Node Workspace. \\
 			\hline
 			Anchor Area Space & Anchor Area. \\
 			\hline
@@ -1453,17 +1456,19 @@ human being users and the mobile node.
 			\hline
 			GUI Interaction & GUI Use \\
 			\hline
-			Inquisition & Inquisition Use \\
+			Inquisition Interaction & Analysis Use \\
 			\hline
 			ObtainPosition Interaction & ObtainPosition Use \\	
 			\hline
 			DiscoverNeighbour Interaction & DiscoverNeighbour Use \\	
 			\hline
-			Communication Interaction & Communication Use \\	
-			\hline
 			ShowInfo Interaction & ShowInfo Use \\
 			\hline
 			ShowList Interaction & ShowList Use \\
+			\hline
+			InsertNewPiece Interaction & InsertNewPiece \\
+			\hline
+			RemovePiece Interaction & RemovePiece \\
 			\hline
 		\end{tabular}
 	\caption{Mapping Interaction-Use table $(C)MIU_t$}
@@ -1476,6 +1481,7 @@ human being users and the mobile node.
 			\hline
 			\textbf{Interaction} & \textbf{Manifest} \\
 			\hline
+			& \\
 			\hline
 		\end{tabular}
 	\caption{Mapping Interaction-Manifest table $(C)MIM_t$}
@@ -1494,7 +1500,7 @@ human being users and the mobile node.
 			\hline
 			User Create Interaction & Creation Speech \\
 			\hline
-			User Access Interaction & Access Speech \\
+			User Access Interaction & AskAccess Speech \\
 			\hline
 			List Interaction & List Speech \\
 			\hline
@@ -1511,17 +1517,9 @@ human being users and the mobile node.
 			\hline
 			\textbf{Interaction} & \textbf{LinkedTo} \\
 			\hline
-			LowLevel Access Interaction & LowLevel Access Link\\
+			GUI Interaction & GUI Link\\
 			\hline
-			LowLevel List Interaction & LowLevel List Link \\
-			\hline
-			LowLevel Create Interaction & LowLevel Create Link \\
-			\hline
-			Access UI Interaction & Access UI Link\\
-			\hline
-			List UI Interaction & List UI Link\\
-			\hline
-			Crate UI Interaction & Create UI Link\\
+			Inquisition Interaction & Inquisition Link\\
 			\hline
 		\end{tabular}
 	\caption{Mapping Interaction-LinkedTo table $(C)MIL_t$}
@@ -1540,9 +1538,9 @@ human being users and the mobile node.
 			\hline
 			Person & Legs Artifact. \\
 			\hline
-			Mobile node & Mobile Node Artifact. \\
+			Mobile node & \\
 			\hline
-			Piece of Hovering Information & \\
+			Piece of Hovering Information & HoveringInformation Artifact. \\
 			\hline
 			Simulation Manager & Simulation Management Artifact, SimulatorUI
 			Artifact. \\
@@ -1558,6 +1556,7 @@ human being users and the mobile node.
 			\hline
 			\textbf{Society} & \textbf{Agent} \\
 			\hline
+			Simulation Society & AnalystAgent, SimulationAgent\\
 			\hline
 		\end{tabular}
 	\caption{Society-Agent table $(C)SA_t$}
@@ -1570,6 +1569,8 @@ human being users and the mobile node.
 			\hline
 			\textbf{Society} & \textbf{Artifact} \\
 			\hline
+			Simulation Society & Analyzer Artifact, SimulatorInquisitor Artifact,
+			SimulatorUI Artifact. \\
 			\hline
 		\end{tabular}
 	\caption{Society-Artifact table $(C)SAr_t$}
@@ -1586,9 +1587,9 @@ human being users and the mobile node.
 			\hline
 			Legs Artifact & Step. \\
 			\hline
-			Mobile Node Artifact & Communicate, DiscoveNeighbour, InsertData,
-			RemoveData, GetRemainingSpace, GetMaximumSize, ObtainPosition,
-			ShowInformation, ShowInformationList. \\
+			MobileResource Artifact & DiscoveNeighbour, InsertData, RemoveData,
+			GetRemainingSpace, GetMaximumSize, ObtainPosition, ShowInformation,
+			ShowInformationList. \\
 			\hline
 			Simulation Management Artifact & InputIntialParameter,
 			SetInitialParameters, StartSimulation, ShowSimulation. \\
@@ -1599,6 +1600,8 @@ human being users and the mobile node.
 			\hline
 			SimulatorInquisitor Artifact & InquireNodes, InquireHovering,
 			InquireEnvironment \\
+			\hline
+			HoveringInformation Artifact & GetData \\
 			\hline
 		\end{tabular}
 	\caption{Artifact-UsageInterface table $(C)AUI_t$}
@@ -1639,20 +1642,22 @@ human being users and the mobile node.
 			\hline
 			\textbf{Use} & \textbf{Protocol} \\
 			\hline
-			GUI Use & Render(world\_representation)\\
+			GUI Use & Render\\
 			\hline
-			Inquisition & inquire nodes \newline InquireHovering \newline
-			InquireEnvironment\\
+			Analysis Use & analyze\_system \newline return results\\
 			\hline
-			ObtainPosition Use & obtain position\\
+			ObtainPosition Use & ask position\newline return position\\
 			\hline
-			DiscoverNeighbour Use & discover neighbours\\
+			DiscoverNeighbour Use & discover neighbours\newline return list of neighbours\\
 			\hline
-			Communication Use & \\
+			ShowInfo Use & show information\\
 			\hline
-			ShowInfo Use & \\
+			ShowList Use & show information list\\
 			\hline
-			ShowList Use & \\
+			InsertNewPiece& can insert?(name, size) \newline response \newline
+			insert(piece\_of\_information) \\
+			\hline
+			RemovePiece& remove(piece\_of\_information) \\
 			\hline
 		\end{tabular}
 	\caption{Use-Protocol table $(C)UP_t$}
@@ -1665,6 +1670,14 @@ human being users and the mobile node.
 			\hline
 			\textbf{Agent} & \textbf{Use} \\
 			\hline
+			Simulation Analyst & Analysis Use \\
+			\hline
+			Person &  \\
+			\hline
+			Mobile node & ObtainPosition Use, DiscoverNeighbour Use, ShowInfo Use,
+			ShowList Use,InsertNewPiece, RemovePiece  \\
+			\hline
+			Simulation Manager & GUI Use. \\
 			\hline
 		\end{tabular}
 	\caption{Agent-Use table $(C)AgeU_t$}
@@ -1677,6 +1690,11 @@ human being users and the mobile node.
 			\hline
 			\textbf{Artifact} & \textbf{Use} \\
 			\hline
+			Analyzer Artifact & Analysis Use. \\
+			\hline
+			HoveringInformation Artifact & AccessInformationData. \\
+			\hline
+			SimulationManagement Artifact & GUI Use. \\
 			\hline
 		\end{tabular}
 	\caption{Artifact-Use table $(C)ArtU_t$}
@@ -1689,6 +1707,19 @@ human being users and the mobile node.
 			\hline
 			\textbf{SpeakTo} & \textbf{Protocol} \\
 			\hline
+			Jump Speech & I\_am\_already\_there? \newline response \newline if\_not
+			try\_insert(information) \newline response \newline if\_yes remove\_information \\
+			\hline
+			Replication Speech & I\_am\_already\_there? \newline response \newline if\_not
+			try\_insert(information) \newline response \\
+			\hline
+			AskAccess Speech & access(information) \\
+			\hline
+			Creation Speech & create(information) \\
+			\hline
+			List Speech & give\_me\_valid\_info\_id(my\_position) \newline return list\_info\_id\\
+			\hline
+			Access Speech & give\_me\_information(info\_id) \newline return information \\
 			\hline
 		\end{tabular}
 	\caption{SpeakTo-Protocol table $(C)SP_t$}
@@ -1701,6 +1732,11 @@ human being users and the mobile node.
 			\hline
 			\textbf{Agent} & \textbf{SpeakTo} \\
 			\hline
+			MobileNode & List Speech, Access Speech, Creation Speech, AskAccess Speech, Replication Speech, Jump Speech. \\
+			\hline
+			Person & AskAccess Speech, Creation Speech. \\
+			\hline
+			Piece of Hovering Information & Jump Speech, Replication Speech. \\
 			\hline
 		\end{tabular}
 	\caption{Agent-SpeakTo table $(C)AgeSp_t$}
@@ -1752,7 +1788,11 @@ human being users and the mobile node.
 			\hline
 			\textbf{LinkedTo} & \textbf{Protocol} \\
 			\hline
-			& \\
+			GUI Link & render(world) \\
+			\hline
+			Inquisition Link & inquire nodes \newline return node info \newline inquire
+			hovering \newline return hovering info\newline
+			InquireEnvironment\newline return environment info \\
 			\hline
 		\end{tabular}
 	\caption{LinkedTo-Protocol table $(C)LP_t$}
@@ -1765,7 +1805,13 @@ human being users and the mobile node.
 			\hline
 			\textbf{Artifact} & \textbf{LinkedTo} \\
 			\hline
-			& \\
+			Simulation Management Artifact & GUI Link \\
+			\hline
+			SimulatorUI Artifact & GUI Link \\
+			\hline
+			Analyzer Artifact & Inquisition Link \\
+			\hline
+			SimulatorInquisition Artifact & Inquisition Link \\
 			\hline
 		\end{tabular}
 	\caption{Artifact-LinkedTo table $(C)ArtL_t$}
@@ -1780,7 +1826,7 @@ human being users and the mobile node.
 			\hline
 			\textbf{Workspace} & \textbf{Description} \\
 			\hline
-			Node Position  & Position of a node. \\
+			Node Workspace  & A mobile node workspace. \\
 			\hline
 			Anchor Area  & Area bound to an hovering information. \\
 			\hline
@@ -1801,6 +1847,15 @@ human being users and the mobile node.
 			\hline
 			\textbf{Workspace} & \textbf{Connection} \\
 			\hline
+			Communication Range & Centered, Inside. \\
+			\hline
+			Node Workspace & Centered, Inside. \\
+			\hline
+			Anchor Area & Inside. \\
+			\hline
+			Living Space & Inside. \\
+			\hline
+			World  & Inside. \\
 			\hline
 		\end{tabular}
 	\caption{Workspace-Connection table $(C)WC_t$}
@@ -1813,6 +1868,16 @@ human being users and the mobile node.
 			\hline
 			\textbf{Workspace} & \textbf{Artifact} \\
 			\hline
+			Node Workspace & HoveringInformation Artifact, MobileNode Artifact,
+			MobileResource Artifact. \\
+			\hline
+			World & SimulatorUI Artifact, SimulatorInquisitor Artifact,
+			HoveringInformation Artifact, MobileNode Artifact, MobileResource
+			Artifact. \\
+			\hline
+			Anchor Area & HoveringInformation Artifact. \\
+			\hline
+			Living Space & Legs Artifact \\
 			\hline
 		\end{tabular}
 	\caption{Workspace-Artifact table $(C)WArt_t$}
@@ -1825,6 +1890,14 @@ human being users and the mobile node.
 			\hline
 			\textbf{Workspace} & \textbf{Agent} \\
 			\hline
+			Node Workspace & Mobile Node, Piece of Hovering Information \\
+			\hline
+			World & Person, Simulator Analyzer, Simulator Manager, Piece of Hovering
+			Information, Mobile Node. \\
+			\hline
+			Anchor Area & Piece of hovering Information. \\
+			\hline
+			Living Space & Person. \\
 			\hline
 		\end{tabular}
 	\caption{Workspace-Agent table $(C)WA_t$}
