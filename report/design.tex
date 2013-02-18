@@ -253,7 +253,10 @@ System}, already present in the environment.
 			\hline
 			Maintain accessibility & maintain\_accessibility\_task\\
 			\hline
-			Manage Simulation & define\_initial\_parameters, start\_simulation, show\_simulation \\
+			Manage Simulation & initialize\_simulation, start\_simulation,
+			show\_simulation \\
+			\hline
+			Move & move\_task \\
 			\hline
 		\end{tabular}
 	\caption{Reference Requirement-Task table $(C)RRT_t$}
@@ -385,7 +388,7 @@ System}, already present in the environment.
 			maintain\_accessibility & Jumps or replicates to mobile nodes in order to
 			keep an high accessibility. \\
 			\hline
-			define\_initial\_parameters & Create initial parameters. \\
+			initialize\_simulation & Create initial parameters. \\
 			\hline
 			start\_simulation & Start the simulation. \\
 			\hline
@@ -506,8 +509,7 @@ System}, already present in the environment.
 			\hline
 			GUIDep & Make the needed information available for GUI purposes. \\
 			\hline
-			DefineInitialDep & Simulation can be started after the insertion of the
-			initial parameter. \\
+			InitializeSimDep & Simulation must be initialized before it can be started. \\
 			\hline
 			SimStartedDep & Simulation should be started before analysis and showing. \\
 			\hline
@@ -551,7 +553,7 @@ System}, already present in the environment.
 			\hline
 			move\_task & LivingSpaceDep, BoundedWorldDep. \\
 			\hline
-			define\_initial\_parameters & DefineInitialDep. \\
+			initialize\_simulation & InitializeSimDep. \\
 			\hline
 			show\_simulation & GUIDep, SimStartedDep. \\
 			\hline
@@ -634,7 +636,7 @@ human being users and the mobile node.
 			Piece of Hovering Information & survive\_task, be\_available\_task,
 			maintain\_accessibility\_task. \\
 			\hline
-			Simulation Manager & define\_initial\_parameters, start\_simulation,
+			Simulation Manager & initialize\_simulation, start\_simulation,
 			show\_simulation. \\
 			\hline
 		\end{tabular}
@@ -655,7 +657,7 @@ human being users and the mobile node.
 			\hline
 			create\_information & CreateInformation, CreateViaUI. \\
 			\hline
-			move\_task & MoveAction. \\
+			move\_task & SenseAction, MoveAction. \\
 			\hline
 			survive\_task & Jump, Replicate. \\
 			\hline
@@ -663,11 +665,11 @@ human being users and the mobile node.
 			\hline
 			maintain\_accessibility\_task & Jump, Replicate. \\
 			\hline
-			define\_initial\_parameters & InputInitialParameters, SetInitialParameters. \\
+			initialize\_simulation & InitializeSimulation. \\
 			\hline
 			start\_simulation & StartSimulation. \\
 			\hline
-			show\_simulation & ShowSimulation. \\
+			show\_simulation & \\
 			\hline
 		\end{tabular}
 	\caption{Transition Task-Action table $(C)TTA_t$}
@@ -722,11 +724,11 @@ human being users and the mobile node.
 			\hline
 			\textbf{Dependency} & \textbf{Interaction} \\
 			\hline
-			GUIDep & GUI Interaction \\
+			GUIDep & Render Interaction, InitUI Interaction \\
 			\hline
-			DefineInitialDep & \\
+			InitializeSimDep & InitializeSim Interaction\\
 			\hline
-			SimStartedDep & \\
+			SimStartedDep & StartSimulation Interaction \\
 			\hline
 			NeighbourDep & DiscoverNeighbour Interaction\\
 			\hline
@@ -753,9 +755,9 @@ human being users and the mobile node.
 			\hline
 			\textbf{Dependency} & \textbf{Rule} \\
 			\hline
-			GUIDep & \\
+			GUIDep & InitBefRender Rule\\
 			\hline
-			DefineInitialDep & \\
+			InitializeSimDep & InitSimBefStart Rule \\
 			\hline
 			SimStartedDep & StartBefGUI Rule, StartBefInq Rule\\
 			\hline
@@ -839,7 +841,7 @@ human being users and the mobile node.
 			\hline
 			StartSimulation & Start the simulation using the initial parameters. \\
 			\hline
-			ShowSimulation & Show a simulation representation to the GUI. \\
+			SenseAction & Obtain the near person or points of interest. \\
 			\hline
 			MoveAction & Basic movement in the environment. \\
 			\hline
@@ -897,14 +899,14 @@ human being users and the mobile node.
 			\hline
 			Simulation Analyst & AnalyzeSimulation. \\
 			\hline
-			Person & MoveAction, AccessViaUI, CreateViaUI. \\
+			Person & SenseAction, MoveAction, AccessViaUI, CreateViaUI. \\
 			\hline
 			Mobile node & ManageDevice, ListInformation, CreateInformation.  \\
 			\hline
 			Piece of Hovering Information & Replicate, Jump, AccessInformationData. \\
 			\hline
 			Simulation Manager & InputInitialParameters, SetInitialParameters,
-			StartSimulation, ShowSimulation. \\
+			StartSimulation. \\
 			\hline
 		\end{tabular}
 	\caption{Role-Action table $(C)RA_t$}
@@ -938,7 +940,20 @@ human being users and the mobile node.
 			\hline
 			\textbf{Interaction} & \textbf{Description} \\
 			\hline
-			Inquisition Interaction & World inquisition for analysis purposes. \\
+			Sense Interaction & Sense the world, obtaining information about other
+			people and points of interest. \\
+			\hline
+			Move Interaction & Move inside the world, following a certain behaviour.
+			\\
+			\hline
+			InitializeSim Interaction & The simulation must be initialized. \\
+			\hline
+			StartSimulation Interaction & The simulation must be started. \\
+			\hline
+			Inquisition Interaction & World inquisition for simulation analysis and
+			management purposes. \\
+			\hline
+			InitUI Interaction & Initialize the UI. \\
 			\hline
 			GUI Interaction & The system should access the GUI for graphical output
 			purposes. \\
@@ -1006,15 +1021,13 @@ human being users and the mobile node.
 			\hline
 			AnalyzeSimulation & Inquisition Interaction \\
 			\hline
-			InputInitialParameters & \\
+			InitializeSimulation & InitializeSim Interaction \\
 			\hline
-			SetInitialParameters & \\
+			StartSimulation & StartSimulation Interaction \\
 			\hline
-			StartSimulation & \\
+			MoveAction & Move Interaction \\
 			\hline
-			ShowSimulation & GUI Interaction \\
-			\hline
-			MoveAction & \\
+			SenseAction & Sense Interaction \\
 			\hline
 		\end{tabular}
 	\caption{Action-Interaction table $(C)AcI_t$}
@@ -1067,16 +1080,14 @@ human being users and the mobile node.
 			\hline
 			\textbf{Rule} & \textbf{Description} \\
 			\hline
+			InitBefRender Rule & Rendering should after resource initialization. \\
+			\hline
+			InitSimBefStart Rule & Initialize simulation before starting it.  \\
+			\hline
 			StartBefGUI Rule & Simulation have to be started before showing it.\\
 			\hline
 			StartBefInq Rule & Inquisition can be performed after the simulation is
 			started.\\
-			\hline
-			InSimBefSet Rule & Input initial simulation parameters before setting
-			them.  \\
-			\hline
-			SetBefStart Rule & Set initial simulation parameters before starting the
-			simulation.  \\
 			\hline
 			Accessible Rule & A mobile node can access an hovering information, if it
 			resides in its anchor area. \\
@@ -1114,7 +1125,17 @@ human being users and the mobile node.
 			\hline
 			\textbf{Interaction} & \textbf{Rule} \\
 			\hline
-			GUI Interaction & StartBefGUI Rule\\
+			Move Interaction & Bounded World Rule, Living Space Rule. \\
+			\hline
+			Sense Interaction & \\
+			\hline
+			InitializeSim Interaction & InitSimBefStart Rule \\
+			\hline
+			StartSimulation Interaction & InitSimBefStart Rule \\
+			\hline
+			InitUi Interaction & InitBefRender Rule \\
+			\hline
+			GUI Interaction & StartBefGUI Rule, InitBefRender Rule\\
 			\hline
 			ShowInfo Interaction & \\
 			\hline
@@ -1151,7 +1172,7 @@ human being users and the mobile node.
 			\hline
 			\textbf{Resource} & \textbf{Rule} \\
 			\hline
-			SimulatorUIRes & StartBefGUI Rule. \\
+			SimulatorUIRes & StartBefGUI Rule, InitBefRender Rule. \\
 			\hline
 			SimulatorInquisitor & StartBefInq Rule. \\
 			\hline
@@ -1175,7 +1196,8 @@ human being users and the mobile node.
 			Piece of Hovering Information &  Movement Duplicate
 			Rule, Storage Rule, Neighbour Rule. \\
 			\hline
-			Simulation Manager & InSimBefSet Rule, SetBefStart Rule, StartBefGUI Rule. \\
+			Simulation Manager & InitSimBefStart Rule, StartBefGUI Rule,
+			InitBefRender Rule. \\
 			\hline
 			Mobile Node & Accessible Rule, Listing Rule, Creation Rule, Neighbour
 			Rule, Node Location Rule. \\
@@ -1339,10 +1361,9 @@ human being users and the mobile node.
 			\hline
 			\textbf{Artifact} & \textbf{Action} \\
 			\hline
-			Legs Artifact & MoveAction. \\
+			Body Artifact & MoveAction, SenseAction. \\
 			\hline
-			SimulationManagement Artifact & InputIntialParameter,
-			SetInitialParameters, StartSimulation, ShowSimulation. \\
+			SimulationManagement Artifact & InitializeSimulation, StartSimulation. \\
 			\hline
 			Analyzer Artifact & AnalyzeSimulation. \\
 			\hline
@@ -1409,12 +1430,12 @@ human being users and the mobile node.
 			\hline
 			\textbf{Artifact} & \textbf{Rule} \\
 			\hline
-			Legs Artifact & Bounded World Rule, Living Space Rule. \\
+			Body Artifact & Bounded World Rule, Living Space Rule. \\
 			\hline
 			MobileResource Artifact & Storage Rule, Neighbour Rule, Node Location
 			Rule, Movement Duplicate Rule. \\
 			\hline
-			Simulation Management Artifact & InSimBefSet Rule, SetBefStart Rule. \\
+			Simulation Management Artifact & InitSimBefStart Rule. \\
 			\hline
 			Analyzer Artifact & \\
 			\hline
@@ -1453,6 +1474,16 @@ human being users and the mobile node.
 	\begin{tabular}{|p{4cm}|p{8cm}|}
 			\hline
 			\textbf{Interaction} & \textbf{Use} \\
+			\hline
+			Move Interaction & Move Use \\
+			\hline
+			Sense Interaction & Sense Use \\
+			\hline
+			InitializeSimulation Interaction & InitSim Use \\
+			\hline
+			StartSimulation Interaction & StartSim Use \\
+			\hline
+			InitUI Interaction & InitUI Use \\
 			\hline
 			GUI Interaction & GUI Use \\
 			\hline
@@ -1536,7 +1567,7 @@ human being users and the mobile node.
 			\hline
 			Simulation Analyst & Analyzer Artifact, SimulatorInquisitor Artifact. \\
 			\hline
-			Person & Legs Artifact. \\
+			Person & Body Artifact. \\
 			\hline
 			Mobile node & \\
 			\hline
@@ -1585,14 +1616,14 @@ human being users and the mobile node.
 			\hline
 			\textbf{Artifact} & \textbf{UsageInterface} \\
 			\hline
-			Legs Artifact & Step. \\
+			Body Artifact & Sense, MoveTo. \\
 			\hline
 			MobileResource Artifact & DiscoveNeighbour, InsertData, RemoveData,
 			GetRemainingSpace, GetMaximumSize, ObtainPosition, ShowInformation,
 			ShowInformationList. \\
 			\hline
-			Simulation Management Artifact & InputIntialParameter,
-			SetInitialParameters, StartSimulation, ShowSimulation. \\
+			SimulationManagement Artifact & InitializeSimulation, StartSimulation.
+			\\
 			\hline
 			Analyzer Artifact & AnalyzeSimulation. \\
 			\hline
@@ -1642,7 +1673,17 @@ human being users and the mobile node.
 			\hline
 			\textbf{Use} & \textbf{Protocol} \\
 			\hline
-			GUI Use & Render\\
+			Sense Use & sense \newline return list\_people and list\_points\_of\_interest \\
+			\hline
+			Move Use & move\_to(position, velocity) \\
+			\hline
+			InitSim Use & initialize\_simulation \\
+			\hline
+			StartSim Use & start\_simulation \\
+			\hline
+			InitUI Use & initUI \\
+			\hline
+			GUI Use & render \\
 			\hline
 			Analysis Use & analyze\_system \newline return results\\
 			\hline
@@ -1672,12 +1713,12 @@ human being users and the mobile node.
 			\hline
 			Simulation Analyst & Analysis Use \\
 			\hline
-			Person &  \\
+			Person & Sense Use, Move Use \\
 			\hline
 			Mobile node & ObtainPosition Use, DiscoverNeighbour Use, ShowInfo Use,
 			ShowList Use,InsertNewPiece, RemovePiece  \\
 			\hline
-			Simulation Manager & GUI Use. \\
+			Simulation Manager & GUI Use, InitUI Use, InitSim Use, StartSim Use. \\
 			\hline
 		\end{tabular}
 	\caption{Agent-Use table $(C)AgeU_t$}
@@ -1690,11 +1731,15 @@ human being users and the mobile node.
 			\hline
 			\textbf{Artifact} & \textbf{Use} \\
 			\hline
+			Body Artifact & Move Use, Sense Use. \\
+			\hline
 			Analyzer Artifact & Analysis Use. \\
 			\hline
 			HoveringInformation Artifact & AccessInformationData. \\
 			\hline
-			SimulationManagement Artifact & GUI Use. \\
+			SimulatorUI Artifact & InitUI Use, GUI Use. \\
+			\hline
+			SimulationManagement Artifact & InitSim Use, StartSim Use. \\
 			\hline
 		\end{tabular}
 	\caption{Artifact-Use table $(C)ArtU_t$}
