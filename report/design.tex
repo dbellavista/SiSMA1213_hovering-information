@@ -612,12 +612,12 @@ System}, already present in the environment.
 
 \subsection{Architectural Design}
 
-In order to ease the project complexity, I assume that two neighbour mobile
-nodes can interact directly, without the explicit use of communication medium.
-Similarly, a person can interact with a mobile node without the explicit use of
-an interface. The system, implemented on a real world, will have different
-communication resource, such as wireless or bluetooth and an interface between
-human being users and the mobile node.
+%In order to ease the project complexity, I assume that two neighbour mobile
+%nodes can interact directly, without the explicit use of communication medium.
+%Similarly, a person can interact with a mobile node without the explicit use of
+%an interface. The system, implemented on a real world, will have different
+%communication resource, such as wireless or bluetooth and an interface between
+%human being users and the mobile node.
 
 \subsubsection{Transition Tables}
 
@@ -938,7 +938,7 @@ human being users and the mobile node.
 	\centering
 	\begin{tabular}{|p{4cm}|p{8cm}|}
 			\hline
-			\textbf{Interaction} & \textbf{Description} \\
+			\textbf{Interaction (Social \& Analysis)} & \textbf{Description} \\
 			\hline
 			Sense Interaction & Sense the world, obtaining information about other
 			people and points of interest. \\
@@ -946,17 +946,36 @@ human being users and the mobile node.
 			Move Interaction & Move inside the world, following a certain behaviour.
 			\\
 			\hline
+			\hline
 			InitializeSim Interaction & The simulation must be initialized. \\
 			\hline
 			StartSimulation Interaction & The simulation must be started. \\
-			\hline
-			Inquisition Interaction & World inquisition for simulation analysis and
-			management purposes. \\
 			\hline
 			InitUI Interaction & Initialize the UI. \\
 			\hline
 			GUI Interaction & The system should access the GUI for graphical output
 			purposes. \\
+			\hline
+			User Create Interaction & Mobile users have to communicate with the
+			mobile node in order to create information. \\
+			\hline
+			User Access Interaction & Mobile users have to communicate with the
+			mobile node in order to access information. \\
+			\hline
+			\hline
+			Inquisition Interaction & World inquisition for simulation analysis and
+			management purposes. \\
+			\hline
+		\end{tabular}
+	\caption{Interaction table $(C)Isa_t$}
+	\label{tab:cisat}
+\end{table}
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|p{4cm}|p{8cm}|}
+			\hline
+			\textbf{Interaction (Hovering System)} & \textbf{Description} \\
 			\hline
 			ShowInfo Interaction & Show to the mobile UI an accessed hovering
 			information. \\
@@ -976,25 +995,20 @@ human being users and the mobile node.
 			List Interaction & Mobile nodes have to communicate together in order to
 			obtain the list of available hovering information. \\
 			\hline
-			AccessInformationData Interaction & Mobile nodes must interact with Pieces
-			of Hovering Information in order to get their data. \\
-			\hline
 			DiscoverNeighbour Interaction & Mobile nodes or piece of hovering
 			information have to know the neighbours. \\
 			\hline
-			User Create Interaction & Mobile users have to communicate with the
-			mobile node in order to create information. \\
 			\hline
-			User Access Interaction & Mobile users have to communicate with the
-			mobile node in order to access information. \\
+			AccessInformationData Interaction & Mobile nodes must interact with Pieces
+			of Hovering Information in order to get their data. \\
 			\hline
 			Jump Interaction & Jump from a mobile node to another. \\
 			\hline
 			Replication Interaction & Replicate to another mobile node. \\
 			\hline
 		\end{tabular}
-	\caption{Interaction table $(C)I_t$}
-	\label{tab:cit}
+	\caption{Interaction table $(C)Ihov_t$}
+	\label{tab:cihovt}
 \end{table}
 
 \begin{table}[H]
@@ -1363,6 +1377,8 @@ human being users and the mobile node.
 			\hline
 			Body Artifact & MoveAction, SenseAction. \\
 			\hline
+			MobileUI Artifact & AccessViaUI Action, CreateViaUI Action. \\
+			\hline
 			SimulationManagement Artifact & InitializeSimulation, StartSimulation. \\
 			\hline
 			Analyzer Artifact & AnalyzeSimulation. \\
@@ -1479,6 +1495,10 @@ human being users and the mobile node.
 			\hline
 			Sense Interaction & Sense Use \\
 			\hline
+			User Access Interaction & UserAccess Use \\
+			\hline
+			User Create Interaction & UserCreate Use \\
+			\hline
 			InitializeSimulation Interaction & InitSim Use \\
 			\hline
 			StartSimulation Interaction & StartSim Use \\
@@ -1512,7 +1532,13 @@ human being users and the mobile node.
 			\hline
 			\textbf{Interaction} & \textbf{Manifest} \\
 			\hline
-			& \\
+			UserAccess Interaction & UserAccess Manifest \\
+			\hline
+			UserCreate Interaction & UserCreate Manifest \\
+			\hline
+			ShowInfo Interaction & ShowInfo Manifest \\
+			\hline
+			ShowList Interaction & ShowList Manifest \\
 			\hline
 		\end{tabular}
 	\caption{Mapping Interaction-Manifest table $(C)MIM_t$}
@@ -1551,6 +1577,10 @@ human being users and the mobile node.
 			GUI Interaction & GUI Link\\
 			\hline
 			Inquisition Interaction & Inquisition Link\\
+			\hline
+			ShowInfo Interaction & ShowInfo Link \\
+			\hline
+			ShowList Interaction & ShowList Link \\
 			\hline
 		\end{tabular}
 	\caption{Mapping Interaction-LinkedTo table $(C)MIL_t$}
@@ -1618,6 +1648,8 @@ human being users and the mobile node.
 			\hline
 			Body Artifact & Sense, MoveTo. \\
 			\hline
+			MobileUI Artifact & AccessViaUI, CreateViaUI. \\
+			\hline
 			MobileResource Artifact & DiscoveNeighbour, InsertData, RemoveData,
 			GetRemainingSpace, GetMaximumSize, ObtainPosition, ShowInformation,
 			ShowInformationList. \\
@@ -1677,6 +1709,10 @@ human being users and the mobile node.
 			\hline
 			Move Use & move\_to(position, velocity) \\
 			\hline
+			UserAccess Use & access \\
+			\hline
+			UserCreate Use & create(information) \\
+			\hline
 			InitSim Use & initialize\_simulation \\
 			\hline
 			StartSim Use & start\_simulation \\
@@ -1713,7 +1749,7 @@ human being users and the mobile node.
 			\hline
 			Simulation Analyst & Analysis Use \\
 			\hline
-			Person & Sense Use, Move Use \\
+			Person & Sense Use, Move Use, UserAccess Use, UserCreate Use\\
 			\hline
 			Mobile node & ObtainPosition Use, DiscoverNeighbour Use, ShowInfo Use,
 			ShowList Use,InsertNewPiece, RemovePiece  \\
@@ -1732,6 +1768,8 @@ human being users and the mobile node.
 			\textbf{Artifact} & \textbf{Use} \\
 			\hline
 			Body Artifact & Move Use, Sense Use. \\
+			\hline
+			MobileUI Artifact & UserAccess Use, UserCreate Use. \\
 			\hline
 			Analyzer Artifact & Analysis Use. \\
 			\hline
@@ -1794,7 +1832,13 @@ human being users and the mobile node.
 			\hline
 			\textbf{Manifest} & \textbf{Protocol} \\
 			\hline
-			& \\
+			UserAccess Manifest & requested\_access(info\_id) \\
+			\hline
+			UserCreate Manifest & requested\_creation(info) \\
+			\hline
+			ShowInfo Manifest & new\_info \\
+			\hline
+			ShowList Manifest & new\_info\_list \\
 			\hline
 		\end{tabular}
 	\caption{Manifest-Protocol table $(C)MP_t$}
@@ -1807,7 +1851,9 @@ human being users and the mobile node.
 			\hline
 			\textbf{Agent} & \textbf{Manifest} \\
 			\hline
-			& \\
+			MobileNode & UserAccess Manifest, UserCreate Manifest \\
+			\hline
+			Person & ShowInfo Manifest, ShowList Manifest \\
 			\hline
 		\end{tabular}
 	\caption{Agent-Manifest table $(C)AgeM_t$}
@@ -1820,7 +1866,8 @@ human being users and the mobile node.
 			\hline
 			\textbf{Artifact} & \textbf{Manifest} \\
 			\hline
-			& \\
+			MobileUI Artifact & ShowInfo Manifest, ShowList Manifest, UserAccess
+			Manifest, UserCreate Manifest \\
 			\hline
 		\end{tabular}
 	\caption{Artifact-Manifest table $(C)ArtM_t$}
@@ -1839,6 +1886,10 @@ human being users and the mobile node.
 			hovering \newline return hovering info\newline
 			InquireEnvironment\newline return environment info \\
 			\hline
+			ShowInfo Link & new\_info \\
+			\hline
+			ShowList Link & new\_info\_list \\
+			\hline
 		\end{tabular}
 	\caption{LinkedTo-Protocol table $(C)LP_t$}
 	\label{tab:clpt}
@@ -1849,6 +1900,10 @@ human being users and the mobile node.
 	\begin{tabular}{|p{4cm}|p{8cm}|}
 			\hline
 			\textbf{Artifact} & \textbf{LinkedTo} \\
+			\hline
+			MobileResource Artifact & ShowInfo Link, ShowList Link. \\
+			\hline
+			MobileUI Artifact & ShowInfo Link, ShowList Link. \\
 			\hline
 			Simulation Management Artifact & GUI Link \\
 			\hline
