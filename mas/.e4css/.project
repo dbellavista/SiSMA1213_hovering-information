@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<projectDescription>
+	<name>.e4css</name>
+	<comment></comment>
+	<projects>
+	</projects>
+	<buildSpec>
+	</buildSpec>
+	<natures>
+	</natures>
+	<linkedResources>
+		<link>
+			<name>chrome.css</name>
+			<type>1</type>
+			<location>/home/daniele/.eclipse/org.eclipse.platform_4.2.0_1543616141/configuration/org.eclipse.osgi/bundles/459/1/.cp/css/chrome.css</location>
+		</link>
+		<link>
+			<name>e4_classic_winxp.css</name>
+			<type>1</type>
+			<location>/usr/share/eclipse/plugins/org.eclipse.platform_4.2.1.v201209141800/css/e4_classic_winxp.css</location>
+		</link>
+		<link>
+			<name>e4_default.css</name>
+			<type>1</type>
+			<location>/usr/share/eclipse/plugins/org.eclipse.platform_4.2.1.v201209141800/css/e4_default.css</location>
+		</link>
+		<link>
+			<name>e4_default_gtk.css</name>
+			<type>1</type>
+			<location>/usr/share/eclipse/plugins/org.eclipse.platform_4.2.1.v201209141800/css/e4_default_gtk.css</location>
+		</link>
+	</linkedResources>
+</projectDescription>

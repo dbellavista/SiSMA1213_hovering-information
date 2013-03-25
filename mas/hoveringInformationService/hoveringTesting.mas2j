@@ -1,0 +1,11 @@
+MAS hoveringInformationService {
+
+	infrastructure: Centralised
+
+	environment: c4jason.CartagoEnvironment
+
+	agents:
+		testing testingAgent agentArchClass c4jason.CAgentArch;
+
+	aslSourcePath: "src/asl";
+}

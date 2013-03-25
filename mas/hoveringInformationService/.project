@@ -6,6 +6,11 @@
 	</projects>
 	<buildSpec>
 		<buildCommand>
+			<name>net.sourceforge.texlipse.builder.TexlipseBuilder</name>
+			<arguments>
+			</arguments>
+		</buildCommand>
+		<buildCommand>
 			<name>org.eclipse.jdt.core.javabuilder</name>
 			<arguments>
 			</arguments>
@@ -22,8 +27,16 @@
 		</buildCommand>
 	</buildSpec>
 	<natures>
+		<nature>net.sourceforge.texlipse.builder.TexlipseNature</nature>
 		<nature>org.eclipse.jdt.core.javanature</nature>
 		<nature>org.eclipse.xtext.ui.shared.xtextNature</nature>
 		<nature>jasonide.jasonNature</nature>
 	</natures>
+	<linkedResources>
+		<link>
+			<name>implementation.tex</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/report/implementation.tex</locationURI>
+		</link>
+	</linkedResources>
 </projectDescription>

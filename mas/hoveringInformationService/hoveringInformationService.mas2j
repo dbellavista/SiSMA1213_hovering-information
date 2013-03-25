@@ -5,7 +5,9 @@ MAS hoveringInformationService {
 	environment: c4jason.CartagoEnvironment
 
 	agents:
-		agent1 simulatorAgent agentArchClass c4jason.CAgentArch;
+		sim_agent simulatorAgent agentArchClass c4jason.CAgentArch;
+		//mobile1 mobileNode agentArchClass c4jason.CAgentArch;
+		//person person agentArchClass c4jason.CAgentArch;
 
 	aslSourcePath:
 		"src/asl";
