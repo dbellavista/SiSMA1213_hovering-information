@@ -27,18 +27,15 @@ public class EnvironmentArtifact extends Artifact {
 		positions = new ConcurrentHashMap<>();
 	}
 
-	@OPERATION
-	void createPointInterest(Object ID, double posx, double posy) {
+	@OPERATION void createPointInterest(Object ID, double posx, double posy) {
 		points.put(ID, new double[] { posx, posy });
 	}
 
-	@OPERATION
-	void removePointInsterest(Object ID, double posx, double posy) {
+	@OPERATION void removePointInsterest(Object ID, double posx, double posy) {
 		points.remove(ID);
 	}
 
-	@OPERATION
-	void enter(Object ID, double posx, double posy) {
+	@OPERATION void enter(Object ID, double posx, double posy) {
 		ReentrantReadWriteLock s = new ReentrantReadWriteLock();
 		WriteLock w = s.writeLock();
 		locks.put(ID, s);
@@ -46,8 +43,7 @@ public class EnvironmentArtifact extends Artifact {
 		w.unlock();
 	}
 
-	@OPERATION
-	void exit(Object ID) {
+	@OPERATION void exit(Object ID) {
 		WriteLock s = writeLock(ID);
 		if (s == null)
 			return;
@@ -56,8 +52,7 @@ public class EnvironmentArtifact extends Artifact {
 		s.unlock();
 	}
 
-	@LINK
-	void move(Object ID, double rel_x2, double rel_y2, double speed) {
+	@LINK void move(Object ID, double rel_x2, double rel_y2, double speed) {
 		WriteLock s = writeLock(ID);
 		if (s == null)
 			return;
@@ -86,8 +81,7 @@ public class EnvironmentArtifact extends Artifact {
 		s.unlock();
 	}
 
-	@LINK
-	void sense(Object ID, OpFeedbackParam<Collection<PersonSenseData>> people,
+	@LINK void sense(Object ID, OpFeedbackParam<Collection<PersonSenseData>> people,
 			OpFeedbackParam<Collection<PoTSenseData>> pointOfInterest) {
 		ReadLock s = readLock(ID);
 		double[] mypos = positions.get(ID);
@@ -118,8 +112,7 @@ public class EnvironmentArtifact extends Artifact {
 		s.unlock();
 	}
 
-	@INTERNAL_OPERATION
-	WriteLock writeLock(Object ID) {
+	@INTERNAL_OPERATION WriteLock writeLock(Object ID) {
 		ReentrantReadWriteLock s = locks.get(ID);
 		if (s == null) {
 			failed("Operation failure", "fail", ID, "Null lock");
@@ -136,8 +129,7 @@ public class EnvironmentArtifact extends Artifact {
 		}
 	}
 
-	@INTERNAL_OPERATION
-	ReadLock readLock(Object ID) {
+	@INTERNAL_OPERATION ReadLock readLock(Object ID) {
 		ReentrantReadWriteLock s = locks.get(ID);
 		if (s == null) {
 			failed("Operation failure", "fail", ID, "Null lock");

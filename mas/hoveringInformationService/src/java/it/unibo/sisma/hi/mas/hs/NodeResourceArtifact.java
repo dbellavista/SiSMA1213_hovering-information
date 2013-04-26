@@ -6,15 +6,13 @@ import cartago.*;
 
 public class NodeResourceArtifact extends Artifact {
 	
-	void init() {
-		defineObsProperty("count", 0);
+	private double range;
+	private double storage;
+
+	void init(Number range, Number storage) {
+		this.range = range.doubleValue();
+		this.storage = storage.doubleValue();
 	}
 	
-	@OPERATION
-	void inc() {
-		ObsProperty prop = getObsProperty("count");
-		prop.updateValue(prop.intValue()+1);
-		signal("tick");
-	}
 }
 

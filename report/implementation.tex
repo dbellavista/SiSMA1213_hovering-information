@@ -6,14 +6,14 @@ reduce the technological gap between the SODA process and
 the implementation, I chosen to use \emph{Jason+CArtAgO}
 infrastructure.
 
-\subsection{Simulation}
-The simulation is composed by two main phases: initialization
-and simulation. During the initialization, the \emph{simulator}
-agent read the configuration from a file and create agents and
-common artifacts specifying the needed configuration. Artifacts
-are configured by setting the proper initialization parameters,
-while agents are configured by telling them what they have to
-believe.
+\subsection{Initialization}
+Prior to simulation, the sistem must be initialized. I couldn't find the
+required flexibility in the \emph{mas2j} files, so I decided to create a new
+Agent, called \emph{initiator}, which reads a configuration from a file and
+create agents, workspaces and common artifacts specifying the needed configuration.
+Artifacts are configured by setting the proper initialization parameters, while
+agents are configured by telling them what they have to believe (using the
+Jason \emph{tell} internal operation).
 
 \subsection{Social System}
 People have to move around the world, basing on
@@ -25,7 +25,7 @@ physical environment, which has a source producing light
 that is reflected by people and points of interest.
 
 From a simplified \emph{artifacful} points of view, the
-environment itself is an artifact, linked to people's
+environment itself is an artifact linked to people's
 sensors and actuator. The environment knows the position of
 every people, updating its internal state when a person moves
 and returning it when the sense operation is executed.

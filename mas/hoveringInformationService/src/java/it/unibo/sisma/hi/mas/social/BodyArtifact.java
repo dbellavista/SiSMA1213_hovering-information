@@ -6,8 +6,11 @@ import java.util.Collection;
 
 import cartago.*;
 
-@ARTIFACT_INFO(outports = { @OUTPORT(name = "out-1") })
-public class BodyArtifact extends Artifact {
+@ARTIFACT_INFO(
+	outports = {
+		@OUTPORT(name = "out-1")
+	}
+) public class BodyArtifact extends Artifact {
 
 	private Object ID;
 
@@ -17,8 +20,7 @@ public class BodyArtifact extends Artifact {
 		this.ID = ID;
 	}
 
-	@OPERATION
-	void sense() {
+	@OPERATION void sense() {
 		OpFeedbackParam<Collection<PersonSenseData>> people = new OpFeedbackParam<>();
 		OpFeedbackParam<Collection<PoTSenseData>> points = new OpFeedbackParam<>();
 		try {
@@ -34,8 +36,7 @@ public class BodyArtifact extends Artifact {
 			failed("Sense linked operation failed", "fail", ID, e);
 		}
 	}
-
-	private Object toArray(Collection<? extends IToArrayable> collection) {
+	@INTERNAL_OPERATION Object toArray(Collection<? extends IToArrayable> collection) {
 		Object[] res = new Object[collection.size()];
 		int i = 0;
 		for (IToArrayable a : collection) {
@@ -44,8 +45,7 @@ public class BodyArtifact extends Artifact {
 		return res;
 	}
 
-	@OPERATION
-	void move(double x, double y, double speed) {
+	@OPERATION void move(double x, double y, double speed) {
 		try {
 			execLinkedOp("out-1", "move", ID, x, y, speed);
 		} catch (Exception e) {
