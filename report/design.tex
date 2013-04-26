@@ -178,7 +178,7 @@ System}, already present in the environment.
 			Node Resources & High Level operations may require or depend from
 			low-level node resources. \\
 			\hline
-			Living Space Respect & A person cannot invade other people's vital spaces. \\
+			Living Space Respect & A person cannot invade other people's living spaces. \\
 			\hline
 			Node Interface & A person needs a node interface in order to use it for
 			accessing or creating information. \\
@@ -294,7 +294,7 @@ System}, already present in the environment.
 			\hline
 			Manage Simulation & World. \\
 			\hline
-			Move & World, Living Space. \\
+			Move & World. \\
 			\hline
 		\end{tabular}
 	\caption{Reference Requirement-Topology table $(C)RRTo_t$}
@@ -443,8 +443,6 @@ System}, already present in the environment.
 			\hline
 			World & The environment. \\
 			\hline
-			Living Space & Space owned by a person. \\
-			\hline
 		\end{tabular}
 	\caption{Topology table $(C)Top_t$}
 	\label{tab:ctopt}
@@ -466,7 +464,7 @@ System}, already present in the environment.
 			\hline
 			maintain\_accessibility & Anchor Area, Communication Range, World. \\
 			\hline
-			world\_task & World, Living Space. \\
+			world\_task & World. \\
 			\hline
 			show\_simulation & World. \\
 			\hline
@@ -601,9 +599,7 @@ System}, already present in the environment.
 			\hline
 			Communication Range & SimDataDep, NeighbourDep. \\
 			\hline
-			World & InquireDep, GUIDep, BoundedWorldDep. \\
-			\hline
-			Living Space & LivingSpaceDep. \\
+			World & InquireDep, GUIDep, BoundedWorldDep, LivingSpaceDep. \\
 			\hline
 		\end{tabular}
 	\caption{Topology-Dependency table $(C)TopD_t$}
@@ -793,8 +789,6 @@ System}, already present in the environment.
 			World & World Space. \\
 			\hline
 			Node Topology & Node Space. \\
-			\hline
-			Living Space & Living Space Space. \\
 			\hline
 		\end{tabular}
 	\caption{Transition Topology-Space table $(C)TTopS_t$}
@@ -1235,8 +1229,6 @@ System}, already present in the environment.
 			\hline
 			World Space & Bounded World Rule. \\
 			\hline
-			Living Space Space & Living Space Rule. \\
-			\hline
 		\end{tabular}
 	\caption{Space-Rule table $(C)SRu_t$}
 	\label{tab:cot}
@@ -1262,8 +1254,6 @@ System}, already present in the environment.
 			\hline
 			World Space & The environment. \\
 			\hline
-			Living Space Space & Space owned by a person. \\
-			\hline
 		\end{tabular}
 	\caption{Space table $(C)S_t$}
 	\label{tab:st}
@@ -1280,8 +1270,6 @@ System}, already present in the environment.
 			Node Space & Centered, Inside. \\
 			\hline
 			Anchor Area Space & Inside. \\
-			\hline
-			Living Space Space & Inside. \\
 			\hline
 			World Space & Inside. \\
 			\hline
@@ -1315,7 +1303,7 @@ System}, already present in the environment.
 			\hline
 			Simulation Analyst & World Space. \\
 			\hline
-			Person & World Space, Living Space Space, Anchor Space. \\
+			Person & World Space, Anchor Space. \\
 			\hline
 			Mobile node & Node Space, Anchor Space. \\
 			\hline
@@ -1477,8 +1465,6 @@ System}, already present in the environment.
 			Communication Range Space & Communication Range.\\
 			\hline
 			World Space & World. \\
-			\hline
-			Living Space Space & Living Space. \\
 			\hline
 		\end{tabular}
 	\caption{Mapping Space-Workspace table $(C)MSW_t$}
@@ -1934,8 +1920,6 @@ System}, already present in the environment.
 			\hline
 			World  & Simulation world. \\
 			\hline
-			Living  Space & Person's livin space.\\
-			\hline
 		\end{tabular}
 	\caption{Workspace table $(C)W_t$}
 	\label{tab:cwt}
@@ -1952,8 +1936,6 @@ System}, already present in the environment.
 			Node Workspace & Centered, Inside. \\
 			\hline
 			Anchor Area & Inside. \\
-			\hline
-			Living Space & Inside. \\
 			\hline
 			World  & Inside. \\
 			\hline
@@ -1977,8 +1959,6 @@ System}, already present in the environment.
 			\hline
 			Anchor Area & HoveringInformation Artifact. \\
 			\hline
-			Living Space & Legs Artifact \\
-			\hline
 		\end{tabular}
 	\caption{Workspace-Artifact table $(C)WArt_t$}
 	\label{tab:cwartt}
@@ -1996,8 +1976,6 @@ System}, already present in the environment.
 			Information, Mobile Node. \\
 			\hline
 			Anchor Area & Piece of hovering Information. \\
-			\hline
-			Living Space & Person. \\
 			\hline
 		\end{tabular}
 	\caption{Workspace-Agent table $(C)WA_t$}
