@@ -28,8 +28,7 @@
 		!getDeviceUI;
 		
 		-~configured;
-		+configured;
-		!start.	
+		+configured.	
 
 -!init : ~inited
 	<- 	!init.
@@ -43,7 +42,13 @@
 	<- 	.wait(200);
 		!getDeviceUI.
 
-+!start : configured
-	<- 	println("===>Person waiting for start...");
-		.wait(10000);
+-!start : not configured
+	<- .wait(200);
 		!start.
+		
++!start : configured
+	<- 	println("===>Person STARTED!");
+		.
+		
+// Running behavior definition
+

@@ -13,7 +13,7 @@ behaviour("random", random).
 // Init plan: create the simulation artifact
 +!initialize
 	<-	?current_wsp(BaseWsp, BaseWspName, _);
-		+wsp(original, BaseWsp);
+		+wsp(default, BaseWsp);
 		makeArtifact("initArtifact", "it.unibo.sisma.hi.mas.sim.InitiatorArtifact",[],ID);
 		+artifact(init, "initArtifact", ID);
 		focus(ID);
@@ -23,6 +23,7 @@ behaviour("random", random).
 		!setup_world;
 		// Setup the simulator, creating the simulator agent
 		?parameter("simulation");
+		?parameter("analysis");
 		!setup_simulation;
 		// Setup people and devices, imposing the MobileUI Artifact name.
 		?parameter("people", NP);
@@ -31,9 +32,6 @@ behaviour("random", random).
 		// dissemination algorithm
 		?parameter("hovering", NH);
 		!setup_hovering(NH);
-		// Setup analysis
-		?parameter("analysis");
-		!setup_analysis;
 		// Start the system
 		!start_system;
 		.
@@ -54,39 +52,34 @@ behaviour("random", random).
 		+artifact(env, "EnvArtifact", EAid);
 		
 		println("World configuration\n   * width=",W,"\n   * height=",H);
-		?wsp(original, WspOrigId);
+		?wsp(default, WspOrigId);
 		cartago.set_current_wsp(WspOrigId);
 		.
 
 +!setup_simulation : parameter("simulation")
 	<-	?parameter("simulation", "gui_width", W);
 		?parameter("simulation", "gui_height", H);
-		?parameter("simulation", "gui_refresh_rate", R);
+		?parameter("simulation", "gui_refresh_rate", GR);
 		?parameter("simulation", "dissemination", Dt);
 		?disseminations(Dt, D);
 		-+parameter("simulation", "dissemination", D);
+		?parameter("analysis", "analysis_rate", AR);
 		
 		?artifact(env, EAName, _);
 		?wsp(world, WspName, _);
 		
 		// Simulator agent creation, sending the world parameters.
 		.create_agent("Simulator", "simulator.asl", [agentArchClass("c4jason.CAgentArch")]);
-		.send("Simulator", tell, [	guiSize(W, H), guiRefresh(R), worldWsp(WspName), envArt(EAName) ]);
+		.send("Simulator", tell, [	guiSize(W, H), guiRefresh(GR), worldWsp(WspName), envArt(EAName), analysisRate(AR) ]);
 		println("Simulation configuration",
 				"\n   * gui_width=",W,
 				"\n   * gui_height=",H,
-				"\n   * gui_refresh_rate=",R,
-				"\n   * dissemination=",D
+				"\n   * gui_refresh_rate=",GR,
+				"\n   * dissemination=",D,
+				"\n   * analysis_rate=",AR
 		);
 	.
-
-+!setup_analysis : parameter("analysis")
-	<-	?parameter("analysis", "analysis_rate", R);
-		// TODO
-		println("Analysis configuration",
-				"\n   * analysis_rate=",R
-		);
-	.
+	
 +!setup_people(0).
 
 +!setup_people(NP) : parameter("people", NTot) & NP <= NTot & NP > 0
@@ -139,10 +132,15 @@ behaviour("random", random).
 		?parameter("simulation", "dissemination", DISS);
 
 		// Add point of interest
-		?artifact(env, EnvArt, _);
+		?artifact(env, EnvArt, EnvArtId);
 		.concat(Name, "_", NameTmp);
 		.concat(NameTmp, NH, IDHover);
-		.send("Simulator", tell, [pot(IDHover, X, Y)]);		
+		
+		?wsp(world, _, WWspId);
+		cartago.set_current_wsp(WWspId);
+		createPointInterest(IDHover, X, Y);
+		?wsp(default, DWspId);
+		cartago.set_current_wsp(DWspId);
 		
 		println("Hovering ",Name," configuration",
 				"\n   * anchor=(",X,", ",Y,")",
@@ -188,4 +186,10 @@ behaviour("random", random).
 
 // Start simulation
 +!start_system
-	<- 	println("========> The simulation can be started!").
+	<- 	!start_person(1);
+		.
++!start_person(NP) : person(NP, Name)
+	<- 	.send(Name, achieve, start);
+		!start_person(NP + 1).
+	
+-!start_person(NP) : not person(NP, _).

@@ -25,6 +25,7 @@ public class EnvironmentArtifact extends Artifact {
 		this.worldHeight = worldHeight;
 		locks = new ConcurrentHashMap<>();
 		positions = new ConcurrentHashMap<>();
+		points = new ConcurrentHashMap<>();
 	}
 
 	@OPERATION void createPointInterest(Object ID, double posx, double posy) {

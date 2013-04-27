@@ -13,7 +13,7 @@ import cartago.*;
  */
 public class SimulatorArtifact extends Artifact {
 
-	void init() {
+	void init(int guiWidth, int guiHeight, int guiRefresh) {
 		
 	}
 	

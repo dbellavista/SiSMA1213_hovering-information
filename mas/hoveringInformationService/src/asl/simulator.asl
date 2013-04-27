@@ -11,18 +11,8 @@
 
 /* Plans */
 
-+pot(ID, X, Y)
-	<- !addNewPot(ID, X, Y).
-
-+!addNewPot(HoverID, X, Y) : artifact(sim, _, ID)
-	<- addPointOfInterest(HoverID, X, Y) [artifact_id(ID)].
-
--!addNewPot(ID, X, Y)
-	<- 	.wait(200); 
-		!addNewPot(ID, X, Y).
-
 // Init plan: create the simulation artifact
-+!init: ~inited  & worldWsp(WspName) & envArt(EAName) & guiSize(GW, GH) & guiRefresh(GR)
++!init: ~inited  & worldWsp(WspName) & envArt(EAName) & guiSize(GW, GH) & guiRefresh(GR) & analysisRate(AR)
 	<-	-~inited;
 		joinWorkspace(WspName, WspID);
 		+workspace(world, WspID);
