@@ -63,7 +63,7 @@ public class GraphicWorld extends JComponent {
 	 */
 	private HashMap<HoveringInformation, Color> colors;
 
-	public GraphicWorld(World world) {
+	public GraphicWorld(World world, Long seed) {
 		super();
 		this.world = world;
 		super.setPreferredSize(new Dimension(world.getWidth(), world
@@ -71,13 +71,21 @@ public class GraphicWorld extends JComponent {
 
 		colors = new HashMap<>();
 
-		Random r = new Random();
+		Random r;
+		if (seed == null) {
+			r = new Random();
+		} else {
+			r = new Random(seed);
+		}
 		for (HoveringInformation hi : world.getHoveringInformations()) {
 			colors.put(
 					hi,
 					new Color(r.nextFloat(), r.nextFloat(), r.nextFloat(), 0.5f));
 		}
+	}
 
+	public GraphicWorld(World world) {
+		this(world, null);
 	}
 
 	public void paintComponent(Graphics g) {
@@ -162,6 +170,7 @@ public class GraphicWorld extends JComponent {
 
 	/**
 	 * Print an hovering information: anchor area.
+	 * 
 	 * @param info
 	 * @param i
 	 * @param g2d

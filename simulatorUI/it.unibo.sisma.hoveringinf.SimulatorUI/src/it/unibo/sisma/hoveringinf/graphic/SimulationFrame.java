@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.Random;
 
 import it.unibo.sisma.hoveringinf.entities.World;
 
@@ -20,6 +21,7 @@ public class SimulationFrame {
 
 	private World wordToDraw;
 	private JFrame frame;
+	private long seed;
 
 	public SimulationFrame(String title, int width, int height) {
 		frame = new JFrame(title);
@@ -27,6 +29,7 @@ public class SimulationFrame {
 		frame.setSize(width, height);
 		frame.setResizable(false);
 		frame.getContentPane().setLayout(new BorderLayout());
+		seed = new Random().nextLong();
 	}
 
 	public void setVisible(final boolean b) {
@@ -49,7 +52,7 @@ public class SimulationFrame {
 				}
 				if (world != null) {
 					wordToDraw = world;
-					frame.getContentPane().add(new GraphicWorld(world),
+					frame.getContentPane().add(new GraphicWorld(world, seed),
 							BorderLayout.CENTER);
 					frame.revalidate();
 					frame.repaint();
