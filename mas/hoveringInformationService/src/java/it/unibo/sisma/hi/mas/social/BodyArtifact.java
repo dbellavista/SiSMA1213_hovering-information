@@ -15,8 +15,8 @@ import cartago.*;
 	private Object ID;
 
 	void init(Object ID) {
-		defineObsProperty("people", (Object) new double[0][0]);
-		defineObsProperty("points", (Object) new double[0][0]);
+		defineObsProperty("people", (Object) new Object[0][0]);
+		defineObsProperty("points", (Object) new Object[0][0]);
 		this.ID = ID;
 	}
 

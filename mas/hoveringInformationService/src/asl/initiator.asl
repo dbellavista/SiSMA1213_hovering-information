@@ -104,7 +104,7 @@ behaviour("random", random).
 
 		// Sending configuration and binding person with his device, by imposition of MobileUI Artifact name
 		?artifact(env, EAName, _);
-		?wsp(world, WspName, _);
+		?wsp(world, WspName, WWspId);
 		 
 		.concat("NodeUI_", DeviceAgent, ArtUIName);
 		.send(DeviceAgent, tell, [	worldWsp(WspName), ui_name(ArtUIName),
@@ -112,6 +112,12 @@ behaviour("random", random).
 		.send(PersonAgent, tell, [worldWsp(WspName), envArt(EAName), ui_name(ArtUIName),
 								position(X, Y), behaviour(B),
 								device(DeviceAgent) ]);
+		
+		cartago.set_current_wsp(WWspId);
+		enter(PersonAgent, X, Y);
+		?wsp(default, DWspId);
+		cartago.set_current_wsp(DWspId);
+		
 		
 		println("Person ",PersonAgent," and device, ", DeviceAgent ," configuration",
 				"\n   * behaviour=",B,
@@ -186,7 +192,8 @@ behaviour("random", random).
 
 // Start simulation
 +!start_system
-	<- 	!start_person(1);
+	<- 	.send("Simulator", achieve, start);
+		!start_person(1);
 		.
 +!start_person(NP) : person(NP, Name)
 	<- 	.send(Name, achieve, start);

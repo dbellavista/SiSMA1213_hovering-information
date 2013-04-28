@@ -19,7 +19,7 @@
 		.my_name(Name);
 		// Todo: behaviour
 		.concat("PersonBody_", Name , PersonBody);
-		makeArtifact(PersonBody, "it.unibo.sisma.hi.mas.social.BodyArtifact", [], ArtBodyID);
+		makeArtifact(PersonBody, "it.unibo.sisma.hi.mas.social.BodyArtifact", [Name], ArtBodyID);
 		+artifacts(body, ArtBodyID);
 	
 		lookupArtifact(EAName, EnvArtID);
@@ -42,13 +42,38 @@
 	<- 	.wait(200);
 		!getDeviceUI.
 
--!start : not configured
+-!start : ~configured
 	<- .wait(200);
 		!start.
 		
 +!start : configured
-	<- 	println("===>Person STARTED!");
+	<- !behave.
+	
++!behave
+	<- 	sense;
+		!choose_destination(DX, DY);
+		!reach(DX, DY);
+		!behave;
 		.
-		
++!choose_destination(DX, DY): behaviour(random)
+	<-  .random(X);
+		DX = (X - 0.5) * 50;
+		.random(Y);
+		DY = (Y - 0.5) * 50;
+		.
+
++!reach(DX, DY): behaviour(random)
+	<- !reach(DX, DY, 40);
+	.
+
++!reach(DX, DY, 0): behaviour(random).
+
++!reach(DX, DY, S): behaviour(random)
+	<- 	move(DX, DY, 1);
+		sense;
+		.wait(100);
+		!reach(DX,DY,S-1);
+		.
+
 // Running behavior definition
 

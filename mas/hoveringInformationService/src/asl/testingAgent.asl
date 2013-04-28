@@ -10,10 +10,12 @@
 	joinWorkspace("TEST", TWId);
 	cartago.set_current_wsp(TWId);
 	*/
-	makeArtifact("Environment","it.unibo.sisma.hi.mas.social.EnvironmentArtifact",[10,21],Id2);
-	makeArtifact("PIPPO","it.unibo.sisma.hi.mas.social.BodyArtifact",[],Id1);
-	linkArtifacts(Id1,"out-1",Id2);
-	println("artifacts linked: going to test");
+	F = 12 + 2;
+	println("ASD ", F);
+//	makeArtifact("Environment","it.unibo.sisma.hi.mas.social.EnvironmentArtifact",[10,21],Id2);
+//	makeArtifact("PIPPO","it.unibo.sisma.hi.mas.social.BodyArtifact",[],Id1);
+//	linkArtifacts(Id1,"out-1",Id2);
+//	println("artifacts linked: going to test");
 	/*test;
 	test2(V);
 	println("value ",V);

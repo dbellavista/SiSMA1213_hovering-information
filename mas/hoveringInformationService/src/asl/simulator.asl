@@ -17,29 +17,30 @@
 		joinWorkspace(WspName, WspID);
 		+workspace(world, WspID);
 		cartago.set_current_wsp(WspID);
-		makeArtifact("SimArtifact", "it.unibo.sisma.hi.mas.sim.SimulatorArtifact",[],SimID);
-		+artifact(sim, "SimArtifact", SimID);
-		focus(SimID);
+		makeArtifact("SimArtifact", "it.unibo.sisma.hi.mas.sim.SimulatorArtifact",[GW,GH,GR],SimArtID);
+		+artifact(sim, "SimArtifact", SimArtID);
+		focus(SimArtID);
+		
+		lookupArtifact(EAName, EnvArtID);
+		-+artifacts(envSocial, EnvArtID);		
+		linkArtifacts(SimArtID, "out-1", EnvArtID);
+		
 		-~configured;
 		+configured;
-		!start;
 	.
 
 -!init : ~inited
 	<- 	!init.
 
 // Start simulation
-+!start:  artifact(sim, Name, ID) & configured
-	<- 	println("===>Simulator waiting for start...");
-		.wait(10000);
+
+-!start : ~configured
+	<- .wait(200);
 		!start.
-	// 2
 
-// Show simulation
-
-+!show_simulation: wait(T) & artifact(Name,ID) & started
-	<- show_simulation [artifact_id(ID)].
-	
--!show_simulation: wait(T) & artifact(Name,ID) & started
-	<- .wait(T); 
-	!show_simulation.
++!start:  configured & artifact(sim, _, SimArtID)
+	<- 	inquireEnvironment(People, PoTs, WWidth, WHeight);
+		showSimulation(People, PoTs, WWidth, WHeight);
+		.wait(100);
+		!start;
+		.

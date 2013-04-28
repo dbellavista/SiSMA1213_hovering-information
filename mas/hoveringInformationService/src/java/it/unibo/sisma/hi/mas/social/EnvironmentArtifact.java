@@ -28,35 +28,52 @@ public class EnvironmentArtifact extends Artifact {
 		points = new ConcurrentHashMap<>();
 	}
 
-	@OPERATION void createPointInterest(Object ID, double posx, double posy) {
+	/*
+	 * INITIALIZATION METHODS
+	 */
+
+	@OPERATION
+	void createPointInterest(Object ID, double posx, double posy) {
 		points.put(ID, new double[] { posx, posy });
 	}
 
-	@OPERATION void removePointInsterest(Object ID, double posx, double posy) {
+	@OPERATION
+	void removePointInsterest(Object ID, double posx, double posy) {
 		points.remove(ID);
 	}
 
-	@OPERATION void enter(Object ID, double posx, double posy) {
+	@OPERATION
+	void enter(Object ID, double posx, double posy) {
 		ReentrantReadWriteLock s = new ReentrantReadWriteLock();
 		WriteLock w = s.writeLock();
+		w.lock();
 		locks.put(ID, s);
 		positions.put(ID, new double[] { posx, posy });
 		w.unlock();
 	}
 
-	@OPERATION void exit(Object ID) {
+	@OPERATION
+	void exit(Object ID) {
 		WriteLock s = writeLock(ID);
 		if (s == null)
 			return;
+		s.lock();
 		locks.remove(ID);
 		positions.remove(ID);
 		s.unlock();
 	}
 
-	@LINK void move(Object ID, double rel_x2, double rel_y2, double speed) {
+	/*
+	 * PEOPLE METHODS
+	 */
+
+	@LINK
+	void move(Object ID, double rel_x2, double rel_y2, double speed) {
+
 		WriteLock s = writeLock(ID);
 		if (s == null)
 			return;
+		s.lock();
 		double[] pos = positions.get(ID);
 		double x1 = pos[0], x3, y1 = pos[0], y3;
 		double x2 = rel_x2 + x1, y2 = rel_y2 + y1;
@@ -70,24 +87,28 @@ public class EnvironmentArtifact extends Artifact {
 			y3 = y2 - (a - speed) / a * (y2 - y1);
 		}
 		if (x3 < 0 || x3 > worldWidth) {
-			failed("Movement failure: out of bound!", "fail", ID, "Wanted: "
-					+ x3 + " max " + worldWidth);
-		} else if (y3 < 0 || y3 > worldHeight) {
-			failed("Movement failure: out of bound!", "fail", ID, "Wanted: "
-					+ y3 + " max " + worldHeight);
-		} else {
-			pos[0] = x3;
-			pos[1] = y3;
+			x3 = (x3 < 0) ? 0 : worldWidth;
+//			failed("Movement failure: out of bound!", "fail", ID, "Wanted: "
+//					+ x3 + " max " + worldWidth);
 		}
+		if (y3 < 0 || y3 > worldHeight) {
+			y3 = (y3 < 0) ? 0 : worldHeight;
+//			failed("Movement failure: out of bound!", "fail", ID, "Wanted: "
+//					+ y3 + " max " + worldHeight);
+		}
+		pos[0] = x3;
+		pos[1] = y3;
 		s.unlock();
 	}
 
-	@LINK void sense(Object ID, OpFeedbackParam<Collection<PersonSenseData>> people,
+	@LINK
+	void sense(Object ID, OpFeedbackParam<Collection<PersonSenseData>> people,
 			OpFeedbackParam<Collection<PoTSenseData>> pointOfInterest) {
 		ReadLock s = readLock(ID);
-		double[] mypos = positions.get(ID);
 		if (s == null)
 			return;
+		s.lock();
+		double[] mypos = positions.get(ID);
 		Collection<PersonSenseData> pl = new ArrayList<>();
 		Collection<PoTSenseData> potl = new ArrayList<>();
 		people.set(pl);
@@ -96,55 +117,73 @@ public class EnvironmentArtifact extends Artifact {
 			if (l.getKey().equals(ID)) {
 				continue;
 			}
-			ReadLock r = readLock(l.getValue());
+			ReadLock r = readLock(l.getKey());
 			if (r == null) {
 				continue;
 			}
-			double[] pos = positions.get(ID);
+			r.lock();
+			double[] pos = positions.get(l.getKey());
 			pl.add(new PersonSenseData(new double[] { pos[0] - mypos[0],
 					pos[1] - mypos[1] }, l.getKey()));
 			r.unlock();
 		}
 		for (Entry<Object, double[]> l : points.entrySet()) {
-			double[] pos = points.get(ID);
+			double[] pos = points.get(l.getKey());
 			potl.add(new PoTSenseData(new double[] { pos[0] - mypos[0],
 					pos[1] - mypos[1] }, l.getKey()));
 		}
 		s.unlock();
 	}
 
-	@INTERNAL_OPERATION WriteLock writeLock(Object ID) {
-		ReentrantReadWriteLock s = locks.get(ID);
-		if (s == null) {
-			failed("Operation failure", "fail", ID, "Null lock");
-			return null;
-		}
-		WriteLock r = s.writeLock();
-		ReentrantReadWriteLock s2 = locks.get(ID);
-		if (s2.equals(s)) {
-			return r;
-		} else {
-			failed("Operation failure", "fail", ID, "Operation not valid");
+	/*
+	 * INQUISITION METHODS
+	 */
+	@LINK
+	void inquireEnvironment(
+			OpFeedbackParam<Collection<PersonSenseData>> people,
+			OpFeedbackParam<Collection<PoTSenseData>> pointOfInterest,
+			OpFeedbackParam<Double> worldWidth,
+			OpFeedbackParam<Double> worldHeight) {
+		Collection<PersonSenseData> pl = new ArrayList<>();
+		Collection<PoTSenseData> potl = new ArrayList<>();
+		people.set(pl);
+		pointOfInterest.set(potl);
+		for (Entry<Object, ReentrantReadWriteLock> l : locks.entrySet()) {
+			ReadLock r = readLock(l.getKey());
+			if (r == null) {
+				continue;
+			}
+			r.lock();
+			double[] pos = positions.get(l.getKey());
+			pl.add(new PersonSenseData(pos, l.getKey()));
 			r.unlock();
-			return null;
 		}
+		for (Entry<Object, double[]> l : points.entrySet()) {
+			double[] pos = points.get(l.getKey());
+			potl.add(new PoTSenseData(pos, l.getKey()));
+		}
+		worldWidth.set(this.worldWidth);
+		worldHeight.set(this.worldHeight);
 	}
 
-	@INTERNAL_OPERATION ReadLock readLock(Object ID) {
+	@INTERNAL_OPERATION
+	WriteLock writeLock(Object ID) {
 		ReentrantReadWriteLock s = locks.get(ID);
 		if (s == null) {
 			failed("Operation failure", "fail", ID, "Null lock");
 			return null;
 		}
-		ReadLock r = s.readLock();
-		ReentrantReadWriteLock s2 = locks.get(ID);
-		if (s2.equals(s)) {
-			return r;
-		} else {
-			failed("Operation failure", "fail", ID, "Operation not valid");
-			r.unlock();
+		return s.writeLock();
+	}
+
+	@INTERNAL_OPERATION
+	ReadLock readLock(Object ID) {
+		ReentrantReadWriteLock s = locks.get(ID);
+		if (s == null) {
+			failed("Operation failure", "fail", ID, "Null lock");
 			return null;
 		}
+		return s.readLock();
 	}
 
 }
