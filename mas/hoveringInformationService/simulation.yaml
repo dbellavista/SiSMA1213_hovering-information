@@ -14,14 +14,14 @@ Analysis:
 People:
   - name: 'pippo'
     behaviour: 'random'
-    xpos: 50
-    ypos: 40
+    xpos: 'random'
+    ypos: 'random'
     device_range: 100
     device_storage: 100
   - name: 'pluto'
     behaviour: 'random'
-    xpos: 70
-    ypos: 40
+    xpos: 'random'
+    ypos: 'random'
     device_range: 100
     device_storage: 100
     

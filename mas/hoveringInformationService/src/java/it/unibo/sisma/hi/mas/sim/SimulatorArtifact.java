@@ -4,8 +4,6 @@ package it.unibo.sisma.hi.mas.sim;
 
 import it.unibo.sisma.hi.mas.social.PersonSenseData;
 import it.unibo.sisma.hi.mas.social.PoTSenseData;
-import it.unibo.sisma.hoveringinf.graphic.WindowCloseListener;
-import it.unibo.sisma.hoveringinf.system.SimulatorUI;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -19,21 +17,14 @@ import cartago.*;
  * @author Daniele Bellavista
  * 
  */
-@ARTIFACT_INFO(outports = { @OUTPORT(name = "out-1") })
+@ARTIFACT_INFO(outports = { @OUTPORT(name = "inq-env-port"),
+		@OUTPORT(name = "ui-port") })
 public class SimulatorArtifact extends Artifact {
 
-	private SimulatorUI ui;
+	private int guiRefresh;
 
-	void init(int guiWidth, int guiHeight, int guiRefresh) {
-		ui = new SimulatorUI();
-		ui.init(guiWidth, guiHeight);
-		ui.config(new WindowCloseListener() {
-			@Override
-			public void onClose() {
-				System.exit(0);
-			}
-		});
-		ui.start();
+	void init(int guiRefresh) {
+		this.guiRefresh = guiRefresh;
 	}
 
 	@OPERATION
@@ -53,7 +44,7 @@ public class SimulatorArtifact extends Artifact {
 			OpFeedbackParam<Double> worldWidth,
 			OpFeedbackParam<Double> worldHeight) {
 		try {
-			execLinkedOp("out-1", "inquireEnvironment", people,
+			execLinkedOp("inq-env-port", "inquireEnvironment", people,
 					pointOfInterest, worldWidth, worldHeight);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -66,8 +57,13 @@ public class SimulatorArtifact extends Artifact {
 	void showSimulation(Object people, Object pointOfInterest,
 			double worldWidth, double worldHeight) {
 		GUIEnvironmentFactory factory = new GUIEnvironmentFactory();
-		ui.render(factory.createWorld(worldWidth, worldHeight,
-				(ArrayList<PersonSenseData>) people,
-				(ArrayList<PoTSenseData>) pointOfInterest));
+		try {
+			execLinkedOp("ui-port", "render", factory.createWorld(worldWidth, worldHeight,
+					(ArrayList<PersonSenseData>) people,
+					(ArrayList<PoTSenseData>) pointOfInterest));
+		} catch (OperationException e) {
+			e.printStackTrace();
+			failed("UI linked operation failed", "fail", e);
+		}
 	}
 }

@@ -57,9 +57,11 @@
 		.
 +!choose_destination(DX, DY): behaviour(random)
 	<-  .random(X);
-		DX = (X - 0.5) * 50;
+		.random(LX);
+		DX = (X - 0.5) * (LX * 100);
 		.random(Y);
-		DY = (Y - 0.5) * 50;
+		.random(LY);
+		DY = (Y - 0.5) * (LY * 100);
 		.
 
 +!reach(DX, DY): behaviour(random)

@@ -87,8 +87,9 @@ behaviour("random", random).
 		?parameter("people", NP, "behaviour", Bt);
 		?behaviour(Bt, B);
 		-+parameter("people", NP, "behaviour", Bt);
-		?parameter("people", NP, "xpos", X);
-		?parameter("people", NP, "ypos", Y);
+		?parameter("people", NP, "xpos", TmpX);
+		?parameter("people", NP, "ypos", TmpY);
+		!analyzePos(TmpX, TmpY, X, Y);
 		?parameter("people", NP, "device_range", DR);
 		?parameter("people", NP, "device_storage", DS);
 
@@ -127,6 +128,21 @@ behaviour("random", random).
 		);
 		!setup_people(NP - 1);
 	.
+	
++!analyzePos("random", TmpY, X, Y) : parameter("world", "width", W)
+	<-  .random(Ran);
+		ValX = Ran * W;
+		!analyzePos(ValX, TmpY, X, Y).
+		 
++!analyzePos(TmpX, "random", X, Y) : parameter("world", "height", H)
+	<-  .random(Ran);
+		ValY = Ran * H;
+		!analyzePos(TmpX, ValY, X, Y).
+
++!analyzePos(TmpX, TmpY, X, Y)
+	<-  Y = TmpY;
+		X = TmpX.
+
 +!setup_hovering(0).
 
 +!setup_hovering(NH) : parameter("hovering", NTot) & NH <= NTot & NH > 0
