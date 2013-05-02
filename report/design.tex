@@ -82,7 +82,7 @@ System}, already present in the environment.
 			\hline
 			\textbf{Requirement} & \textbf{Description} \\
 			\hline
-      Access Hovering Information & Access the hovering information that is
+      Access Hovering Information & Access the hovering information
       available in the current position. \\
 			\hline
 			Create Hovering Information & Create a new hovering information. \\
@@ -256,7 +256,7 @@ System}, already present in the environment.
 			\hline
 			\textbf{Requirement} & \textbf{Function} \\
 			\hline
-			Manage Device & get\_position, discover\_neighbours, manage\_storage, manage\_ui \\
+			Manage Device & get\_position, discover\_neighbours, manage\_storage \\
 			\hline
 		\end{tabular}
 	\caption{Reference Requirement-Function table $(C)RRF_t$}
@@ -335,7 +335,7 @@ System}, already present in the environment.
 			\hline
 			GUI & GUIDep \\
 			\hline
-			Node Resources & NeighbourDep, StorageDep, PositionDep, NodeUIDep. \\
+			Node Resources & NeighbourDep, StorageDep, PositionDep. \\
 			\hline
 			Node Interface & NodeIfDep. \\
 			\hline
@@ -392,8 +392,6 @@ System}, already present in the environment.
 			discover\_neighbours & Return the neighbours of a mobile nodes. \\
 			\hline
 			manage\_storage & Manage mobile node storage resource. \\
-			\hline
-			manage\_ui & Manage mobile node user interface. \\
 			\hline
 		\end{tabular}
 	\caption{Function table $(C)F_t$}
@@ -466,8 +464,6 @@ System}, already present in the environment.
 			\hline
 			manage\_storage & Node Topology. \\
 			\hline
-			manage\_ui & Node Topology. \\
-			\hline
 		\end{tabular}
 	\caption{Function-Topology table $(C)FTop_t$}
 	\label{tab:cftopt}
@@ -489,9 +485,9 @@ System}, already present in the environment.
 			\hline
 			StorageDep & High level operations depends on mobile node storage availability. \\
 			\hline
-			NodeUIDep & A mobile node should show information about the hovering
-			system on the mobile UI. \\
-			\hline
+			%NodeUIDep & A mobile node should show information about the hovering
+			%system on the mobile UI. \\
+			%\hline
 			NodeIfDep & A person needs a node interface in order to use it for access
 			or creating hovering information. \\
 			\hline
@@ -510,7 +506,7 @@ System}, already present in the environment.
 			\hline
 			\textbf{Task} & \textbf{Dependency} \\
 			\hline
-			access\_information & CommDep, PositionDep, NodeIfDep, NoteUIDep. \\
+			access\_information & CommDep, PositionDep, NodeIfDep. \\
 			\hline
 			create\_information & CommDep, PositionDep, StorageDep, NodeIfDep. \\
 			\hline
@@ -547,8 +543,6 @@ System}, already present in the environment.
 			\hline
 			get\_position & PositionDep. \\
 			\hline
-			manage\_ui & NodeIfDep, NodeUIDep. \\
-			\hline
 		\end{tabular}
 	\caption{Function-Dependency table $(C)FD_t$}
 	\label{tab:cfdt}
@@ -560,7 +554,7 @@ System}, already present in the environment.
 			\hline
 			\textbf{Topology} & \textbf{Dependency} \\
 			\hline
-			Node Topology & StorageDep, PositionDep, NodeUIDep, NodeIfDep, NeighbourDep. \\
+			Node Topology & StorageDep, PositionDep, NodeIfDep, NeighbourDep. \\
 			\hline
 			Anchor Area & SimDataDep, PositionDep.\\
 			\hline
@@ -616,7 +610,7 @@ System}, already present in the environment.
 			\hline
 			show\_simulation & ShowSimulation. \\
 			\hline
-			access\_information & AccessInformation, ListInformation, AccessViaUI,
+			access\_information & AccessInformation, ListInformation, ShowInformationToUI,
 			AccessInformationData.\\
 			\hline
 			create\_information & CreateInformation, CreateViaUI. \\
@@ -665,8 +659,6 @@ System}, already present in the environment.
 			\hline
 			get\_position & ObtainPosition. \\
 			\hline
-			manage\_ui & ShowInformation, ShowInformationList. \\
-			\hline
 		\end{tabular}
 	\caption{Transition Function-Operation table $(C)TFO_t$}
 	\label{tab:ctfot}
@@ -684,9 +676,7 @@ System}, already present in the environment.
 			\hline
 			StorageDep & InsertNewPiece Interaction, RemovePiece Interaction \\
 			\hline
-			NodeUIDep & ShowInfo Interaction, ListInfo Interaction \\
-			\hline
-			NodeIfDep & User Create Interaction, User Access Interaction \\
+			NodeIfDep & User Create Interaction, ShowInformation Interaction \\
 			\hline
 			InquireDep & Inquisition Interaction\\
 			\hline
@@ -706,8 +696,6 @@ System}, already present in the environment.
 			NeighbourDep & Neighbour Rule\\
 			\hline
 			StorageDep & Storage Rule \\
-			\hline
-			NodeUIDep & \\
 			\hline
 			NodeIfDep & \\
 			\hline
@@ -755,11 +743,11 @@ System}, already present in the environment.
 			\hline
 			CreateInformation & Create a new hovering information. \\
 			\hline
-			AccessViaUI & A mobile user can access an hovering information using the
-			mobile UI. \\
-			\hline
 			CreateViaUI & A mobile user can create an hovering information using the
 			mobile UI. \\
+			\hline
+      ShowInformationToUI & Show available information to the device UI, so
+      that it's accessible from the user.\\
 			\hline
 			Replicate & Make a copy of the hovering information to be transferred to
 			another mobile node. \\
@@ -810,12 +798,6 @@ System}, already present in the environment.
 			ObtainPosition & Obtain the current node position using some location
 			device. \\
 			\hline
-			ShowInformation & Show a selected hovering information to mobile node
-			user.\\
-			\hline
-			ShowInformationList & Show the current list of available hovering
-			information to mobile node user.\\
-			\hline
 		\end{tabular}
 	\caption{Operation table $(C)O_t$}
 	\label{tab:cot}
@@ -830,9 +812,9 @@ System}, already present in the environment.
 			Simulation Manager & AnalyzeSimulation, InquireNodes, InquireHoveringInformations, In-
 			quireEnvironment, ShowSimulation. \\
 			\hline
-			Person & SenseAction, MoveAction, AccessViaUI, CreateViaUI. \\
+			Person & SenseAction, MoveAction, CreateViaUI. \\
 			\hline
-			Mobile node & ManageDevice, ListInformation, CreateInformation.  \\
+			Mobile node & ManageDevice, ListInformation, CreateInformation, ShowInformationToUI.  \\
 			\hline
 			Piece of Hovering Information & Replicate, Jump, AccessInformationData. \\
 			\hline
@@ -850,8 +832,7 @@ System}, already present in the environment.
 			SimulatorUIRes & RenderWorld. \\
 			\hline
 			MobileResource & InsertData, RemoveData, GetRemainingSpace,
-			GetMaximumSize, DiscoveNeighbour, ObtainPosition, ShowInformation,
-			ShowInformationList. \\
+			GetMaximumSize, DiscoveNeighbour, ObtainPosition. \\
 			\hline
 		\end{tabular}
 	\caption{Resource-Operation table $(C)RO_t$}
@@ -875,9 +856,6 @@ System}, already present in the environment.
 			User Create Interaction & Mobile users have to communicate with the
 			mobile node in order to create information. \\
 			\hline
-			User Access Interaction & Mobile users have to communicate with the
-			mobile node in order to access information. \\
-			\hline
 			\hline
 			Inquisition Interaction & World inquisition for simulation analysis and
 			management purposes. \\
@@ -895,11 +873,7 @@ System}, already present in the environment.
 			\hline
 			\textbf{Interaction (Hovering System)} & \textbf{Description} \\
 			\hline
-			ShowInfo Interaction & Show to the mobile UI an accessed hovering
-			information. \\
-			\hline
-			ShowList Interaction & Show to the mobile UI the list of accessible hovering
-			information. \\
+			ShowInformation Interaction & Show the mobile user the available information. \\
 			\hline
 			InsertNewPiece Interaction & Insert if possible a new piece of hovering
 			information inside a mobile node buffer. \\
@@ -941,9 +915,9 @@ System}, already present in the environment.
 			\hline
 			CreateInformation & \\
 			\hline
-			AccessViaUI & User Access Interaction \\
-			\hline
 			CreateViaUI & User Create Interaction \\
+			\hline
+      ShowInformationToUI & ShowInformation Interaction.\\
 			\hline
 			Replicate & Replication Interaction \\
 			\hline
@@ -990,10 +964,6 @@ System}, already present in the environment.
 			\hline
 			ObtainPosition & Jump Interaction, Replicate Interaction, List
 			Interaction, Access Interaction.  \\
-			\hline
-			ShowInformation & ShowInfo Interaction.  \\
-			\hline
-			ShowInformationList & ShowList Interaction.  \\
 			\hline
 		\end{tabular}
 	\caption{Operation-Interaction table $(C)OpI_t$}
@@ -1046,9 +1016,7 @@ System}, already present in the environment.
 			\hline
 			Sense Interaction & \\
 			\hline
-			ShowInfo Interaction & \\
-			\hline
-			ShowList Interaction & \\
+			ShowInformation Interaction & \\
 			\hline
 			InsertNewPiece Interaction & Storage Rule, Node Location Rule \\
 			\hline
@@ -1098,7 +1066,7 @@ System}, already present in the environment.
 			\hline
 			Simulation Manager & \\
 			\hline
-			Person & Bounded World Rule, Living Space Rule. \\
+			Person & Bounded World Rule. \\
 			\hline
 			Piece of Hovering Information &  Movement Duplicate
 			Rule, Storage Rule, Neighbour Rule. \\
@@ -1255,7 +1223,9 @@ System}, already present in the environment.
 			\hline
 			Body Artifact & MoveAction, SenseAction. \\
 			\hline
-			MobileUI Artifact & AccessViaUI Action, CreateViaUI Action. \\
+			MobileUI Artifact & CreateViaUI Action, ShowInformationToUI Action. \\
+			\hline
+			MobileUIInterface Artifact & ShowInformationToUI Action, CreateViaUI Action. \\
 			\hline
       Simulator Artifact & ShowSimulation, AnalyzeSimulation,
       InquireNodes, InquireHoveringInformation, InquireEnvironment. \\
@@ -1278,8 +1248,7 @@ System}, already present in the environment.
 			UI Artifact & SimulatorUIRes. \\
 			\hline
 			MobileResource Artifact & DiscoveNeighbour, InsertData, RemoveData,
-			GetRemainingSpace, GetMaximumSize, ObtainPosition, ShowInformation,
-			ShowInformationList. \\
+			GetRemainingSpace, GetMaximumSize, ObtainPosition. \\
 			\hline
 		\end{tabular}
 	\caption{Mapping Artifact-Resource table $(C)MArR_t$}
@@ -1318,7 +1287,7 @@ System}, already present in the environment.
 			\hline
 			\textbf{Artifact} & \textbf{Rule} \\
 			\hline
-			Body Artifact & Bounded World Rule, Living Space Rule. \\
+			Body Artifact & Bounded World Rule. \\
 			\hline
 			MobileResource Artifact & Storage Rule, Neighbour Rule, Node Location
 			Rule, Movement Duplicate Rule. \\
@@ -1357,17 +1326,13 @@ System}, already present in the environment.
 			\hline
 			Sense Interaction & Sense Use \\
 			\hline
-			User Access Interaction & UserAccess Use \\
-			\hline
 			User Create Interaction & UserCreate Use \\
 			\hline
 			ObtainPosition Interaction & ObtainPosition Use \\	
 			\hline
 			DiscoverNeighbour Interaction & DiscoverNeighbour Use \\	
 			\hline
-			ShowInfo Interaction & ShowInfo Use \\
-			\hline
-			ShowList Interaction & ShowList Use \\
+			ShowInformation Interaction & ShowInformation Use \\
 			\hline
 			InsertNewPiece Interaction & InsertNewPiece \\
 			\hline
@@ -1388,13 +1353,9 @@ System}, already present in the environment.
 			\hline
 			\textbf{Interaction} & \textbf{Manifest} \\
 			\hline
-			UserAccess Interaction & UserAccess Manifest \\
+			ShowInformation Interaction & ShowInformation Manifest \\
 			\hline
 			UserCreate Interaction & UserCreate Manifest \\
-			\hline
-			ShowInfo Interaction & ShowInfo Manifest \\
-			\hline
-			ShowList Interaction & ShowList Manifest \\
 			\hline
 		\end{tabular}
 	\caption{Mapping Interaction-Manifest table $(C)MIM_t$}
@@ -1411,10 +1372,6 @@ System}, already present in the environment.
 			\hline
 			Replication Interaction & Replication Speech \\
 			\hline
-			User Create Interaction & Creation Speech \\
-			\hline
-			User Access Interaction & AskAccess Speech \\
-			\hline
 			List Interaction & List Speech \\
 			\hline
 			Access Interaction & Access Speech \\
@@ -1430,11 +1387,11 @@ System}, already present in the environment.
 			\hline
 			\textbf{Interaction} & \textbf{LinkedTo} \\
 			\hline
+			ShowInformation Interaction & ShowInformation Link \\
+			\hline
+			UserCreate Interaction & UserCreate Link \\
+			\hline
 			Render Interaction & Render Link\\
-			\hline
-			ShowInfo Interaction & ShowInfo Link \\
-			\hline
-			ShowList Interaction & ShowList Link \\
 			\hline
 		\end{tabular}
 	\caption{Mapping Interaction-LinkedTo table $(C)MIL_t$}
@@ -1451,9 +1408,10 @@ System}, already present in the environment.
 			\hline
 			Simulator & Simulator Artifact. \\
 			\hline
-			Person & Body Artifact. \\
+			Person & Body Artifact, MobileUI Artifact. \\
 			\hline
-			MobileNode & \\
+      MobileNode & MobileUI Artifact, MobileUIInterface Artifact, MobileNode
+      Artifact\\
 			\hline
 			Hovering & HoveringInformation Artifact. \\
 			\hline
@@ -1498,7 +1456,9 @@ System}, already present in the environment.
 			\hline
 			Body Artifact & Sense, MoveTo. \\
 			\hline
-			MobileUI Artifact & AccessViaUI, CreateViaUI. \\
+			MobileUI Artifact & CreateViaUI. \\
+			\hline
+			MobileUIInterface Artifact & ShowInformation. \\
 			\hline
 			MobileResource Artifact & DiscoveNeighbour, InsertData, RemoveData,
 			GetRemainingSpace, GetMaximumSize, ObtainPosition, ShowInformation,
@@ -1552,26 +1512,22 @@ System}, already present in the environment.
 			\hline
 			Move Use & move\_to(position, velocity) \\
 			\hline
-			UserAccess Use & access \\
-			\hline
 			UserCreate Use & create(information) \\
 			\hline
 			ObtainPosition Use & ask position\newline return position\\
 			\hline
 			DiscoverNeighbour Use & discover neighbours\newline return list of neighbours\\
 			\hline
-			ShowInfo Use & show information\\
-			\hline
-			ShowList Use & show information list\\
+			ShowInformationToUI Use & show information\\
 			\hline
 			InsertNewPiece& can insert?(name, size) \newline response \newline
 			insert(piece\_of\_information) \\
 			\hline
 			RemovePiece& remove(piece\_of\_information) \\
 			\hline
-			Analysis Use & analyze\_system \newline return results\\
+			Analysis Use & analyze\_system(inquisition\_result) \newline return results\\
 			\hline
-			Render Use & show\_world \\
+			Render Use & show\_world(inquisition\_result) \\
 			\hline
 		\end{tabular}
 	\caption{Use-Protocol table $(C)UP_t$}
@@ -1584,10 +1540,10 @@ System}, already present in the environment.
 			\hline
 			\textbf{Agent} & \textbf{Use} \\
 			\hline
-			Person & Sense Use, Move Use, UserAccess Use, UserCreate Use\\
+			Person & Sense Use, Move Use, UserCreate Use\\
 			\hline
-			MobileNode & ObtainPosition Use, DiscoverNeighbour Use, ShowInfo Use,
-			ShowList Use,InsertNewPiece, RemovePiece  \\
+      MobileNode & ObtainPosition Use, DiscoverNeighbour Use,
+      ShowInformationToUI Use, ShowList Use,InsertNewPiece, RemovePiece  \\
 			\hline
 			Simulator & Analysis Use, Render Use \\
 			\hline
@@ -1604,7 +1560,9 @@ System}, already present in the environment.
 			\hline
 			Body Artifact & Move Use, Sense Use. \\
 			\hline
-			MobileUI Artifact & UserAccess Use, UserCreate Use. \\
+			MobileUI Artifact & UserCreate Use. \\
+			\hline
+			MobileUIInterface Artifact & ShowInformation Use. \\
 			\hline
 			HoveringInformation Artifact & AccessInformationData. \\
 			\hline
@@ -1627,10 +1585,6 @@ System}, already present in the environment.
 			Replication Speech & I\_am\_already\_there? \newline response \newline if\_not
 			try\_insert(information) \newline response \\
 			\hline
-			AskAccess Speech & access(information) \\
-			\hline
-			Creation Speech & create(information) \\
-			\hline
 			List Speech & give\_me\_valid\_info\_id(my\_position) \newline return list\_info\_id\\
 			\hline
 			Access Speech & give\_me\_information(info\_id) \newline return information \\
@@ -1648,8 +1602,6 @@ System}, already present in the environment.
 			\hline
 			MobileNode & List Speech, Access Speech, Creation Speech, AskAccess Speech, Replication Speech, Jump Speech. \\
 			\hline
-			Person & AskAccess Speech, Creation Speech. \\
-			\hline
 			Piece of Hovering Information & Jump Speech, Replication Speech. \\
 			\hline
 		\end{tabular}
@@ -1663,13 +1615,9 @@ System}, already present in the environment.
 			\hline
 			\textbf{Manifest} & \textbf{Protocol} \\
 			\hline
-			UserAccess Manifest & requested\_access(info\_id) \\
-			\hline
 			UserCreate Manifest & requested\_creation(info) \\
 			\hline
-			ShowInfo Manifest & new\_info \\
-			\hline
-			ShowList Manifest & new\_info\_list \\
+			ShowInformation Manifest & new\_info \\
 			\hline
 		\end{tabular}
 	\caption{Manifest-Protocol table $(C)MP_t$}
@@ -1682,9 +1630,9 @@ System}, already present in the environment.
 			\hline
 			\textbf{Agent} & \textbf{Manifest} \\
 			\hline
-			MobileNode & UserAccess Manifest, UserCreate Manifest \\
+			MobileNode & UserCreate Manifest \\
 			\hline
-			Person & ShowInfo Manifest, ShowList Manifest \\
+			Person & ShowInformation Manifest\\
 			\hline
 		\end{tabular}
 	\caption{Agent-Manifest table $(C)AgeM_t$}
@@ -1697,8 +1645,9 @@ System}, already present in the environment.
 			\hline
 			\textbf{Artifact} & \textbf{Manifest} \\
 			\hline
-			MobileUI Artifact & ShowInfo Manifest, ShowList Manifest, UserAccess
-			Manifest, UserCreate Manifest \\
+			MobileUI Artifact & UserCreate Manifest \\
+			\hline
+			MobileUIInterface Artifact & ShowInfo Manifest\\
 			\hline
 		\end{tabular}
 	\caption{Artifact-Manifest table $(C)ArtM_t$}
@@ -1717,9 +1666,9 @@ System}, already present in the environment.
 			%hovering \newline return hovering info\newline
 			%InquireEnvironment\newline return environment info \\
 			\hline
-			ShowInfo Link & new\_info \\
+			ShowInformation Link & show\_info(info) \\
 			\hline
-			ShowList Link & new\_info\_list \\
+			UserCreate Link & create\_info(info) \\
 			\hline
 		\end{tabular}
 	\caption{LinkedTo-Protocol table $(C)LP_t$}
@@ -1732,9 +1681,9 @@ System}, already present in the environment.
 			\hline
 			\textbf{Artifact} & \textbf{LinkedTo} \\
 			\hline
-			MobileResource Artifact & ShowInfo Link, ShowList Link. \\
+			MobileUIInterface Artifact & ShowInformation Link, UserCreate Link. \\
 			\hline
-			MobileUI Artifact & ShowInfo Link, ShowList Link. \\
+			MobileUI Artifact & ShowInformation Link, UserCreate Link. \\
 			\hline
 			UI Artifact & GUI Link \\
 			\hline
