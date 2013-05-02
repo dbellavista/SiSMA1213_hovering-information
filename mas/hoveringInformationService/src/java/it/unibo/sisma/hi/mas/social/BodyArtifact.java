@@ -8,7 +8,7 @@ import cartago.*;
 
 @ARTIFACT_INFO(
 	outports = {
-		@OUTPORT(name = "out-1")
+		@OUTPORT(name = "env-link")
 	}
 ) public class BodyArtifact extends Artifact {
 
@@ -24,7 +24,7 @@ import cartago.*;
 		OpFeedbackParam<Collection<PersonSenseData>> people = new OpFeedbackParam<>();
 		OpFeedbackParam<Collection<PoTSenseData>> points = new OpFeedbackParam<>();
 		try {
-			execLinkedOp("out-1", "sense", ID, people, points);
+			execLinkedOp("env-link", "sense", ID, people, points);
 			ObsProperty peoplep = getObsProperty("people");
 			ObsProperty pointsp = getObsProperty("points");
 
@@ -47,7 +47,7 @@ import cartago.*;
 
 	@OPERATION void move(double x, double y, double speed) {
 		try {
-			execLinkedOp("out-1", "move", ID, x, y, speed);
+			execLinkedOp("env-link", "move", ID, x, y, speed);
 		} catch (Exception e) {
 			e.printStackTrace();
 			failed("Move linked operation failed", "fail", ID, e);

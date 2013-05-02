@@ -24,7 +24,7 @@
 	
 		lookupArtifact(EAName, EnvArtID);
 		-+artifacts(envSocial, EnvArtID);		
-		linkArtifacts(ArtBodyID, "out-1", EnvArtID);
+		linkArtifacts(ArtBodyID, "env-link", EnvArtID);
 		!getDeviceUI;
 		
 		-~configured;
@@ -35,6 +35,7 @@
 	
 +!getDeviceUI : ui_name(AUName)
 	<-	lookupArtifact(AUName, UiArtd);
+		focus(UiArtd);
 		-+artifacts(mobileUI, UiArtd);
 		.
 		

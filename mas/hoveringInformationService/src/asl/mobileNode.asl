@@ -16,9 +16,17 @@
 		joinWorkspace(WspName, WspId);
 		cartago.set_current_wsp(WspId);
 		+workspace(world, WspId);
+		
 		makeArtifact(AUName, "it.unibo.sisma.hi.mas.hs.MobileUIArtifact",[], UResID);
 		+artifacts(ui, UResID);
-		focus(UResID);
+		.concat(AUName, "_interface", AUIfName);
+		makeArtifact(AUIfName, "it.unibo.sisma.hi.mas.hs.MobileUIInterfaceArtifact",[], UIfResID);
+		+artifacts(ui_if, UIfResID);
+		focus(UIfResID);
+		linkArtifacts(UResID, "to-device", UIfResID);
+		linkArtifacts(UIfResID, "to-ui", UResID);
+		
+		
 		.concat("NodeWorkspace_", Name, WNName);
 		createWorkspace(WNName);
 		joinWorkspace(WNName, WNid);
