@@ -256,7 +256,7 @@ System}, already present in the environment.
 			\hline
 			\textbf{Requirement} & \textbf{Function} \\
 			\hline
-			Manage Device & get\_position, discover\_neighbours, manage\_storage \\
+			Manage Device & get\_position, discover\_neighbours, communicate, manage\_storage \\
 			\hline
 		\end{tabular}
 	\caption{Reference Requirement-Function table $(C)RRF_t$}
@@ -389,7 +389,9 @@ System}, already present in the environment.
 			\hline
 			get\_position & Return the position of a mobile node. \\
 			\hline
-			discover\_neighbours & Return the neighbours of a mobile nodes. \\
+			discover\_neighbours & Discover the neighbours of a mobile nodes. \\
+			\hline
+			communicate & Send a message to a mobile node. \\
 			\hline
 			manage\_storage & Manage mobile node storage resource. \\
 			\hline
@@ -459,6 +461,8 @@ System}, already present in the environment.
 			inquire\_world & World.\\
 			\hline
 			discover\_neighbour & Communication Range, World, Node Topology. \\
+			\hline
+			communicate & Communication Range, World, Node Topology. \\
 			\hline
 			get\_position & World, Node Topology. \\
 			\hline
@@ -539,6 +543,8 @@ System}, already present in the environment.
 			\hline
 			discover\_neighbours & NeighbourDep. \\
 			\hline
+			communicate & NeighbourDep. \\
+			\hline
 			manage\_storage & StorageDep. \\
 			\hline
 			get\_position & PositionDep. \\
@@ -569,12 +575,14 @@ System}, already present in the environment.
 
 \subsection{Architectural Design}
 
-%In order to ease the project complexity, I assume that two neighbour mobile
-%nodes can interact directly, without the explicit use of communication medium.
-%Similarly, a person can interact with a mobile node without the explicit use of
-%an interface. The system, implemented on a real world, will have different
-%communication resource, such as wireless or bluetooth and an interface between
-%human being users and the mobile node.
+Communication mechanisms were not specified during analysis, so, in order to
+reduce design and implementation complexity, I assume that the only way to
+communicate is by \emph{dispatches}, that is asynchronous message passing with
+strong expectation by the sender that the receiver will process the message.
+
+The communication act is then decomposed into two primitives: \emph{in} and
+\emph{out}. The communication resource is shared, so each user must have an
+unique id.
 
 \subsubsection{Transition Tables}
 
@@ -657,6 +665,8 @@ System}, already present in the environment.
 			\hline
 			discover\_neighbour & DiscoveNeighbour. \\
 			\hline
+			Communicate & SendMessage, ReceiveMessage. \\
+			\hline
 			get\_position & ObtainPosition. \\
 			\hline
 		\end{tabular}
@@ -672,7 +682,8 @@ System}, already present in the environment.
 			\hline
 			GUIDep & Render Interaction \\
 			\hline
-			NeighbourDep & DiscoverNeighbour Interaction\\
+      NeighbourDep & DiscoverNeighbour Interaction, SendMessage Interaction,
+      ReceiveMessage Interaction \\
 			\hline
 			StorageDep & InsertNewPiece Interaction, RemovePiece Interaction \\
 			\hline
@@ -693,7 +704,7 @@ System}, already present in the environment.
 			\hline
 			\textbf{Dependency} & \textbf{Rule} \\
 			\hline
-			NeighbourDep & Neighbour Rule\\
+			NeighbourDep & Neighbour Rule, Send Rule, Receive Rule\\
 			\hline
 			StorageDep & Storage Rule \\
 			\hline
@@ -787,6 +798,11 @@ System}, already present in the environment.
 			\hline
 			DiscoveNeighbour & Discover peers node inside the communication range. \\
 			\hline
+      SendMessage & Send an asynchronous message to a node that resides in
+      communication range. \\
+			\hline
+      ReceiveMessage & Receive a message. Blocks if there are no messages. \\
+			\hline
 			InsertData & Insert a data into the mobile node buffer. \\
 			\hline
 			RemoveData & Remove a data from the mobile node buffer. \\
@@ -832,7 +848,7 @@ System}, already present in the environment.
 			SimulatorUIRes & RenderWorld. \\
 			\hline
 			MobileResource & InsertData, RemoveData, GetRemainingSpace,
-			GetMaximumSize, DiscoveNeighbour, ObtainPosition. \\
+			GetMaximumSize, DiscoveNeighbour, SendMessage, ReceiveMessage, ObtainPosition. \\
 			\hline
 		\end{tabular}
 	\caption{Resource-Operation table $(C)RO_t$}
@@ -890,6 +906,12 @@ System}, already present in the environment.
 			DiscoverNeighbour Interaction & Mobile nodes or piece of hovering
 			information have to know the neighbours. \\
 			\hline
+      SendMessage Interaction & Mobile nodes can send messages to their
+      neighbour, specifying an high-level receiver. \\
+			\hline
+      ReceiveMessage Interaction & Mobile nodes can receive messages specifying
+      an high-level receiver. \\
+			\hline
 			\hline
 			AccessInformationData Interaction & Mobile nodes must interact with Pieces
 			of Hovering Information in order to get their data. \\
@@ -909,19 +931,19 @@ System}, already present in the environment.
 			\hline
 			\textbf{Action} & \textbf{Interaction} \\
 			\hline
-			AccessInformation & Access Interaction. \\
+			AccessInformation & Access Interaction, Communication Interaction. \\
 			\hline
-			ListInformation & List Interaction. \\
+			ListInformation & List Interaction, Communication Interaction. \\
 			\hline
-			CreateInformation & \\
+			CreateInformation & Communication Interaction, Communication Interaction.\\
 			\hline
 			CreateViaUI & User Create Interaction \\
 			\hline
       ShowInformationToUI & ShowInformation Interaction.\\
 			\hline
-			Replicate & Replication Interaction \\
+			Replicate & Replication Interaction, Communication Interaction.  \\
 			\hline
-			Jump & Jump Interaction \\
+			Jump & Jump Interaction, Communication Interaction. \\
 			\hline
 			AccessInformationData & AccessInformationData Interaction \\
 			\hline
@@ -953,6 +975,10 @@ System}, already present in the environment.
 			RenderWorld & Render Interaction. \\
 			\hline
 			DiscoveNeighbour & DiscoverNeighbour Interaction. \\
+			\hline
+			SendMessage & SendMessage Interaction. \\
+			\hline
+			ReceiveMessage & ReceiveMessage Interaction. \\
 			\hline
 			InsertData & InsertNewPiece Interaction. \\
 			\hline
@@ -1001,6 +1027,10 @@ System}, already present in the environment.
 			Node Location Rule & A mobile node and an hovering information can access
 			only its own mobile resource. \\
 			\hline
+			Send Rule & A message can be delivered only to nodes in communication range. \\
+			\hline
+			Receive Rule & A message can be picked up only by the high-level receiver. \\
+			\hline
 		\end{tabular}
 	\caption{Rule table $(C)Ru_t$}
 	\label{tab:crut}
@@ -1028,6 +1058,10 @@ System}, already present in the environment.
 			\hline
 			DiscoverNeighbour Interaction & Neighbour Rule\\
 			\hline
+			Send Interaction & Send Rule, Neighbour Rule\\
+			\hline
+			Receive Interaction & Receive Rule, Neighbour Rule\\
+			\hline
 			User Create Interaction & \\
 			\hline
 			User Access Interaction & \\
@@ -1051,7 +1085,8 @@ System}, already present in the environment.
 			\hline
 			\textbf{Resource} & \textbf{Rule} \\
 			\hline
-			MobileResource & Storage Rule, Neighbour Rule, Node Location Rule. \\
+      MobileResource & Storage Rule, Neighbour Rule, Node Location Rule, Send
+      Rule, Receive Rule. \\
 			\hline
 		\end{tabular}
 	\caption{Resource-Rule table $(C)ReRu_t$}
@@ -1069,10 +1104,10 @@ System}, already present in the environment.
 			Person & Bounded World Rule. \\
 			\hline
 			Piece of Hovering Information &  Movement Duplicate
-			Rule, Storage Rule, Neighbour Rule. \\
+			Rule, Storage Rule, Neighbour Rule, Send Rule, Receive Rule.  \\
 			\hline
 			Mobile Node & Accessible Rule, Listing Rule, Creation Rule, Neighbour
-			Rule, Node Location Rule. \\
+			Rule, Send Rule, Receive Rule, Node Location Rule. \\
 			\hline
 		\end{tabular}
 	\caption{Role-Rule table $(C)RoRu_t$}
@@ -1087,7 +1122,7 @@ System}, already present in the environment.
 			\hline
 			Anchor Area Space & Accessible Rule, Listing Rule, Creation Rule. \\
 			\hline
-			Communication Range Space & Neighbour Rule. \\
+			Communication Range Space & Neighbour Rule, Send Rule, Receive Rule. \\
 			\hline
 			Node Space & Node Location Rule, Accessible Rule, Listing Rule, Creation Rule. \\
 			\hline
@@ -1247,8 +1282,7 @@ System}, already present in the environment.
 			\hline
 			UI Artifact & SimulatorUIRes. \\
 			\hline
-			MobileResource Artifact & DiscoveNeighbour, InsertData, RemoveData,
-			GetRemainingSpace, GetMaximumSize, ObtainPosition. \\
+			MobileResource Artifact & MobileResource. \\
 			\hline
 		\end{tabular}
 	\caption{Mapping Artifact-Resource table $(C)MArR_t$}
@@ -1275,6 +1309,10 @@ System}, already present in the environment.
 			\textbf{Artifact} & \textbf{Operation} \\
 			\hline
 			UI Artifact & RenderWorld. \\
+			\hline
+      MobileResource Artifact & DiscoveNeighbour, SendMessage, ReceiveMessage,
+      InsertData, RemoveData, GetRemainingSpace, GetMaximumSize,
+      ObtainPosition. \\
 			\hline
 		\end{tabular}
 	\caption{Mapping Artifact-Operation table $(C)MArOp_t$}
@@ -1331,6 +1369,10 @@ System}, already present in the environment.
 			ObtainPosition Interaction & ObtainPosition Use \\	
 			\hline
 			DiscoverNeighbour Interaction & DiscoverNeighbour Use \\	
+			\hline
+			SendMessage Interaction & Send Use \\	
+			\hline
+			ReceiveMessage Interaction & Receive Use \\	
 			\hline
 			ShowInformation Interaction & ShowInformation Use \\
 			\hline
@@ -1460,9 +1502,9 @@ System}, already present in the environment.
 			\hline
 			MobileUIInterface Artifact & ShowInformation. \\
 			\hline
-			MobileResource Artifact & DiscoveNeighbour, InsertData, RemoveData,
-			GetRemainingSpace, GetMaximumSize, ObtainPosition, ShowInformation,
-			ShowInformationList. \\
+      MobileResource Artifact & DiscoveNeighbour, SendMessage, ReceiveMessage,
+      InsertData, RemoveData, GetRemainingSpace, GetMaximumSize,
+      ObtainPosition, ShowInformation, ShowInformationList. \\
 			\hline
       Simulator Artifact & ShowSimulation, AnalyzeSimulation, InquireNodes,
       InquireHovering, InquireEnvironment \\
@@ -1518,6 +1560,10 @@ System}, already present in the environment.
 			\hline
 			DiscoverNeighbour Use & discover neighbours\newline return list of neighbours\\
 			\hline
+			Send Use & send\_message(NeighbourID, ReceiverID, message) \\
+			\hline
+			Receive Use & receive\_message(ReceiverID)\newline return message \\
+			\hline
 			ShowInformationToUI Use & show information\\
 			\hline
 			InsertNewPiece& can insert?(name, size) \newline response \newline
@@ -1542,8 +1588,10 @@ System}, already present in the environment.
 			\hline
 			Person & Sense Use, Move Use, UserCreate Use\\
 			\hline
-      MobileNode & ObtainPosition Use, DiscoverNeighbour Use,
+      MobileNode & ObtainPosition Use, DiscoverNeighbour Use, Send Use, Receive Use,
       ShowInformationToUI Use, ShowList Use,InsertNewPiece, RemovePiece  \\
+			\hline
+			Hovering & Send Use, Receive Use. \\
 			\hline
 			Simulator & Analysis Use, Render Use \\
 			\hline
@@ -1561,6 +1609,9 @@ System}, already present in the environment.
 			Body Artifact & Move Use, Sense Use. \\
 			\hline
 			MobileUI Artifact & UserCreate Use. \\
+			\hline
+      MobileResource Artifact & DiscoverNeighbour Use, Send Use, Receive Use,
+      InsertNewPiece, RemovePiece \\
 			\hline
 			MobileUIInterface Artifact & ShowInformation Use. \\
 			\hline
@@ -1629,6 +1680,8 @@ System}, already present in the environment.
 	\begin{tabular}{|p{4cm}|p{8cm}|}
 			\hline
 			\textbf{Agent} & \textbf{Manifest} \\
+			\hline
+			Hovering & \\
 			\hline
 			MobileNode & UserCreate Manifest \\
 			\hline
