@@ -1,11 +1,13 @@
-package it.unibo.sisma.hi.mas.social;
+package it.unibo.sisma.hi.mas.environment;
 
-public class PersonSenseData implements IToArrayable {
-	
+import it.unibo.sisma.hi.mas.interfaces.IToArrayable;
+
+public class PoTSenseData implements IToArrayable {
+
 	private double[] position;
 	private Object ID;
 
-	public PersonSenseData(double[] position, Object iD) {
+	public PoTSenseData(double[] position, Object iD) {
 		super();
 		this.position = position;
 		ID = iD;

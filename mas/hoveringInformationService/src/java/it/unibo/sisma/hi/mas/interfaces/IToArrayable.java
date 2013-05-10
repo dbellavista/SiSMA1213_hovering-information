@@ -1,4 +1,4 @@
-package it.unibo.sisma.hi.mas.social;
+package it.unibo.sisma.hi.mas.interfaces;
 
 public interface IToArrayable {
 

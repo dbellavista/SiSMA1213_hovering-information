@@ -1,6 +1,6 @@
 // CArtAgO artifact code for project hoveringInformationService
 
-package it.unibo.sisma.hi.mas.social;
+package it.unibo.sisma.hi.mas.environment;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -17,6 +17,7 @@ public class EnvironmentArtifact extends Artifact {
 	private ConcurrentHashMap<Object, ReentrantReadWriteLock> locks;
 	private ConcurrentHashMap<Object, double[]> positions;
 	private ConcurrentHashMap<Object, double[]> points;
+	private ConcurrentHashMap<Object, MessageQueue> messages;
 	private double worldWidth;
 	private double worldHeight;
 
@@ -26,6 +27,7 @@ public class EnvironmentArtifact extends Artifact {
 		locks = new ConcurrentHashMap<>();
 		positions = new ConcurrentHashMap<>();
 		points = new ConcurrentHashMap<>();
+		messages = new ConcurrentHashMap<>();
 	}
 
 	/*
@@ -49,6 +51,7 @@ public class EnvironmentArtifact extends Artifact {
 		w.lock();
 		locks.put(ID, s);
 		positions.put(ID, new double[] { posx, posy });
+		messages.put(ID, new MessageQueue());
 		w.unlock();
 	}
 
@@ -60,6 +63,7 @@ public class EnvironmentArtifact extends Artifact {
 		s.lock();
 		locks.remove(ID);
 		positions.remove(ID);
+		messages.remove(ID);
 		s.unlock();
 	}
 
@@ -88,13 +92,13 @@ public class EnvironmentArtifact extends Artifact {
 		}
 		if (x3 < 0 || x3 > worldWidth) {
 			x3 = (x3 < 0) ? 0 : worldWidth;
-//			failed("Movement failure: out of bound!", "fail", ID, "Wanted: "
-//					+ x3 + " max " + worldWidth);
+			// failed("Movement failure: out of bound!", "fail", ID, "Wanted: "
+			// + x3 + " max " + worldWidth);
 		}
 		if (y3 < 0 || y3 > worldHeight) {
 			y3 = (y3 < 0) ? 0 : worldHeight;
-//			failed("Movement failure: out of bound!", "fail", ID, "Wanted: "
-//					+ y3 + " max " + worldHeight);
+			// failed("Movement failure: out of bound!", "fail", ID, "Wanted: "
+			// + y3 + " max " + worldHeight);
 		}
 		pos[0] = x3;
 		pos[1] = y3;
@@ -133,6 +137,75 @@ public class EnvironmentArtifact extends Artifact {
 					pos[1] - mypos[1] }, l.getKey()));
 		}
 		s.unlock();
+	}
+
+	/*
+	 * MOBILE RESOURCE METHODS
+	 */
+	@LINK
+	void discoverNeighbour(Object ID, Number commRange,
+			OpFeedbackParam<Collection<Object>> mobileIDs) {
+		ReadLock mr = readLock(ID);
+		mr.lock();
+		double[] mypos = positions.get(ID);
+		Collection<Object> ids = new ArrayList<>();
+		mobileIDs.set(ids);
+		for (Entry<Object, ReentrantReadWriteLock> l : locks.entrySet()) {
+			if (l.getKey().equals(ID)) {
+				continue;
+			}
+			ReadLock r = readLock(l.getKey());
+			if (r == null) {
+				continue;
+			}
+			r.lock();
+			double[] pos = positions.get(l.getKey());
+			if (inRange(mypos, pos, commRange)) {
+				ids.add(l.getKey());
+			}
+			r.unlock();
+		}
+		mr.unlock();
+	}
+
+	@LINK
+	void sendMessage(Object senderID, Number commRange, Object receiverID,
+			Object receiverName, Object message) {
+		ReadLock mr = readLock(senderID);
+		double[] mypos = positions.get(senderID);
+		ReadLock r = readLock(receiverID);
+		if (r == null) {
+			throw new RuntimeException("Receiver not found!");
+		}
+		r.lock();
+		double[] destPos = positions.get(receiverID);
+		if (inRange(mypos, destPos, commRange)) {
+			messages.get(receiverID).insertMessage(
+					new Message(message, receiverName, senderID));
+		} else {
+			throw new RuntimeException("Receiver not in range!");
+		}
+		r.unlock();
+		mr.unlock();
+	}
+
+	@LINK
+	void receiveMessage(Object ID, Object receiverName,
+			OpFeedbackParam<Object> senderID, OpFeedbackParam<Object> message) {
+		MessageQueue queue = messages.get(ID);
+		Message m = queue.getMessage(receiverName);
+		if (m == null) {
+			throw new RuntimeException("Receiving interrupted!");
+		}
+		senderID.set(m.getSenderID());
+		message.set(m.getMessage());
+	}
+	
+	@LINK
+	void obtainPosition(Object ID, OpFeedbackParam<double[]> position) {
+		ReadLock mr = readLock(ID);
+		position.set(positions.get(ID));
+		mr.unlock();
 	}
 
 	/*
@@ -184,6 +257,17 @@ public class EnvironmentArtifact extends Artifact {
 			return null;
 		}
 		return s.readLock();
+	}
+
+	@INTERNAL_OPERATION
+	boolean inRange(double[] pos1, double[] pos2, Number range) {
+		return (sq(pos1[0] - pos2[0]) + sq(pos1[1] - pos2[1])) <= sq(range
+				.doubleValue());
+	}
+
+	@INTERNAL_OPERATION
+	double sq(double p) {
+		return p * p;
 	}
 
 }

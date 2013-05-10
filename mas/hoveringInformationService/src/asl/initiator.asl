@@ -48,7 +48,7 @@ behaviour("random", random).
 		cartago.set_current_wsp(WspId);
 		+wsp(world, "World", WspId);
 		// Environment artifact
-		makeArtifact("EnvArtifact", "it.unibo.sisma.hi.mas.social.EnvironmentArtifact", [W, H], EAid);
+		makeArtifact("EnvArtifact", "it.unibo.sisma.hi.mas.environment.EnvironmentArtifact", [W, H], EAid);
 		+artifact(env, "EnvArtifact", EAid);
 		
 		println("World configuration\n   * width=",W,"\n   * height=",H);
@@ -109,7 +109,7 @@ behaviour("random", random).
 		 
 		.concat("NodeUI_", DeviceAgent, ArtUIName);
 		.send(DeviceAgent, tell, [	worldWsp(WspName), ui_name(ArtUIName),
-								range(DR), storage(DS) ]);
+								range(DR), storage(DS), node_id(PersonAgent) ]);
 		.send(PersonAgent, tell, [worldWsp(WspName), envArt(EAName), ui_name(ArtUIName),
 								position(X, Y), behaviour(B),
 								device(DeviceAgent) ]);

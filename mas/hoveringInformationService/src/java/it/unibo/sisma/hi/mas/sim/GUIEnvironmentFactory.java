@@ -6,8 +6,8 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-import it.unibo.sisma.hi.mas.social.PersonSenseData;
-import it.unibo.sisma.hi.mas.social.PoTSenseData;
+import it.unibo.sisma.hi.mas.environment.PersonSenseData;
+import it.unibo.sisma.hi.mas.environment.PoTSenseData;
 import it.unibo.sisma.hoveringinf.entities.HoveringInformation;
 import it.unibo.sisma.hoveringinf.entities.MobileNode;
 import it.unibo.sisma.hoveringinf.entities.PieceOfHoveringInformation;

@@ -2,6 +2,10 @@
 
 package it.unibo.sisma.hi.mas.social;
 
+import it.unibo.sisma.hi.mas.environment.PersonSenseData;
+import it.unibo.sisma.hi.mas.environment.PoTSenseData;
+import it.unibo.sisma.hi.mas.interfaces.IToArrayable;
+
 import java.util.Collection;
 
 import cartago.*;

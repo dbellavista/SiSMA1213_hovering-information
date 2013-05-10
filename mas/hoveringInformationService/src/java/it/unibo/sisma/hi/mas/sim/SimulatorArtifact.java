@@ -2,8 +2,8 @@
 
 package it.unibo.sisma.hi.mas.sim;
 
-import it.unibo.sisma.hi.mas.social.PersonSenseData;
-import it.unibo.sisma.hi.mas.social.PoTSenseData;
+import it.unibo.sisma.hi.mas.environment.PersonSenseData;
+import it.unibo.sisma.hi.mas.environment.PoTSenseData;
 
 import java.util.ArrayList;
 import java.util.Collection;
