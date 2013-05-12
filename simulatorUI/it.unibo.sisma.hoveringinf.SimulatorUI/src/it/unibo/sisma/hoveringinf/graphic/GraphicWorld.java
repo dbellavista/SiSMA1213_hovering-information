@@ -66,8 +66,7 @@ public class GraphicWorld extends JComponent {
 	public GraphicWorld(World world, Long seed) {
 		super();
 		this.world = world;
-		super.setPreferredSize(new Dimension(world.getWidth(), world
-				.getHeight()));
+		super.setSize(new Dimension(world.getWidth(), world.getHeight()));
 
 		colors = new HashMap<>();
 
@@ -121,13 +120,16 @@ public class GraphicWorld extends JComponent {
 	 * @param g2d
 	 */
 	private void paintMobileNodes(MobileNode mn, int i, Graphics2D g2d) {
-		// Color
+		// Mapping
+		double mXpos = mx(mn.getxPos());
+		double mYpos = mx(mn.getyPos());
 
+		// Color
 		Stroke original = g2d.getStroke();
 		// Anchor area
 		g2d.setColor(Color.black);
-		g2d.draw(new Ellipse2D.Double(mn.getxPos() - personSize / 2, mn
-				.getyPos() - personSize / 2, personSize, personSize));
+		g2d.draw(new Ellipse2D.Double(mXpos - personSize / 2, mYpos
+				- personSize / 2, personSize, personSize));
 
 		double j = 0;
 		for (PieceOfHoveringInformation phi : mn.getHosted()) {
@@ -135,16 +137,16 @@ public class GraphicWorld extends JComponent {
 
 			g2d.setStroke(dashed);
 			g2d.setColor(new Color(0.0f, 0.0f, 1.0f, 0.3f));
-			g2d.draw(new Line2D.Double(mn.getxPos(), mn.getyPos(), info
-					.getxAnchor(), info.getyAnchor()));
+			g2d.draw(new Line2D.Double(mXpos, mYpos, info.getxAnchor(), info
+					.getyAnchor()));
 
 			g2d.setColor(colors.get(info));
 
 			double w = bufferWidth;
 			double h = info.getSize() / ((double) mn.getBufferSize())
 					* bufferHeight;
-			double x = mn.getxPos() + bufferPos;
-			double y = mn.getyPos() + bufferHeight / 2 - j - h;
+			double x = mXpos + bufferPos;
+			double y = mYpos + bufferHeight / 2 - j - h;
 			j += h;
 
 			g2d.fill(new Rectangle2D.Double(x, y, w, h));
@@ -156,14 +158,14 @@ public class GraphicWorld extends JComponent {
 
 		g2d.setStroke(original);
 		g2d.setColor(Color.black);
-		g2d.draw(new Rectangle2D.Double(mn.getxPos() + bufferPos, mn.getyPos()
-				- bufferHeight / 2, bufferWidth, bufferHeight));
+		g2d.draw(new Rectangle2D.Double(mXpos + bufferPos, mYpos - bufferHeight
+				/ 2, bufferWidth, bufferHeight));
 
 		g2d.setColor(new Color(0.7f, 0.7f, 0.7f, 0.3f));
 		g2d.setStroke(dashed);
 		for (MobileNode conn : mn.getConnectedNodes()) {
-			g2d.draw(new Line2D.Double(mn.getxPos(), mn.getyPos(), conn
-					.getxPos(), conn.getyPos()));
+			g2d.draw(new Line2D.Double(mXpos, mYpos, mx(conn.getxPos()),
+					my(conn.getyPos())));
 		}
 		g2d.setStroke(original);
 	}
@@ -179,9 +181,10 @@ public class GraphicWorld extends JComponent {
 			Graphics2D g2d) {
 		// Anchor area
 		g2d.setColor(colors.get(info));
-		g2d.fill(new Ellipse2D.Double(info.getxAnchor() - info.getAnchorRange()
-				/ 2, info.getyAnchor() - info.getAnchorRange() / 2, info
-				.getAnchorRange(), info.getAnchorRange()));
+		g2d.fill(new Ellipse2D.Double(mx(info.getxAnchor()
+				- info.getAnchorRange() / 2), my(info.getyAnchor()
+				- info.getAnchorRange() / 2), mx(info.getAnchorRange()),
+				my(info.getAnchorRange())));
 		// Anchor
 		// g2d.setColor(Color.RED.darker());
 		// g2d.draw(new Ellipse2D.Double(info.getxAnchor(), info.getyAnchor(),
@@ -189,4 +192,11 @@ public class GraphicWorld extends JComponent {
 
 	}
 
+	private double mx(double x) {
+		return x / world.getWidth() * getSize().width;
+	}
+
+	private double my(double y) {
+		return y / world.getHeight() * getSize().height;
+	}
 }

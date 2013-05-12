@@ -20,7 +20,7 @@ import org.junit.Test;
 
 public class TestPaint {
 
-	private final static int width = 1200;
+	private final static int width = 800;
 	private final static int height = 800;
 
 	private List<PieceOfHoveringInformation> pieces;
@@ -54,6 +54,29 @@ public class TestPaint {
 	@After
 	public void tearDown() throws Exception {
 		testFrame.setVisible(false);
+	}
+
+	@Test
+	public void testBounds() throws Exception {
+		HoveringInformation hi = new HoveringInformation(0, 0, 100, 0);
+		hoveringInformations.add(hi);
+		hi = new HoveringInformation(width, 0, 100, 0);
+		hoveringInformations.add(hi);
+		hi = new HoveringInformation(0, height, 100, 0);
+		hoveringInformations.add(hi);
+		hi = new HoveringInformation(width, height, 100, 0);
+		hoveringInformations.add(hi);
+		hi = new HoveringInformation(width/2, height/2, width, 0);
+		hoveringInformations.add(hi);
+		hi = new HoveringInformation(width/2, height/2, height, 0);
+		hoveringInformations.add(hi);
+
+		testFrame.setVisible(true);
+		testFrame.render(world);
+
+		closed.acquire();
+
+		assert (true);
 	}
 
 	@Test
@@ -105,6 +128,7 @@ public class TestPaint {
 	}
 
 	@Test
+	@Ignore
 	public void testMobileHovering() throws Exception {
 
 		Random r = new Random();
@@ -112,7 +136,7 @@ public class TestPaint {
 		for (int i = 0; i < 10; i++) {
 			HoveringInformation h1 = new HoveringInformation(
 					r.nextInt(width - 100) + 10, r.nextInt(height - 100) + 10,
-					r.nextInt(Math.min(width, height)/4) + 10, 10);
+					r.nextInt(Math.min(width, height) / 4) + 10, 10);
 			hoveringInformations.add(h1);
 		}
 
