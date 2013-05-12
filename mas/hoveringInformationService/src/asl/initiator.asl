@@ -109,13 +109,13 @@ behaviour("random", random).
 		 
 		.concat("NodeUI_", DeviceAgent, ArtUIName);
 		.send(DeviceAgent, tell, [	worldWsp(WspName), ui_name(ArtUIName),
-								range(DR), storage(DS), node_id(PersonAgent) ]);
+								range(DR), storage(DS), envArt(EAName), node_id(PersonAgent) ]);
 		.send(PersonAgent, tell, [worldWsp(WspName), envArt(EAName), ui_name(ArtUIName),
 								position(X, Y), behaviour(B),
 								device(DeviceAgent) ]);
 		
 		cartago.set_current_wsp(WWspId);
-		enter(PersonAgent, X, Y);
+		enter(PersonAgent, DeviceAgent, X, Y);
 		?wsp(default, DWspId);
 		cartago.set_current_wsp(DWspId);
 		
@@ -128,7 +128,7 @@ behaviour("random", random).
 		);
 		!setup_people(NP - 1);
 	.
-	
+
 +!analyzePos("random", TmpY, X, Y) : parameter("world", "width", W)
 	<-  .random(Ran);
 		ValX = Ran * W;

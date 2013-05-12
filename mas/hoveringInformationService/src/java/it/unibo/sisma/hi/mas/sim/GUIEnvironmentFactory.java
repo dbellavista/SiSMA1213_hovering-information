@@ -1,42 +1,52 @@
 package it.unibo.sisma.hi.mas.sim;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-
-import it.unibo.sisma.hi.mas.environment.PersonSenseData;
-import it.unibo.sisma.hi.mas.environment.PoTSenseData;
 import it.unibo.sisma.hoveringinf.entities.HoveringInformation;
 import it.unibo.sisma.hoveringinf.entities.MobileNode;
 import it.unibo.sisma.hoveringinf.entities.PieceOfHoveringInformation;
 import it.unibo.sisma.hoveringinf.entities.World;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 public class GUIEnvironmentFactory {
 
 	public World createWorld(double worldWidth, double worldHeight,
-			ArrayList<PersonSenseData> people, ArrayList<PoTSenseData> pointOfInterest) {
+			Object[] nodes, Object[] pointOfInterest) {
 		List<HoveringInformation> hoveringInformations = new ArrayList<>(
-				pointOfInterest.size());
-		List<MobileNode> mobileNodes = new ArrayList<>(people.size());
+				pointOfInterest.length);
+		List<MobileNode> mobileNodes = new ArrayList<>(nodes.length);
 		List<PieceOfHoveringInformation> pieceOfHoveringInformation = Collections
 				.emptyList();
 
-		for (PersonSenseData p : people) {
-			MobileNode mn = new MobileNode(100, 0, 0, p.getPosition()[0],
-					p.getPosition()[1], Collections.<MobileNode> emptyList(),
+		for (int i = 0; i < nodes.length; i++) {
+			Object[] p = (Object[]) nodes[i];
+			Object[] pos = (Object[]) p[2];
+			MobileNode mn = new MobileNode(toInt(p[4]), toInt(p[5]),
+					toInt(p[3]), toDouble(pos[0]), toDouble(pos[1]),
+					Collections.<MobileNode> emptyList(),
 					Collections.<PieceOfHoveringInformation> emptyList());
 			mobileNodes.add(mn);
 		}
 
-		for (PoTSenseData p : pointOfInterest) {
-			HoveringInformation hi = new HoveringInformation(
-					p.getPosition()[0], p.getPosition()[1], 50, 0);
+		for (int i = 0; i < pointOfInterest.length; i++) {
+			Object[] p = (Object[]) pointOfInterest[i];
+			Object[] pos = (Object[]) p[1];
+			HoveringInformation hi = new HoveringInformation(toDouble(pos[0]),
+					toDouble(pos[1]), 50, 0);
 			hoveringInformations.add(hi);
 		}
 
 		return new World(hoveringInformations, mobileNodes,
 				pieceOfHoveringInformation, (int) worldWidth, (int) worldHeight);
 	}
+
+	private double toDouble(Object n) {
+		return ((Number) n).doubleValue();
+	}
+
+	private int toInt(Object n) {
+		return ((Number) n).intValue();
+	}
+
 }

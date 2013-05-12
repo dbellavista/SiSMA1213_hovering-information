@@ -2,13 +2,12 @@
 
 package it.unibo.sisma.hi.mas.sim;
 
-import it.unibo.sisma.hi.mas.environment.PersonSenseData;
-import it.unibo.sisma.hi.mas.environment.PoTSenseData;
-
-import java.util.ArrayList;
-import java.util.Collection;
-
-import cartago.*;
+import cartago.ARTIFACT_INFO;
+import cartago.Artifact;
+import cartago.OPERATION;
+import cartago.OUTPORT;
+import cartago.OpFeedbackParam;
+import cartago.OperationException;
 
 /**
  * Simulator artifact: input configuration, configure, start and show the
@@ -28,19 +27,13 @@ public class SimulatorArtifact extends Artifact {
 	}
 
 	@OPERATION
-	void inquireNodes() {
-
-	}
-
-	@OPERATION
 	void inquireHovering() {
 
 	}
 
 	@OPERATION
-	void inquireEnvironment(
-			OpFeedbackParam<Collection<PersonSenseData>> people,
-			OpFeedbackParam<Collection<PoTSenseData>> pointOfInterest,
+	void inquireEnvironment(OpFeedbackParam<Object[]> people,
+			OpFeedbackParam<Object[]> pointOfInterest,
 			OpFeedbackParam<Double> worldWidth,
 			OpFeedbackParam<Double> worldHeight) {
 		try {
@@ -52,15 +45,13 @@ public class SimulatorArtifact extends Artifact {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
 	@OPERATION
-	void showSimulation(Object people, Object pointOfInterest,
+	void showSimulation(Object nodes, Object pointOfInterest,
 			double worldWidth, double worldHeight) {
 		GUIEnvironmentFactory factory = new GUIEnvironmentFactory();
 		try {
-			execLinkedOp("ui-port", "render", factory.createWorld(worldWidth, worldHeight,
-					(ArrayList<PersonSenseData>) people,
-					(ArrayList<PoTSenseData>) pointOfInterest));
+			execLinkedOp("ui-port", "render", factory.createWorld(worldWidth,
+					worldHeight, (Object[]) nodes, (Object[]) pointOfInterest));
 		} catch (OperationException e) {
 			e.printStackTrace();
 			failed("UI linked operation failed", "fail", e);
