@@ -57,25 +57,28 @@
 		!behave;
 		.
 +!choose_destination(DX, DY): behaviour(random)
-	<-  .random(X);
-		.random(LX);
+	<- 	randomInt(LX, 1, 100);
+		randomInt(X, -LX, LX);
 		DX = (X - 0.5) * (LX * 100);
-		.random(Y);
-		.random(LY);
+	 	randomInt(LY, 1, 100);
+		randomInt(Y, -LY, LY);
 		DY = (Y - 0.5) * (LY * 100);
 		.
 
 +!reach(DX, DY): behaviour(random)
-	<- !reach(DX, DY, 40);
+	<- 
+	randomInt(Time, 10, 100);
+	randomInt(Speed, 1, 3);
+	!reach(DX, DY, Time, Speed);
 	.
 
-+!reach(DX, DY, 0): behaviour(random).
++!reach(_, _, 0, _): behaviour(random).
 
-+!reach(DX, DY, S): behaviour(random)
-	<- 	move(DX, DY, 1);
++!reach(DX, DY, Time, Speed): behaviour(random)
+	<- 	move(DX, DY, Speed);
 		sense;
 		.wait(100);
-		!reach(DX,DY,S-1);
+		!reach(DX,DY,Time-1, Speed);
 		.
 
 // Running behavior definition

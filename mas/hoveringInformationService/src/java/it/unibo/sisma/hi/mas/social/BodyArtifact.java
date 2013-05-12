@@ -2,12 +2,11 @@
 
 package it.unibo.sisma.hi.mas.social;
 
+import java.util.Random;
+
 import it.unibo.sisma.hi.mas.environment.PersonSenseData;
 import it.unibo.sisma.hi.mas.environment.PoTSenseData;
 import it.unibo.sisma.hi.mas.interfaces.IToArrayable;
-
-import java.util.Collection;
-
 import cartago.*;
 
 @ARTIFACT_INFO(
@@ -17,16 +16,18 @@ import cartago.*;
 ) public class BodyArtifact extends Artifact {
 
 	private Object ID;
+	private Random r;
 
 	void init(Object ID) {
+		r = new Random();
 		defineObsProperty("people", (Object) new Object[0][0]);
 		defineObsProperty("points", (Object) new Object[0][0]);
 		this.ID = ID;
 	}
 
 	@OPERATION void sense() {
-		OpFeedbackParam<Collection<PersonSenseData>> people = new OpFeedbackParam<>();
-		OpFeedbackParam<Collection<PoTSenseData>> points = new OpFeedbackParam<>();
+		OpFeedbackParam<PersonSenseData[]> people = new OpFeedbackParam<>();
+		OpFeedbackParam<PoTSenseData[]> points = new OpFeedbackParam<>();
 		try {
 			execLinkedOp("env-link", "sense", ID, people, points);
 			ObsProperty peoplep = getObsProperty("people");
@@ -40,8 +41,8 @@ import cartago.*;
 			failed("Sense linked operation failed", "fail", ID, e);
 		}
 	}
-	@INTERNAL_OPERATION Object toArray(Collection<? extends IToArrayable> collection) {
-		Object[] res = new Object[collection.size()];
+	@INTERNAL_OPERATION Object toArray(IToArrayable[] collection) {
+		Object[] res = new Object[collection.length];
 		int i = 0;
 		for (IToArrayable a : collection) {
 			res[i++] = a.toArray();
@@ -56,5 +57,9 @@ import cartago.*;
 			e.printStackTrace();
 			failed("Move linked operation failed", "fail", ID, e);
 		}
+	}
+	
+	@OPERATION void randomInt(OpFeedbackParam<Integer> res, int min, int max) {
+		res.set(r.nextInt(max + 1 - min) + min);
 	}
 }
