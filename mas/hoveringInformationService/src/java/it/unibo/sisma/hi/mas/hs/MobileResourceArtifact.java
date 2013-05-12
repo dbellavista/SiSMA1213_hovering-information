@@ -2,10 +2,17 @@
 
 package it.unibo.sisma.hi.mas.hs;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
 
-import java.util.Collection;
-
-import cartago.*;
+import cartago.ARTIFACT_INFO;
+import cartago.Artifact;
+import cartago.OPERATION;
+import cartago.OUTPORT;
+import cartago.ObsProperty;
+import cartago.OpFeedbackParam;
 
 @ARTIFACT_INFO(outports = { @OUTPORT(name = "env-link") })
 public class MobileResourceArtifact extends Artifact {
@@ -23,14 +30,36 @@ public class MobileResourceArtifact extends Artifact {
 	}
 
 	@OPERATION
-	void discoverNeighbour() {
-		OpFeedbackParam<Collection<Object>> mobileIDs = new OpFeedbackParam<>();
-
+	void discoverNeighbour(OpFeedbackParam<Object[]> mobileIDs) {
 		try {
-			execLinkedOp("env-link", "discoverneighbour", ID, range, mobileIDs);
+			execLinkedOp("env-link", "discoverNeighbour", ID, range, mobileIDs);
 			ObsProperty neighbours = getObsProperty("neighbours");
+			List<Object> oldNeigh = Arrays.asList((Object[]) neighbours.getValue());
+			List<Object> newNeigh = new ArrayList<>(Arrays.asList(mobileIDs.get()));
 
-			neighbours.updateValue(mobileIDs.get().toArray());
+			Iterator<Object> oit = oldNeigh.iterator();
+			while (oit.hasNext()) {
+				Object old = oit.next();
+				Iterator<Object> nit = newNeigh.iterator();
+				boolean found = false;
+				while (!found && nit.hasNext()) {
+					Object newn = nit.next();
+					if (old.equals(newn)) {
+						found = true;
+						nit.remove();
+					}
+				}
+				if (!found) {
+					signal("neighbour_gone", old);
+				}
+			}
+			Iterator<Object> nit = newNeigh.iterator();
+			while (nit.hasNext()) {
+				Object newn = nit.next();
+				signal("new_neighbour", newn);
+			}
+
+			neighbours.updateValue(mobileIDs.get());
 
 		} catch (Exception e) {
 			e.printStackTrace();

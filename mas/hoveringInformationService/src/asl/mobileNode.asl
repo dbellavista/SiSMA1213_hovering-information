@@ -59,9 +59,25 @@
 	<- 	!init.
 		
 +!start : configured
-	<- 	
-		println("Started");
+	<- 	!!discoverNeighbour;
+//		!!receiveMessage;
 		.
 
++message(Sender, Message)
+	<- println("Received: ", message, " from ", sender).
+
++new_neighbour(ID)
+	<- println("New neighbour: ", ID).
+	
++neighbour_gone(ID)
+	<- println("Neighbour gone: ", ID).
+
++!discoverNeighbour
+	<-	?artifacts(resource, MResID);
+		discoverNeighbour(_) [artifact_id(MResID)];
+		.wait(5000);
+		!discoverNeighbour;
+		.
+		
 +?inquire(Range, Storage, OccStorage) [source(self)] : range(DR) & storage(DS)
 	<- Range = DR; Storage = DS; OccStorage = 0.
