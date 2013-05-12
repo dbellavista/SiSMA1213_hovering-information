@@ -56,13 +56,17 @@
 		!reach(DX, DY);
 		!behave;
 		.
++!choose_destination(0, 0): behaviour(none).
++!reach(0, 0): behaviour(none)
+	<- .wait(1000).
+
 +!choose_destination(DX, DY): behaviour(random)
 	<- 	randomInt(LX, 1, 100);
 		randomInt(X, -LX, LX);
-		DX = (X - 0.5) * (LX * 100);
+		DX = (X - 0.5) * LX;
 	 	randomInt(LY, 1, 100);
 		randomInt(Y, -LY, LY);
-		DY = (Y - 0.5) * (LY * 100);
+		DY = (Y - 0.5) * LY;
 		.
 
 +!reach(DX, DY): behaviour(random)

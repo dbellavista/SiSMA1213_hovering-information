@@ -87,26 +87,26 @@ public class EnvironmentArtifact extends Artifact {
 			return;
 		s.lock();
 		double[] pos = positions.get(ID);
-		double x1 = pos[0], x3, y1 = pos[0], y3;
+		double x1 = pos[0], x3, y1 = pos[1], y3;
 		double x2 = rel_x2 + x1, y2 = rel_y2 + y1;
 
-		double a = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
-		if (speed > a) {
+		double length = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
+		if (speed >= length) {
 			x3 = x2;
 			y3 = y2;
 		} else {
-			x3 = x2 - (a - speed) / a * (x2 - x1);
-			y3 = y2 - (a - speed) / a * (y2 - y1);
+			x3 = x1 + (speed / length) * (x2 - x1);
+			y3 = y1 + (speed / length) * (y2 - y1);
 		}
 		if (x3 < 0 || x3 > worldWidth) {
 			x3 = (x3 < 0) ? 0 : worldWidth;
-			System.out.println("OUT OF BOUND!");
+			System.out.println("OUT OF BOUND X!");
 			// failed("Movement failure: out of bound!", "fail", ID, "Wanted: "
 			// + x3 + " max " + worldWidth);
 		}
 		if (y3 < 0 || y3 > worldHeight) {
 			y3 = (y3 < 0) ? 0 : worldHeight;
-			System.out.println("OUT OF BOUND!");
+			System.out.println("OUT OF BOUND Y!");
 			// failed("Movement failure: out of bound!", "fail", ID, "Wanted: "
 			// + y3 + " max " + worldHeight);
 		}
