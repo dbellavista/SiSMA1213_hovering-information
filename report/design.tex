@@ -1382,7 +1382,7 @@ unique id.
 			\hline
 			Render Interaction & Render Use \\
 			\hline
-			Inquisition Interaction & Analysis Use \\
+			Inquisition Interaction & Inquisition Use, Analysis Use \\
 			\hline
 		\end{tabular}
 	\caption{Mapping Interaction-Use table $(C)MIU_t$}
@@ -1417,6 +1417,8 @@ unique id.
 			List Interaction & List Speech \\
 			\hline
 			Access Interaction & Access Speech \\
+			\hline
+			Inquisition Interaction & Inquisition Speech \\
 			\hline
 		\end{tabular}
 	\caption{Mapping Interaction-SpeakTo table $(C)MISp_t$}
@@ -1506,8 +1508,8 @@ unique id.
       InsertData, RemoveData, GetRemainingSpace, GetMaximumSize,
       ObtainPosition. \\
 			\hline
-      Simulator Artifact & ShowSimulation, AnalyzeSimulation, InquireNodes,
-      InquireHovering, InquireEnvironment \\
+      Simulator Artifact & ShowSimulation, AnalyzeSimulation, InquireHovering,
+      InquireEnvironment \\
 			\hline
 			HoveringInformation Artifact & GetData \\
 			\hline
@@ -1571,6 +1573,8 @@ unique id.
 			\hline
 			RemovePiece& remove(piece\_of\_information) \\
 			\hline
+			Inquisiton Use & inquire\_environment \\
+			\hline
 			Analysis Use & analyze\_system(inquisition\_result) \newline return results\\
 			\hline
 			Render Use & show\_world(inquisition\_result) \\
@@ -1593,7 +1597,7 @@ unique id.
 			\hline
 			Hovering & Send Use, Receive Use. \\
 			\hline
-			Simulator & Analysis Use, Render Use \\
+			Simulator & Inquisition Use, Analysis Use, Render Use \\
 			\hline
 		\end{tabular}
 	\caption{Agent-Use table $(C)AgeU_t$}
@@ -1617,7 +1621,7 @@ unique id.
 			\hline
 			HoveringInformation Artifact & AccessInformationData. \\
 			\hline
-			Simulator Artifact & Analysis Use, Render Use \\
+			Simulator Artifact & Inquisition Use, Analysis Use, Render Use \\
 			\hline
 		\end{tabular}
 	\caption{Artifact-Use table $(C)ArtU_t$}
@@ -1640,6 +1644,8 @@ unique id.
 			\hline
 			Access Speech & give\_me\_information(info\_id) \newline return information \\
 			\hline
+			Inquisiton Speech & inquire\_mobile\_ask \\
+			\hline
 		\end{tabular}
 	\caption{SpeakTo-Protocol table $(C)SP_t$}
 	\label{tab:cspt}
@@ -1651,9 +1657,12 @@ unique id.
 			\hline
 			\textbf{Agent} & \textbf{SpeakTo} \\
 			\hline
-			MobileNode & List Speech, Access Speech, Creation Speech, AskAccess Speech, Replication Speech, Jump Speech. \\
+      MobileNode & List Speech, Access Speech, Creation Speech, AskAccess
+      Speech, Replication Speech, Jump Speech, Inquisiton Speech. \\
 			\hline
 			Piece of Hovering Information & Jump Speech, Replication Speech. \\
+			\hline
+			Simulator & Inquisition Speech \\
 			\hline
 		\end{tabular}
 	\caption{Agent-SpeakTo table $(C)AgeSp_t$}
