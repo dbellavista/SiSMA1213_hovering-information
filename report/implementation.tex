@@ -40,3 +40,7 @@ First of all, the communication between mobile nodes is implemented using
 the same \emph{Environment Artifact} used for the Social System. It
 maintains a buffers of messages to be red, so that a sender put a message
 in the receiver queue and the receiver can read or get a message from there.
+
+However, Jason doesn't like when an Agent blocks its plan without using the
+internal action \emph{.wait}, so the message receive it's actually implemented
+as a polling.

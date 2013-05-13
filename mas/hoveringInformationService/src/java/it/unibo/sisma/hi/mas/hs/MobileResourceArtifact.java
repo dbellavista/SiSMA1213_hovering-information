@@ -84,8 +84,10 @@ public class MobileResourceArtifact extends Artifact {
 		try {
 			execLinkedOp("env-link", "receiveMessage", ID, receiverName,
 					sender, message);
-			// TODO: how to map ArtifactID with Jason?
-			signal("message", receiverName, sender, message);
+			if(message.get() != null) {
+				// TODO: how to map AgentID with Jason?
+				signal("message", receiverName, sender, message);
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			failed("receiveMessage linked operation failed", "fail", ID, e);

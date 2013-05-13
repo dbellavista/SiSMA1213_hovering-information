@@ -100,13 +100,13 @@ public class EnvironmentArtifact extends Artifact {
 		}
 		if (x3 < 0 || x3 > worldWidth) {
 			x3 = (x3 < 0) ? 0 : worldWidth;
-			System.out.println("OUT OF BOUND X!");
+//			System.out.println("OUT OF BOUND X!");
 			// failed("Movement failure: out of bound!", "fail", ID, "Wanted: "
 			// + x3 + " max " + worldWidth);
 		}
 		if (y3 < 0 || y3 > worldHeight) {
 			y3 = (y3 < 0) ? 0 : worldHeight;
-			System.out.println("OUT OF BOUND Y!");
+//			System.out.println("OUT OF BOUND Y!");
 			// failed("Movement failure: out of bound!", "fail", ID, "Wanted: "
 			// + y3 + " max " + worldHeight);
 		}
@@ -176,6 +176,7 @@ public class EnvironmentArtifact extends Artifact {
 	void sendMessage(Object senderID, Number commRange, Object receiverID,
 			Object receiverName, Object message) {
 		ReadLock mr = readLock(senderID);
+		mr.lock();
 		double[] mypos = positions.get(senderID);
 		ReadLock r = readLock(receiverID);
 		if (r == null) {
@@ -197,12 +198,18 @@ public class EnvironmentArtifact extends Artifact {
 	void receiveMessage(Object ID, Object receiverName,
 			OpFeedbackParam<Object> senderID, OpFeedbackParam<Object> message) {
 		MessageQueue queue = messages.get(ID);
-		Message m = queue.getMessage(receiverName);
-		if (m == null) {
+		try {
+			Message m = queue.getMessage(receiverName, false);
+			if (m == null) {
+				senderID.set(null);
+				message.set(null);
+			} else {
+				senderID.set(m.getSenderID());
+				message.set(m.getMessage());
+			}
+		} catch (InterruptedException e) {
 			throw new RuntimeException("Receiving interrupted!");
 		}
-		senderID.set(m.getSenderID());
-		message.set(m.getMessage());
 	}
 
 	@LINK

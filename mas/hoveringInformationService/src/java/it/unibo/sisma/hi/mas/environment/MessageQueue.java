@@ -11,21 +11,18 @@ public class MessageQueue {
 	public MessageQueue() {
 		messages = new ArrayDeque<>();
 	}
-	
+
 	public synchronized void insertMessage(Message mess) {
 		messages.add(mess);
 		notifyAll();
 	}
 
-	public synchronized Message getMessage(Object receiverName) {
+	public synchronized Message getMessage(Object receiverName, boolean blocking)
+			throws InterruptedException {
 		while (true) {
 			Message m = getFirst(receiverName);
-			if (m == null) {
-				try {
-					wait();
-				} catch (InterruptedException e) {
-					return null;
-				}
+			if (m == null && blocking) {
+				wait();
 			} else {
 				return m;
 			}

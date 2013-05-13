@@ -60,22 +60,29 @@
 		
 +!start : configured
 	<- 	!!discoverNeighbour;
-//		!!receiveMessage;
+		!!receiveMessage;
 		.
 
-+message(Sender, Message)
-	<- println("Received: ", message, " from ", sender).
++message(Receiver, Sender, Message)
+	<- println("Received: ", Message, " from ", Sender, " for ", Receiver).
 
 +new_neighbour(ID)
-	<- println("New neighbour: ", ID).
+	<- 	println("New neighbour: ", ID);
+		sendMessage(ID, "mobile", "Hi!!").
 	
 +neighbour_gone(ID)
 	<- println("Neighbour gone: ", ID).
 
++!receiveMessage
+	<- 	receiveMessage("mobile", _, _);
+		.wait(500);
+		!receiveMessage;
+		.
+
 +!discoverNeighbour
 	<-	?artifacts(resource, MResID);
 		discoverNeighbour(_) [artifact_id(MResID)];
-		.wait(5000);
+		.wait(500);
 		!discoverNeighbour;
 		.
 		

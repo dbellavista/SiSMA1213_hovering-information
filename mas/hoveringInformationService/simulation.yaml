@@ -16,13 +16,13 @@ People:
     behaviour: 'random'
     xpos: 'random'
     ypos: 'random'
-    device_range: 100
+    device_range: 200
     device_storage: 100
   - name: 'pluto'
     behaviour: 'random'
     xpos: 'random'
     ypos: 'random'
-    device_range: 100
+    device_range: 200
     device_storage: 100
     
 Hovering:
