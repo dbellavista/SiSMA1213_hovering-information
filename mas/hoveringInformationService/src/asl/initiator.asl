@@ -3,6 +3,7 @@
 /* Initial beliefs and rules */
 disseminations("random", random).
 behaviour("random", random).
+behaviour("none", none).
 
 /* Initial goals */
 
