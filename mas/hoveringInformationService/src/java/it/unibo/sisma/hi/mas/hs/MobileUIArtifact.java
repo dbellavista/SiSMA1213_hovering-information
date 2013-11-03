@@ -28,5 +28,25 @@ public class MobileUIArtifact extends Artifact {
 	@LINK void showInformation() {
 		
 	}
+	
+	@OPERATION void startDevice() {
+		try {
+			execLinkedOp("to-device", "startDevice");
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			failed("startDevice linked operation failed", "fail", e.getMessage());
+		}
+	}
+	
+	@OPERATION void stopDevice() {
+		try {
+			execLinkedOp("to-device", "stopDevice");
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			failed("stopDevice linked operation failed", "fail", e.getMessage());
+		}
+	}
 }
 

@@ -20,12 +20,12 @@
 		+artifacts(artifact, HArtID);
 		-~configured;
 		+configured;
-		!start;
 		.
+
 -!init : ~inited
 	<- !init.
 	
 +!start : configured
-<- 	//println("===>Hovering waiting for start...");
+<- 	println("===>Hovering waiting for start...");
 	.wait(10000);
 	!start.

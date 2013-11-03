@@ -28,4 +28,12 @@ public class MobileUIInterfaceArtifact extends Artifact {
 			failed("ShowInformation linked operation failed", "fail", e);
 		}
 	}
+	
+	@LINK void startDevice() {
+		signal("start_command");
+	}
+	
+	@LINK void stopDevice() {
+		signal("stop_command");
+	}
 }

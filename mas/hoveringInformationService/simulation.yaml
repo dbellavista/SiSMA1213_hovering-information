@@ -24,7 +24,67 @@ People:
     ypos: 'random'
     device_range: 200
     device_storage: 100
-    
+  - name: 'pippo'
+    behaviour: 'random'
+    xpos: 'random'
+    ypos: 'random'
+    device_range: 200
+    device_storage: 100
+  - name: 'pluto'
+    behaviour: 'random'
+    xpos: 'random'
+    ypos: 'random'
+    device_range: 200
+    device_storage: 100
+  - name: 'pippo'
+    behaviour: 'random'
+    xpos: 'random'
+    ypos: 'random'
+    device_range: 200
+    device_storage: 100
+  - name: 'pluto'
+    behaviour: 'random'
+    xpos: 'random'
+    ypos: 'random'
+    device_range: 200
+    device_storage: 100
+  - name: 'pippo'
+    behaviour: 'random'
+    xpos: 'random'
+    ypos: 'random'
+    device_range: 200
+    device_storage: 100
+  - name: 'pluto'
+    behaviour: 'random'
+    xpos: 'random'
+    ypos: 'random'
+    device_range: 200
+    device_storage: 100
+  - name: 'pippo'
+    behaviour: 'random'
+    xpos: 'random'
+    ypos: 'random'
+    device_range: 200
+    device_storage: 100
+  - name: 'pluto'
+    behaviour: 'random'
+    xpos: 'random'
+    ypos: 'random'
+    device_range: 200
+    device_storage: 100
+  - name: 'pippo'
+    behaviour: 'random'
+    xpos: 'random'
+    ypos: 'random'
+    device_range: 200
+    device_storage: 100
+  - name: 'pluto'
+    behaviour: 'random'
+    xpos: 'random'
+    ypos: 'random'
+    device_range: 200
+    device_storage: 100
+        
 Hovering:
   - name: 'h1'
     xanchor: 70

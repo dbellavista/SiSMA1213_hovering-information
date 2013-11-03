@@ -21,17 +21,17 @@
 		.concat("PersonBody_", Name , PersonBody);
 		makeArtifact(PersonBody, "it.unibo.sisma.hi.mas.social.BodyArtifact", [Name], ArtBodyID);
 		+artifacts(body, ArtBodyID);
-	
 		lookupArtifact(EAName, EnvArtID);
 		-+artifacts(envSocial, EnvArtID);		
 		linkArtifacts(ArtBodyID, "env-link", EnvArtID);
 		!getDeviceUI;
-		
 		-~configured;
-		+configured.	
+		+configured;
+		.
 
 -!init : ~inited
-	<- 	!init.
+	<- 	.wait(500);
+		!init.
 	
 +!getDeviceUI : ui_name(AUName)
 	<-	lookupArtifact(AUName, UiArtd);
@@ -48,7 +48,10 @@
 		!start.
 		
 +!start : configured
-	<- !behave.
+	<- 	?artifacts(mobileUI, UiArtd);
+		startDevice [artifact_id(UiArtd)];
+		!behave;
+		.
 	
 +!behave
 	<- 	sense;

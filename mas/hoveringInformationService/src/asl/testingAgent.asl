@@ -31,12 +31,49 @@
 	cartago.set_current_wsp(W2);
 	linkArtifacts(Id1,"to2-link",Id2);
 	println("artifacts linked 2");
-	/*test;
+	!test1;
+	/*!test2;
 	test2(V);
 	println("value ",V);
 	test3
 	*/
 	.
+	
++!test2
+	<- 	!provaArr([1,2,3,4], Res);
+		!printArr(Res);
+		.
+
++!printArr([], Tot)
+	<- println("Tot", "]").
+
++!printArr(List)
+	<- printArr(List, "[").
+
++!provaArr([], []).
+
++!provaArr([H1 | T1], [RH | TH])
+	<- 	RH = H1 + 1;
+		!provaArr(T1, TH)
+		.
+
++?value(beer,X) [source(self)] : not done
+	<- println("Asked...");
+		X = 10;
+		+done.
+
++?value(beer,X) [source(self)] : done
+	<- println("Asked...");
+		X = 135.
+		
+
+
++!test1
+	<- 	.my_name(Name);
+		.send(Name,askOne,value(beer,_), value(beer, A));
+		println("Returned ", A);
+		.send(Name,askOne,value(beer,X2), A2);
+		println("Returned ", X2).
 
 +!notWk
 	<-

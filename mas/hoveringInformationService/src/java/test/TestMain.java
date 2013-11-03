@@ -19,9 +19,11 @@ public class TestMain {
 	public static void main(String[] args) {
 
 		JFrame frame = new JFrame();
-		frame.setSize(300, 300);
+		frame.setSize(500, 500);
+		frame.setResizable(false);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(new BorderLayout());
-		frame.getContentPane().add(new MyPanel(50.0, 200.0, 300.0, 0.0, 50.0),
+		frame.getContentPane().add(new MyPanel(250.0, 50.0, 50.0, 250.0, 50.0),
 				BorderLayout.CENTER);
 		frame.setVisible(true);
 		frame.revalidate();
@@ -47,8 +49,8 @@ class MyPanel extends JPanel {
 		this.y1 = y1;
 		this.y2 = y2;
 		double a = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
-		x3 = x2 - (a - s) / a * (x2 - x1);
-		y3 = y2 - (a - s) / a * (y2 - y1);
+		x3 = x1 + s / a * (x2 - x1);
+		y3 = y1 + s / a * (y2 - y1);
 	}
 
 	@Override

@@ -18,15 +18,19 @@ import cartago.OpFeedbackParam;
 public class MobileResourceArtifact extends Artifact {
 
 	private double range;
-	private double storage;
+	private MobileStorage storage;
 	private Object ID;
 
 	void init(Object ID, Number range, Number storage) {
 		this.ID = ID;
 		this.range = range.doubleValue();
-		this.storage = storage.doubleValue();
+		this.storage = new MobileStorage(storage.doubleValue());
 		defineObsProperty("neighbours", (Object) new Object[0]);
 		defineObsProperty("position", (Object) new Object[0]);
+		
+		defineObsProperty("total_space", this.storage.getTotal_space());
+		defineObsProperty("free_space", this.storage.getFree_space());
+		defineObsProperty("data", (Object) new Object[0]);
 	}
 
 	@OPERATION
@@ -80,7 +84,7 @@ public class MobileResourceArtifact extends Artifact {
 
 	@OPERATION
 	void receiveMessage(Object receiverName, OpFeedbackParam<Object> sender,
-			OpFeedbackParam<Object> message) {
+			OpFeedbackParam<Object> senderName, OpFeedbackParam<Object> message) {
 		try {
 			execLinkedOp("env-link", "receiveMessage", ID, receiverName,
 					sender, message);
@@ -95,23 +99,18 @@ public class MobileResourceArtifact extends Artifact {
 	}
 
 	@OPERATION
-	void insertData() {
-
+	void allocateData(Object ID, double size, OpFeedbackParam<Boolean> res) {
+		res.set(storage.allocateData(ID, size));
 	}
 
 	@OPERATION
-	void removeData() {
-
+	void editData(Object ID, String data) {
+		storage.editData(ID, data);
 	}
-
+	
 	@OPERATION
-	void getRemainingSpace() {
-
-	}
-
-	@OPERATION
-	void getMaximumSize() {
-
+	void removeData(Object ID) {
+		storage.freeData(ID);
 	}
 
 	@OPERATION

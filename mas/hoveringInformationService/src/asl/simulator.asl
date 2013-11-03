@@ -45,7 +45,7 @@
 	<- 	inquireEnvironment(People, PoTs, WWidth, WHeight) [artifact_id(SimArtID)];
 		!inquireNodes(People, NodesInformation);
 		showSimulation(NodesInformation, PoTs, WWidth, WHeight) [artifact_id(SimArtID)];
-		.wait(100);
+		.wait(200);
 		!start;
 		.
 

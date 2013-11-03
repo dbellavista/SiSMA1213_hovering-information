@@ -52,37 +52,61 @@
 		cartago.set_current_wsp(WNid);
 		-~configured;
 		+configured;
-		!start.
+		.
 		
 
 -!init : ~inited
-	<- 	!init.
-		
+	<- 	.wait(500);
+		!init.
+
++start_command <- !start.
++stop_command <- !stop.		
+
++!start : ~configured | not configured
+	<- 	.wait(1000);
+		!start;
+		.
+
 +!start : configured
 	<- 	!!discoverNeighbour;
 		!!receiveMessage;
 		.
 
++!stop : configured
+	<-	+stop_receiving;
+		+stop_discovering;
+		.
+
 +message(Receiver, Sender, Message)
 	<- println("Received: ", Message, " from ", Sender, " for ", Receiver).
 
+//+message("mobile", Sender, canICome(Size))
+//	<- 	allocateData(Sender, Size, Res);
+//				
+//	.
+
 +new_neighbour(ID)
 	<- 	println("New neighbour: ", ID);
-		sendMessage(ID, "mobile", "Hi!!").
+		sendMessage(ID, "mobile", "Hi!!")
+		.
 	
 +neighbour_gone(ID)
 	<- println("Neighbour gone: ", ID).
 
-+!receiveMessage
-	<- 	receiveMessage("mobile", _, _);
++!receiveMessage : stop_receiving.
++!discoverNeighbour : stop_discovering.
+
++!receiveMessage : not stop_receiving
+	<- 	?artifacts(resource, MResID);
+		receiveMessage("mobile", _, _, _) [artifact_id(MResID)];
 		.wait(500);
 		!receiveMessage;
 		.
 
-+!discoverNeighbour
++!discoverNeighbour : not stop_discovering
 	<-	?artifacts(resource, MResID);
 		discoverNeighbour(_) [artifact_id(MResID)];
-		.wait(500);
+		.wait(1000);
 		!discoverNeighbour;
 		.
 		
