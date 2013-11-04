@@ -4,23 +4,23 @@ import java.util.HashMap;
 
 public class MobileStorage {
 
-	private double total_space;
-	private double free_space;
+	private double totalSpace;
+	private double freeSpace;
 	private HashMap<Object, Data> storage;
 
-	public MobileStorage(double total_space) {
+	public MobileStorage(double totalSpace) {
 		super();
-		this.total_space = total_space;
-		this.free_space = total_space;
+		this.totalSpace = totalSpace;
+		this.freeSpace = totalSpace;
 		this.storage = new HashMap<>();
 	}
 
-	public synchronized double getTotal_space() {
-		return total_space;
+	public synchronized double getTotalSpace() {
+		return totalSpace;
 	}
 
-	public synchronized double getFree_space() {
-		return free_space;
+	public synchronized double getFreeSpace() {
+		return freeSpace;
 	}
 	
 	public synchronized String getData(Object ID) {
@@ -28,10 +28,10 @@ public class MobileStorage {
 	}
 
 	public synchronized boolean allocateData(Object ID, double size) {
-		if(free_space < size) {
+		if(freeSpace < size) {
 			return false;
 		}
-		free_space -= size;
+		freeSpace -= size;
 		storage.put(ID, new Data(null, size));
 		return true;
 	}
@@ -46,7 +46,7 @@ public class MobileStorage {
 	public synchronized void freeData(Object ID) {
 		Data d = storage.remove(ID);
 		if(d != null) {
-			free_space += d.getSize();
+			freeSpace += d.getSize();
 		}
 	}
 	

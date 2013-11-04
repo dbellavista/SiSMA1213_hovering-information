@@ -28,8 +28,8 @@ public class MobileResourceArtifact extends Artifact {
 		defineObsProperty("neighbours", (Object) new Object[0]);
 		defineObsProperty("position", (Object) new Object[0]);
 		
-		defineObsProperty("total_space", this.storage.getTotal_space());
-		defineObsProperty("free_space", this.storage.getFree_space());
+		defineObsProperty("total_space", this.storage.getTotalSpace());
+		defineObsProperty("free_space", this.storage.getFreeSpace());
 		defineObsProperty("data", (Object) new Object[0]);
 	}
 
