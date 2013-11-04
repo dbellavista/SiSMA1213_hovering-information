@@ -223,6 +223,8 @@ public class EnvironmentArtifact extends Artifact {
 	@LINK
 	void receiveMessage(Object ID, Object receiverName,
 			OpFeedbackParam<Object> senderID, OpFeedbackParam<Object> message) {
+		ReadLock r = readLock(ID);
+		r.lock();
 		MessageQueue queue = messages.get(ID);
 		try {
 			Message m = queue.getMessage(receiverName, false);
@@ -235,12 +237,15 @@ public class EnvironmentArtifact extends Artifact {
 			}
 		} catch (InterruptedException e) {
 			throw new RuntimeException("Receiving interrupted!");
+		} finally {
+			r.unlock();
 		}
 	}
 
 	@LINK
 	void obtainPosition(Object ID, OpFeedbackParam<double[]> position) {
 		ReadLock mr = readLock(ID);
+		mr.lock();
 		position.set(positions.get(ID));
 		mr.unlock();
 	}
