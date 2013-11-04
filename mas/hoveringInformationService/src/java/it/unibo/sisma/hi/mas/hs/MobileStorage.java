@@ -12,6 +12,7 @@ public class MobileStorage {
 		super();
 		this.total_space = total_space;
 		this.free_space = total_space;
+		this.storage = new HashMap<>();
 	}
 
 	public synchronized double getTotal_space() {
