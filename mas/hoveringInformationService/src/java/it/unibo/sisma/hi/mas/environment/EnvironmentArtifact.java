@@ -101,13 +101,13 @@ public class EnvironmentArtifact extends Artifact {
 		}
 		if (x3 < 0 || x3 > worldWidth) {
 			x3 = (x3 < 0) ? 0 : worldWidth;
-//			System.out.println("OUT OF BOUND X!");
+			// System.out.println("OUT OF BOUND X!");
 			// failed("Movement failure: out of bound!", "fail", ID, "Wanted: "
 			// + x3 + " max " + worldWidth);
 		}
 		if (y3 < 0 || y3 > worldHeight) {
 			y3 = (y3 < 0) ? 0 : worldHeight;
-//			System.out.println("OUT OF BOUND Y!");
+			// System.out.println("OUT OF BOUND Y!");
 			// failed("Movement failure: out of bound!", "fail", ID, "Wanted: "
 			// + y3 + " max " + worldHeight);
 		}
