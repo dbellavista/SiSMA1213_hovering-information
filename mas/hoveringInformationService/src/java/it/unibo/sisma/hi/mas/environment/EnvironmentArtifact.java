@@ -181,7 +181,6 @@ public class EnvironmentArtifact extends Artifact {
 			throw new RuntimeException("Receiver not found!");
 		}
 		r.lock();
-		System.out.println("Backdored! " + receiverID.toString());
 		messages.get(receiverID).insertMessage(
 				new Message(message, receiverName, null));
 		r.unlock();
