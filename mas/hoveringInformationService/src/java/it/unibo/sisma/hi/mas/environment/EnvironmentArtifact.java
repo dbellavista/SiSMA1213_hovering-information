@@ -70,6 +70,7 @@ public class EnvironmentArtifact extends Artifact {
 			return;
 		s.lock();
 		locks.remove(ID);
+		deviceNames.remove(ID);
 		positions.remove(ID);
 		messages.remove(ID);
 		s.unlock();
