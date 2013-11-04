@@ -29,7 +29,7 @@ public class MessageQueue {
 		}
 	}
 
-	private Message getFirst(Object receiverName) {
+	private synchronized Message getFirst(Object receiverName) {
 		Iterator<Message> it = messages.iterator();
 		while (it.hasNext()) {
 			Message m = it.next();
@@ -40,5 +40,4 @@ public class MessageQueue {
 		}
 		return null;
 	}
-
 }
