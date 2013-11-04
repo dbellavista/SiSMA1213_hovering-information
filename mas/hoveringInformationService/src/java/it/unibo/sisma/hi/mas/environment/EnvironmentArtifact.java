@@ -173,12 +173,36 @@ public class EnvironmentArtifact extends Artifact {
 		mobileIDs.set(ids.toArray(new Object[ids.size()]));
 	}
 
+	@OPERATION
+	void backdoorSendMessage(Object receiverID, Object receiverName,
+			Object message) {
+		ReadLock r = readLock(receiverID);
+		if (r == null) {
+			throw new RuntimeException("Receiver not found!");
+		}
+		r.lock();
+		System.out.println("Backdored! " + receiverID.toString());
+		messages.get(receiverID).insertMessage(
+				new Message(message, receiverName, null));
+		r.unlock();
+	}
+
 	@LINK
 	void sendMessage(Object senderID, Number commRange, Object receiverID,
 			Object receiverName, Object message) {
-		ReadLock mr = readLock(senderID);
-		mr.lock();
-		double[] mypos = positions.get(senderID);
+		double[] mypos;
+		ReadLock mr;
+		try {
+			mr = readLock(senderID);
+			mr.lock();
+			mypos = positions.get(senderID);
+		} catch (Exception e) {
+			throw new RuntimeException("Sender not found!");
+		}
+		if (mypos == null) {
+			throw new RuntimeException("Sender not found!");
+		}
+
 		ReadLock r = readLock(receiverID);
 		if (r == null) {
 			throw new RuntimeException("Receiver not found!");
@@ -192,7 +216,9 @@ public class EnvironmentArtifact extends Artifact {
 			throw new RuntimeException("Receiver not in range!");
 		}
 		r.unlock();
-		mr.unlock();
+		if (senderID != null) {
+			mr.unlock();
+		}
 	}
 
 	@LINK
