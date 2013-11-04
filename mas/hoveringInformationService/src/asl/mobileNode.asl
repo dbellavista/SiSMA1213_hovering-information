@@ -9,7 +9,7 @@
 
 /* Plans */
 
-+!init : ~inited & worldWsp(WspName) & node_id(NodeID) &
++!init : ~inited & initiator(InitName) & worldWsp(WspName) & node_id(NodeID) &
 		 range(DR) & storage(DS) & envArt(EAName) & ui_name(AUName)
 	<-	-~inited;
 		.my_name(Name);
@@ -52,6 +52,7 @@
 		cartago.set_current_wsp(WNid);
 		-~configured;
 		+configured;
+		.send(InitName, tell, device_done);
 		.
 		
 

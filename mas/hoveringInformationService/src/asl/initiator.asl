@@ -80,11 +80,22 @@ behaviour("none", none).
 				"\n   * analysis_rate=",AR
 		);
 	.
-	
-+!setup_people(0).
+
++!wait_people(0).
+
++!wait_people(NP) : person_done[source(S)]
+	<- -person_done[source(S)]; !wait_people(NP - 1).
++!wait_people(NP) : device_done[source(S)]
+	<- -device_done[source(S)]; !wait_people(NP - 1).
+
+-!wait_people(NP) <- .wait(1000); !wait_people(NP).
+
++!setup_people(0) : parameter("people", NTot) <- !wait_people(NTot + NTot).
 
 +!setup_people(NP) : parameter("people", NTot) & NP <= NTot & NP > 0
-	<-	?parameter("people", NP, "name", Name);
+	<-	+wait_device(0);
+		+wait_people(0);
+		?parameter("people", NP, "name", Name);
 		?parameter("people", NP, "behaviour", Bt);
 		?behaviour(Bt, B);
 		-+parameter("people", NP, "behaviour", Bt);
@@ -108,10 +119,11 @@ behaviour("none", none).
 		?artifact(env, EAName, _);
 		?wsp(world, WspName, WWspId);
 		 
+		 .my_name(InitName);
 		.concat("NodeUI_", DeviceAgent, ArtUIName);
-		.send(DeviceAgent, tell, [	worldWsp(WspName), ui_name(ArtUIName),
+		.send(DeviceAgent, tell, [	initiator(InitName), worldWsp(WspName), ui_name(ArtUIName),
 								range(DR), storage(DS), envArt(EAName), node_id(PersonAgent) ]);
-		.send(PersonAgent, tell, [worldWsp(WspName), envArt(EAName), ui_name(ArtUIName),
+		.send(PersonAgent, tell, [ initiator(InitName), worldWsp(WspName), envArt(EAName), ui_name(ArtUIName),
 								position(X, Y), behaviour(B),
 								device(DeviceAgent) ]);
 		

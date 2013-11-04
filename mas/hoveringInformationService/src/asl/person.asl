@@ -9,7 +9,7 @@
 
 /* Plans */
 
-+!init : ~inited & worldWsp(WspName) & envArt(EAName) & position(X, Y) &
++!init : ~inited & initiator(InitName) & worldWsp(WspName) & envArt(EAName) & position(X, Y) &
 			ui_name(AUName) & behaviour(B) & device(DeviceAgent)
 	<-	-~inited;
 		joinWorkspace(WspName, WspId);
@@ -27,6 +27,7 @@
 		!getDeviceUI;
 		-~configured;
 		+configured;
+		.send(InitName, tell, person_done);
 		.
 
 -!init : ~inited
