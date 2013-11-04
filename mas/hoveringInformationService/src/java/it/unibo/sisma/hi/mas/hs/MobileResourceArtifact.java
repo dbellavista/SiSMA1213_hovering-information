@@ -81,7 +81,7 @@ public class MobileResourceArtifact extends Artifact {
 			failed("sendMessage linked operation failed", "fail", ID, e);
 		}
 	}
-
+	  
 	@OPERATION
 	void receiveMessage(Object receiverName, OpFeedbackParam<Object> sender,
 			OpFeedbackParam<Object> senderName, OpFeedbackParam<Object> message) {
@@ -90,7 +90,7 @@ public class MobileResourceArtifact extends Artifact {
 					sender, message);
 			if(message.get() != null) {
 				// TODO: how to map AgentID with Jason?
-				signal("message", receiverName, sender, message);
+				signal("message", receiverName, sender.get(), message.get());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -112,7 +112,7 @@ public class MobileResourceArtifact extends Artifact {
 	void removeData(Object ID) {
 		storage.freeData(ID);
 	}
-
+	
 	@OPERATION
 	void obtainPosition() {
 		OpFeedbackParam<double[]> position = new OpFeedbackParam<>();
