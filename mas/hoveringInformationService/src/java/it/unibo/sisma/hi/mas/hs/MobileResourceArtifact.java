@@ -101,16 +101,26 @@ public class MobileResourceArtifact extends Artifact {
 	@OPERATION
 	void allocateData(Object ID, double size, OpFeedbackParam<Boolean> res) {
 		res.set(storage.allocateData(ID, size));
+		ObsProperty fsProp = getObsProperty("free_space");
+		fsProp.updateValue(this.storage.getFreeSpace()) ;
+		ObsProperty dataProp = getObsProperty("data");
+		dataProp.updateValue(this.storage.getAllData());
 	}
 
 	@OPERATION
 	void editData(Object ID, String data) {
 		storage.editData(ID, data);
+		ObsProperty dataProp = getObsProperty("data");
+		dataProp.updateValue(this.storage.getAllData());
 	}
 	
 	@OPERATION
 	void removeData(Object ID) {
 		storage.freeData(ID);
+		ObsProperty fsProp = getObsProperty("free_space");
+		fsProp.updateValue(this.storage.getFreeSpace()) ;
+		ObsProperty dataProp = getObsProperty("data");
+		dataProp.updateValue(this.storage.getAllData());
 	}
 	
 	@OPERATION

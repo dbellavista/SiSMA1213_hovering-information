@@ -78,8 +78,26 @@
 		+stop_discovering;
 		.
 
-+message(Receiver, Sender, Message)
-	<- println("Received: ", Message, " from ", Sender, " for ", Receiver).
++!allocate_init(HoveringName, DS)
+	<- 	allocateData(HoveringName, DS, Res);
+		!finalize_allocation(HoveringName, Res).
+
++!finalize_allocation(HoveringName, false)
+	<- 	?node_id(MyNodeID);
+		sendMessage(MyNodeID, HoveringName, [sorry_after_init]);
+		.
++!finalize_allocation(HoveringName, true) <-
+		?pieces(L);
+		-+pieces([H, L]).
+
++message("mobile", Sender, ["init_dissemination", HoveringName, DS])
+	<- 	//println("Initial received: ", HoveringName, " of size ", DS, " from ", Sender);
+		!allocate_init(HoveringName, DS);
+		.
+
++message("mobile", Sender, [A, B, C])
+	<- 	println("UKN received: ", A, " ", B, " ", C, " from ", Sender);
+		.
 
 //+message("mobile", Sender, canICome(Size))
 //	<- 	allocateData(Sender, Size, Res);
@@ -110,6 +128,6 @@
 		.wait(1000);
 		!discoverNeighbour;
 		.
-		
-+?inquire(Range, Storage, OccStorage) [source(self)] : range(DR) & storage(DS)
-	<- Range = DR; Storage = DS; OccStorage = 0.
+
++?inquire(Range, Storage, OccStorage) [source(self)] : range(DR) & storage(DS) & free_space(FS)
+	<-  Range = DR; Storage = DS; OccStorage = (DS - FS).

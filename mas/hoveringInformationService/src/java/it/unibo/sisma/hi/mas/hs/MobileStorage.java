@@ -26,6 +26,10 @@ public class MobileStorage {
 	public synchronized String getData(Object ID) {
 		return storage.get(ID).getValue();
 	}
+	
+	public synchronized Object[] getAllData() {
+		return storage.values().toArray(new Object[storage.size()]);
+	}
 
 	public synchronized boolean allocateData(Object ID, double size) {
 		if(freeSpace < size) {
