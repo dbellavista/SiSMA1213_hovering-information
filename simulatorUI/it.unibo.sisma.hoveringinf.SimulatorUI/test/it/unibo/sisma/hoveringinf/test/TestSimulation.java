@@ -37,7 +37,7 @@ public class TestSimulation {
 		world = new World(hoveringInformations, mobilenodes, pieces, width,
 				height);
 	}
-	
+
 	@Before
 	public void setUp() throws Exception {
 
@@ -71,7 +71,7 @@ public class TestSimulation {
 				HoveringInformation h1 = new HoveringInformation(
 						r.nextInt(width - 100) + 10,
 						r.nextInt(height - 100) + 10, r.nextInt(Math.min(width,
-								height) / 4) + 10, 10);
+								height) / 4) + 10);
 				hoveringInformations.add(h1);
 			}
 
@@ -86,7 +86,7 @@ public class TestSimulation {
 				for (j = 0; j < r.nextInt(10); j++) {
 					tmpl.add(new PieceOfHoveringInformation(
 							hoveringInformations.get(r
-									.nextInt(hoveringInformations.size()))));
+									.nextInt(hoveringInformations.size())), 10));
 				}
 				pieces.addAll(tmpl);
 
@@ -98,7 +98,7 @@ public class TestSimulation {
 				mobilenodes.add(mn);
 			}
 			simulator.render(world);
-			
+
 			Thread.sleep(1000);
 		}
 

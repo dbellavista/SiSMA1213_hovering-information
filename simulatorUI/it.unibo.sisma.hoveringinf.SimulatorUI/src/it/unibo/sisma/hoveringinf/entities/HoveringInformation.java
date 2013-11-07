@@ -16,15 +16,12 @@ public class HoveringInformation {
 	private double anchorRange;
 	private List<PieceOfHoveringInformation> children;
 
-	private int size;
-
 	public HoveringInformation(double xAnchor, double yAnchor,
-			double anchorRange, int size) {
+			double anchorRange) {
 		super();
 		this.xAnchor = xAnchor;
 		this.yAnchor = yAnchor;
 		this.anchorRange = anchorRange;
-		this.size = size;
 		children = new ArrayList<>();
 	}
 
@@ -44,10 +41,6 @@ public class HoveringInformation {
 		return anchorRange;
 	}
 
-	public int getSize() {
-		return size;
-	}
-
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -55,7 +48,8 @@ public class HoveringInformation {
 		long temp;
 		temp = Double.doubleToLongBits(anchorRange);
 		result = prime * result + (int) (temp ^ (temp >>> 32));
-		result = prime * result + size;
+		result = prime * result
+				+ ((children == null) ? 0 : children.hashCode());
 		temp = Double.doubleToLongBits(xAnchor);
 		result = prime * result + (int) (temp ^ (temp >>> 32));
 		temp = Double.doubleToLongBits(yAnchor);
@@ -75,7 +69,10 @@ public class HoveringInformation {
 		if (Double.doubleToLongBits(anchorRange) != Double
 				.doubleToLongBits(other.anchorRange))
 			return false;
-		if (size != other.size)
+		if (children == null) {
+			if (other.children != null)
+				return false;
+		} else if (!children.equals(other.children))
 			return false;
 		if (Double.doubleToLongBits(xAnchor) != Double
 				.doubleToLongBits(other.xAnchor))
@@ -85,4 +82,5 @@ public class HoveringInformation {
 			return false;
 		return true;
 	}
+
 }

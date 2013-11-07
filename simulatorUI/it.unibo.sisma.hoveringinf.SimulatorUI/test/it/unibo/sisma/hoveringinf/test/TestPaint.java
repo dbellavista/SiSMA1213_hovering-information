@@ -58,17 +58,17 @@ public class TestPaint {
 
 	@Test
 	public void testBounds() throws Exception {
-		HoveringInformation hi = new HoveringInformation(0, 0, 100, 0);
+		HoveringInformation hi = new HoveringInformation(0, 0, 100);
 		hoveringInformations.add(hi);
-		hi = new HoveringInformation(width, 0, 100, 0);
+		hi = new HoveringInformation(width, 0, 100);
 		hoveringInformations.add(hi);
-		hi = new HoveringInformation(0, height, 100, 0);
+		hi = new HoveringInformation(0, height, 100);
 		hoveringInformations.add(hi);
-		hi = new HoveringInformation(width, height, 100, 0);
+		hi = new HoveringInformation(width, height, 100);
 		hoveringInformations.add(hi);
-		hi = new HoveringInformation(width/2, height/2, width, 0);
+		hi = new HoveringInformation(width / 2, height / 2, width);
 		hoveringInformations.add(hi);
-		hi = new HoveringInformation(width/2, height/2, height, 0);
+		hi = new HoveringInformation(width / 2, height / 2, height);
 		hoveringInformations.add(hi);
 
 		testFrame.setVisible(true);
@@ -88,7 +88,7 @@ public class TestPaint {
 		for (int i = 0; i < 40; i++) {
 			HoveringInformation h1 = new HoveringInformation(
 					r.nextInt(width - 100) + 10, r.nextInt(height - 100) + 10,
-					r.nextInt(Math.min(width, height) - 50) + 10, 10);
+					r.nextInt(Math.min(width, height) - 50) + 10);
 			hoveringInformations.add(h1);
 		}
 
@@ -136,7 +136,7 @@ public class TestPaint {
 		for (int i = 0; i < 10; i++) {
 			HoveringInformation h1 = new HoveringInformation(
 					r.nextInt(width - 100) + 10, r.nextInt(height - 100) + 10,
-					r.nextInt(Math.min(width, height) / 4) + 10, 10);
+					r.nextInt(Math.min(width, height) / 4) + 10);
 			hoveringInformations.add(h1);
 		}
 
@@ -150,7 +150,7 @@ public class TestPaint {
 			List<PieceOfHoveringInformation> tmpl = new ArrayList<>();
 			for (j = 0; j < r.nextInt(10); j++) {
 				tmpl.add(new PieceOfHoveringInformation(hoveringInformations
-						.get(r.nextInt(hoveringInformations.size()))));
+						.get(r.nextInt(hoveringInformations.size())), 10));
 			}
 			pieces.addAll(tmpl);
 

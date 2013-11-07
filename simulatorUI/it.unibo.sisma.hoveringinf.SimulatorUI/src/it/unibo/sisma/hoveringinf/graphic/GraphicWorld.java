@@ -143,7 +143,7 @@ public class GraphicWorld extends JComponent {
 			g2d.setColor(colors.get(info));
 
 			double w = bufferWidth;
-			double h = info.getSize() / ((double) mn.getBufferSize())
+			double h = phi.getSize() / ((double) mn.getBufferSize())
 					* bufferHeight;
 			double x = mXpos + bufferPos;
 			double y = mYpos + bufferHeight / 2 - j - h;

@@ -11,9 +11,12 @@ public class PieceOfHoveringInformation {
 
 	private HoveringInformation parent;
 	private MobileNode host;
+
+	private int size;
 	
-	public PieceOfHoveringInformation(HoveringInformation parent) {
+	public PieceOfHoveringInformation(HoveringInformation parent, int size) {
 		this.parent = parent;
+		this.size = size;
 		parent.addChild(this);
 	}
 
@@ -27,6 +30,10 @@ public class PieceOfHoveringInformation {
 
 	public MobileNode getHost() {
 		return host;
+	}
+
+	public int getSize() {
+		return size;
 	}
 	
 }
