@@ -42,12 +42,12 @@ public class EnvironmentArtifact extends Artifact {
 	 */
 
 	@OPERATION
-	void createPointInterest(Object ID, double posx, double posy) {
-		points.put(ID, new double[] { posx, posy });
+	void createPointInterest(Object ID, double posx, double posy, double comm_range) {
+		points.put(ID, new double[] { posx, posy, comm_range });
 	}
 
 	@OPERATION
-	void removePointInsterest(Object ID, double posx, double posy) {
+	void removePointInsterest(Object ID) {
 		points.remove(ID);
 	}
 
@@ -182,7 +182,7 @@ public class EnvironmentArtifact extends Artifact {
 		}
 		r.lock();
 		messages.get(receiverID).insertMessage(
-				new Message(message, receiverName, null));
+				new Message(message, receiverName, "__BACKDOOR__"));
 		r.unlock();
 	}
 

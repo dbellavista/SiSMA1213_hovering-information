@@ -45,20 +45,28 @@
 	<- 	inquireEnvironment(People, PoTs, WWidth, WHeight) [artifact_id(SimArtID)];
 		!inquireNodes(People, NodesInformation);
 		showSimulation(NodesInformation, PoTs, WWidth, WHeight) [artifact_id(SimArtID)];
-		.wait(200);
+		.wait(200);		
 		!start;
 		.
 
 +!inquireNodes([], []).
 
 +!inquireNodes([[ID, MB, Pos] | Rest], [InfoH | InfoT])
-	<- 	.send(MB, askOne, inquire(_, _, _), inquire(Range, Storage, OccStorage));
-		InfoH = [ID, MB, Pos, Range, Storage, OccStorage];
+	<- 	.send(MB, askOne, inquire(_, _, _, _), inquire(Range, Storage, OccStorage, Pieces));
+		if(.list(Pieces)) {
+			!inquirePieces(Pieces, FinalPieces);
+		} else {
+			FinalPieces = []
+		}
+		InfoH = [ID, MB, Pos, Range, Storage, OccStorage, FinalPieces];
 		!inquireNodes(Rest, InfoT);
+		.		
+		
++!inquirePieces([], []).
++!inquirePieces([P | PT], [[HoverName, Size] | FPT])
+	<-	.send(P, askOne, inquire(_, _), inquire(HoverName, Size));
+		!inquirePieces(PT, FPT);
 		.
-		
-		
-		
 		
 		
 		

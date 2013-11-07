@@ -9,8 +9,9 @@
 
 /* Plans */
 
-+!init : ~inited & worldWsp(WspName) & anchor(X, Y, Area) & size(S)
++!init : ~inited & worldWsp(WspName) & anchor(X, Y, Area) & size(S) & hover_name(HoverName)
 	<-	-~inited;
+		// TODO: Cogito ergo sum. Host must be defined!!! :)
 		joinWorkspace(WspName, WspId);
 		+workspace(world, WspId);
 		cartago.set_current_wsp(WspId);
@@ -29,3 +30,6 @@
 <- 	println("===>Hovering waiting for start...");
 	.wait(10000);
 	!start.
+	
++?inquire(HoverName, Size) : size(S) & hover_name(HN)
+<- HoverName = HN; Size = S.

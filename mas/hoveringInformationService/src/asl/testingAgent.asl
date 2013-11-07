@@ -3,7 +3,16 @@
 /* Initial beliefs and rules */
 
 /* Initial goals */
-!test_link.
+!test1.
+
++!test1
+	<-
+		A = [];
+		for ( .range(I,1,10) ) {
+        	A = [I | A];    // print all values from 1 to 10
+     	}
+	.
+
 +!test_link
 	<-
 	createWorkspace("W1");

@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.Semaphore;
 
 import cartago.ARTIFACT_INFO;
 import cartago.Artifact;
@@ -27,7 +28,7 @@ public class MobileResourceArtifact extends Artifact {
 		this.storage = new MobileStorage(storage.doubleValue());
 		defineObsProperty("neighbours", (Object) new Object[0]);
 		defineObsProperty("position", (Object) new Object[0]);
-		
+
 		defineObsProperty("total_space", this.storage.getTotalSpace());
 		defineObsProperty("free_space", this.storage.getFreeSpace());
 		defineObsProperty("data", (Object) new Object[0]);
@@ -38,8 +39,10 @@ public class MobileResourceArtifact extends Artifact {
 		try {
 			execLinkedOp("env-link", "discoverNeighbour", ID, range, mobileIDs);
 			ObsProperty neighbours = getObsProperty("neighbours");
-			List<Object> oldNeigh = Arrays.asList((Object[]) neighbours.getValue());
-			List<Object> newNeigh = new ArrayList<>(Arrays.asList(mobileIDs.get()));
+			List<Object> oldNeigh = Arrays.asList((Object[]) neighbours
+					.getValue());
+			List<Object> newNeigh = new ArrayList<>(Arrays.asList(mobileIDs
+					.get()));
 
 			Iterator<Object> oit = oldNeigh.iterator();
 			while (oit.hasNext()) {
@@ -81,16 +84,21 @@ public class MobileResourceArtifact extends Artifact {
 			failed("sendMessage linked operation failed", "fail", ID, e);
 		}
 	}
-	  
+
 	@OPERATION
-	void receiveMessage(Object receiverName, OpFeedbackParam<Object> sender,
-			OpFeedbackParam<Object> senderName, OpFeedbackParam<Object> message) {
+	void receiveMessage(Object receiverName, OpFeedbackParam<Boolean> res,
+			OpFeedbackParam<Object> sender, OpFeedbackParam<Object> senderName,
+			OpFeedbackParam<Object> message) {
+
 		try {
 			execLinkedOp("env-link", "receiveMessage", ID, receiverName,
 					sender, message);
-			if(message.get() != null) {
+			if (message.get() != null) {
+				res.set(true);
 				// TODO: how to map AgentID with Jason?
-				signal("message", receiverName, sender.get(), message.get());
+				// signal("message", receiverName, sender.get(), message.get());
+			} else {
+				res.set(false);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -102,7 +110,7 @@ public class MobileResourceArtifact extends Artifact {
 	void allocateData(Object ID, double size, OpFeedbackParam<Boolean> res) {
 		res.set(storage.allocateData(ID, size));
 		ObsProperty fsProp = getObsProperty("free_space");
-		fsProp.updateValue(this.storage.getFreeSpace()) ;
+		fsProp.updateValue(this.storage.getFreeSpace());
 		ObsProperty dataProp = getObsProperty("data");
 		dataProp.updateValue(this.storage.getAllData());
 	}
@@ -113,16 +121,16 @@ public class MobileResourceArtifact extends Artifact {
 		ObsProperty dataProp = getObsProperty("data");
 		dataProp.updateValue(this.storage.getAllData());
 	}
-	
+
 	@OPERATION
 	void removeData(Object ID) {
 		storage.freeData(ID);
 		ObsProperty fsProp = getObsProperty("free_space");
-		fsProp.updateValue(this.storage.getFreeSpace()) ;
+		fsProp.updateValue(this.storage.getFreeSpace());
 		ObsProperty dataProp = getObsProperty("data");
 		dataProp.updateValue(this.storage.getAllData());
 	}
-	
+
 	@OPERATION
 	void obtainPosition() {
 		OpFeedbackParam<double[]> position = new OpFeedbackParam<>();

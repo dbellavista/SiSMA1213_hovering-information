@@ -69,7 +69,8 @@
 		.
 
 +!start : configured
-	<- 	!!discoverNeighbour;
+	<- 	+pieces([]);
+		!!discoverNeighbour;
 		!!receiveMessage;
 		.
 
@@ -80,44 +81,54 @@
 
 +!allocate_init(HoveringName, DS)
 	<- 	allocateData(HoveringName, DS, Res);
-		!finalize_allocation(HoveringName, Res).
+		if(Res) {
+			?pieces(L);
+			-+pieces([HoveringName | L]);
+		} else {
+			?node_id(MyNodeID);
+			sendMessage(MyNodeID, HoveringName, [sorry_after_init]);
+		}.
 
-+!finalize_allocation(HoveringName, false)
-	<- 	?node_id(MyNodeID);
-		sendMessage(MyNodeID, HoveringName, [sorry_after_init]);
-		.
-+!finalize_allocation(HoveringName, true) <-
-		?pieces(L);
-		-+pieces([H, L]).
-
-+message("mobile", Sender, ["init_dissemination", HoveringName, DS])
++!manage_message(Sender, ["init_dissemination", HoveringName, DS])
 	<- 	//println("Initial received: ", HoveringName, " of size ", DS, " from ", Sender);
 		!allocate_init(HoveringName, DS);
 		.
 
-+message("mobile", Sender, [A, B, C])
++!manage_message(Sender, [A, B, C])
 	<- 	println("UKN received: ", A, " ", B, " ", C, " from ", Sender);
 		.
+
+//+message("mobile", Sender, ["init_dissemination", HoveringName, DS])
+//	<- 	//println("Initial received: ", HoveringName, " of size ", DS, " from ", Sender);
+//		!allocate_init(HoveringName, DS);
+//		.
+
+//+message("mobile", Sender, [A, B, C])
+//	<- 	println("UKN received: ", A, " ", B, " ", C, " from ", Sender);
+//		.
 
 //+message("mobile", Sender, canICome(Size))
 //	<- 	allocateData(Sender, Size, Res);
 //				
 //	.
 
-+new_neighbour(ID)
-	<- 	println("New neighbour: ", ID);
-		sendMessage(ID, "mobile", "Hi!!")
-		.
++new_neighbour(ID).
+	//<- 	//println("New neighbour: ", ID);
+		//sendMessage(ID, "mobile", "Hi!!")
+		//.
 	
-+neighbour_gone(ID)
-	<- println("Neighbour gone: ", ID).
++neighbour_gone(ID).
+	//<- println("Neighbour gone: ", ID).
 
 +!receiveMessage : stop_receiving.
 +!discoverNeighbour : stop_discovering.
 
 +!receiveMessage : not stop_receiving
 	<- 	?artifacts(resource, MResID);
-		receiveMessage("mobile", _, _, _) [artifact_id(MResID)];
+		receiveMessage("mobile", Res, Sender, SenderName, Message) [artifact_id(MResID)];
+		if(Res) {
+			!manage_message(Sender, Message);	
+		}
 		.wait(500);
 		!receiveMessage;
 		.
@@ -129,5 +140,9 @@
 		!discoverNeighbour;
 		.
 
-+?inquire(Range, Storage, OccStorage) [source(self)] : range(DR) & storage(DS) & free_space(FS)
-	<-  Range = DR; Storage = DS; OccStorage = (DS - FS).
++?inquire(Range, Storage, OccStorage, PList) [source(self)] : range(Range) & storage(Storage) & free_space(FreeSpace) & pieces(Pieces)
+	<-  OccStorage = (Storage - FreeSpace); PList = Pieces.
+
++?inquire(Range, Storage, OccStorage, PList) [source(self)] : range(Range) & storage(Storage) & free_space(FreeSpace) & not pieces(Pieces)
+	<-  .wait(200);
+		?inquire(Range, Storage, OccStorage, PList).

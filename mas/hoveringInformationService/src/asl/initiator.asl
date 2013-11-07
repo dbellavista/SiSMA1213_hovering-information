@@ -173,7 +173,7 @@ behaviour("none", none).
 		
 		?wsp(world, _, WWspId);
 		cartago.set_current_wsp(WWspId);
-		createPointInterest(IDHover, X, Y);
+		createPointInterest(IDHover, X, Y, AR);
 		?wsp(default, DWspId);
 		cartago.set_current_wsp(DWspId);
 		
@@ -203,7 +203,7 @@ behaviour("none", none).
 		person(NP, PersonAgent)
 	<-	.concat(ID, "_", NameT);
 		.concat(NameT, Index, HoveringAgent);
-		!create_hovering_agent(HoveringAgent, Anchor, Size, PersonAgent);		
+		!create_hovering_agent(HoveringAgent, ID, Anchor, Size, PersonAgent);		
 		// DRY trick
 		!random_dissemination(ID, NH, Anchor, Size, NP, Prob, Index + 1, false);
 		.
@@ -212,10 +212,10 @@ behaviour("none", none).
 	<-	toss_coin(Prob, DissRes);
 		!random_dissemination(ID, NH, Anchor, Size, NP - 1, Prob, Index, DissRes).
 
-+!create_hovering_agent(Name, Anchor, size(Size), DeviceID)
++!create_hovering_agent(Name, HoverName, Anchor, size(Size), DeviceID)
 	<- 	.create_agent(Name, "hovering.asl", [agentArchClass("c4jason.CAgentArch")]);
 		?wsp(world, WspName, _);
-		.send(Name, tell, [worldWsp(WspName), Anchor, size(Size), host(DeviceID)]);
+		.send(Name, tell, [worldWsp(WspName), hover_name(HoverName), Anchor, size(Size), host(DeviceID)]);
 		// TODO: insert the hovering information inside the mobile node
 		?artifact(env, "EnvArtifact", EAid);
 		backdoorSendMessage(DeviceID, "mobile", [init_dissemination, Name, Size]) [artifact_id(EAid)];
