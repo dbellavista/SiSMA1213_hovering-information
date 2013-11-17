@@ -84,11 +84,11 @@ People:
     ypos: 'random'
     device_range: 200
     device_storage: 100
-        
+       
 Hovering:
   - name: 'h1'
-    xanchor: 70
-    yanchor: 40
+    xanchor: 20
+    yanchor: 70
     anchor_radius: 100
     data_size: 30
   - name: 'h2'
@@ -96,3 +96,13 @@ Hovering:
     yanchor: 400
     anchor_radius: 100
     data_size: 40
+  - name: 'h3'
+    xanchor: 400
+    yanchor: 400
+    anchor_radius: 200
+    data_size: 40
+  - name: 'h4'
+    xanchor: 300
+    yanchor: 70
+    anchor_radius: 100
+    data_size: 20
