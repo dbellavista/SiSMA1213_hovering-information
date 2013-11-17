@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
-import java.util.concurrent.Semaphore;
 
 import cartago.ARTIFACT_INFO;
 import cartago.Artifact;
@@ -17,12 +16,13 @@ import cartago.OpFeedbackParam;
 
 @ARTIFACT_INFO(outports = { @OUTPORT(name = "env-link") })
 public class MobileResourceArtifact extends Artifact {
-
+	
 	private double range;
 	private MobileStorage storage;
 	private Object ID;
 
 	void init(Object ID, Number range, Number storage) {
+		
 		this.ID = ID;
 		this.range = range.doubleValue();
 		this.storage = new MobileStorage(storage.doubleValue());
@@ -75,13 +75,15 @@ public class MobileResourceArtifact extends Artifact {
 	}
 
 	@OPERATION
-	void sendMessage(Object receiverID, Object receiverName, Object message) {
+	void sendMessage(Object senderName, Object receiverID, Object receiverName, Object message, OpFeedbackParam<Boolean> Res) {
 		try {
-			execLinkedOp("env-link", "sendMessage", ID, range, receiverID,
+			execLinkedOp("env-link", "sendMessage", ID, senderName, range, receiverID,
 					receiverName, message);
+			Res.set(true);
 		} catch (Exception e) {
-			e.printStackTrace();
-			failed("sendMessage linked operation failed", "fail", ID, e);
+			//e.printStackTrace();
+			//failed("sendMessage linked operation failed", "fail", ID, e);
+			Res.set(false);
 		}
 	}
 
@@ -92,7 +94,7 @@ public class MobileResourceArtifact extends Artifact {
 
 		try {
 			execLinkedOp("env-link", "receiveMessage", ID, receiverName,
-					sender, message);
+					sender, senderName, message);
 			if (message.get() != null) {
 				res.set(true);
 				// TODO: how to map AgentID with Jason?
@@ -132,8 +134,7 @@ public class MobileResourceArtifact extends Artifact {
 	}
 
 	@OPERATION
-	void obtainPosition() {
-		OpFeedbackParam<double[]> position = new OpFeedbackParam<>();
+	void obtainPosition(OpFeedbackParam<double[]> position) {
 		try {
 			execLinkedOp("env-link", "obtainPosition", ID, position);
 			ObsProperty psProp = getObsProperty("position");

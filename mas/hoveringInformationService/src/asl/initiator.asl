@@ -203,7 +203,8 @@ behaviour("none", none).
 		person(NP, PersonAgent)
 	<-	.concat(ID, "_", NameT);
 		.concat(NameT, Index, HoveringAgent);
-		!create_hovering_agent(HoveringAgent, ID, Anchor, Size, PersonAgent);		
+		.concat("device_", PersonAgent, DeviceName);
+		!create_hovering_agent(HoveringAgent, ID, Anchor, Size, PersonAgent, DeviceName);		
 		// DRY trick
 		!random_dissemination(ID, NH, Anchor, Size, NP, Prob, Index + 1, false);
 		.
@@ -212,10 +213,10 @@ behaviour("none", none).
 	<-	toss_coin(Prob, DissRes);
 		!random_dissemination(ID, NH, Anchor, Size, NP - 1, Prob, Index, DissRes).
 
-+!create_hovering_agent(Name, HoverName, Anchor, size(Size), DeviceID)
++!create_hovering_agent(Name, HoverName, Anchor, size(Size), DeviceID, DeviceName)
 	<- 	.create_agent(Name, "hovering.asl", [agentArchClass("c4jason.CAgentArch")]);
 		?wsp(world, WspName, _);
-		.send(Name, tell, [worldWsp(WspName), hover_name(HoverName), Anchor, size(Size), host(DeviceID)]);
+		.send(Name, tell, [worldWsp(WspName), hover_name(HoverName), Anchor, size(Size), host(DeviceID, DeviceName)]);
 		// TODO: insert the hovering information inside the mobile node
 		?artifact(env, "EnvArtifact", EAid);
 		backdoorSendMessage(DeviceID, "mobile", [init_dissemination, Name, Size]) [artifact_id(EAid)];
@@ -225,6 +226,9 @@ behaviour("none", none).
 +!start_system
 	<- 	.send("Simulator", achieve, start);
 		!start_person(1);
+		// My work here is done now!
+		.my_name(Name);
+		.kill_agent(Name)
 		.
 +!start_person(NP) : person(NP, Name)
 	<- 	.send(Name, achieve, start);

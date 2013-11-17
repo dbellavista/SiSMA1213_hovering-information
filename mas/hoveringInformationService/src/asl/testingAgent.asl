@@ -7,10 +7,15 @@
 
 +!test1
 	<-
-		A = [];
-		for ( .range(I,1,10) ) {
-        	A = [I | A];    // print all values from 1 to 10
-     	}
+		+pippo(1);
+		+pippo(2);
+		+pippo(3);
+		+pippo(4);
+		.findall(X, pippo(X), R);
+		if( pippo(5) ) {
+			.print("OK");
+		}
+		.print(R);
 	.
 
 +!test_link

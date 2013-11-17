@@ -5,11 +5,13 @@ public class Message {
 	private Object message;
 	private Object receiverName;
 	private Object senderID;
+	private Object senderName;
 
-	public Message(Object message, Object receiverName, Object senderID) {
+	public Message(Object message, Object receiverName, Object senderID, Object senderName) {
 		this.message = message;
 		this.receiverName = receiverName;
 		this.senderID = senderID;
+		this.senderName = senderName;
 	}
 
 	public Object getMessage() {
@@ -22,6 +24,10 @@ public class Message {
 
 	public Object getSenderID() {
 		return senderID;
+	}
+	
+	public Object getSenderName() {
+		return senderName;
 	}
 
 }

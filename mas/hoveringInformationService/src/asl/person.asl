@@ -58,7 +58,7 @@
 	<- 	sense;
 		!choose_destination(DX, DY);
 		!reach(DX, DY);
-		!behave;
+		!!behave;
 		.
 +!choose_destination(0, 0): behaviour(none).
 +!reach(0, 0): behaviour(none)

@@ -61,7 +61,7 @@
 		!init.
 
 +start_command <- !start.
-+stop_command <- !stop.		
++stop_command <- !stop.
 
 +!start : ~configured | not configured
 	<- 	.wait(1000);
@@ -79,39 +79,37 @@
 		+stop_discovering;
 		.
 
-+!allocate_init(HoveringName, DS)
+@allocInit[atomic] +!manage_message(Sender, SenderName, ["init_dissemination", HoveringName, DS])
 	<- 	allocateData(HoveringName, DS, Res);
+		if(.string(HoveringName)) {
+			.term2string(HTerm, HoveringName);
+		} else {
+			HTerm = HoveringName;
+		}
 		if(Res) {
 			?pieces(L);
-			-+pieces([HoveringName | L]);
+
+			-+pieces([HTerm | L]);
+			.send(HTerm, achieve, start);
 		} else {
-			?node_id(MyNodeID);
-			sendMessage(MyNodeID, HoveringName, [sorry_after_init]);
+			.send(HTerm, tell, sorry_after_init);
+			 // ?node_id(MyNodeID);
+			// sendMessage(MyNodeID, HoveringName, [sorry_after_init]);
+		}
+		.
+
+@askSpace[atomic] +!manage_message(Sender, SenderName, ["there_is_space", DS])
+	<-	?free_space(FS);
+		.my_name(Name);
+		if(FS >= DS) {
+			sendMessage(Name, Sender, SenderName, [reply_ok_space], _);
+		} else {
+			sendMessage(Name, Sender, SenderName, [reply_no_space], _);
 		}.
 
-+!manage_message(Sender, ["init_dissemination", HoveringName, DS])
-	<- 	//println("Initial received: ", HoveringName, " of size ", DS, " from ", Sender);
-		!allocate_init(HoveringName, DS);
++!manage_message(Sender, L)
+	<- 	println("UKN received: ", L, " from ", Sender);
 		.
-
-+!manage_message(Sender, [A, B, C])
-	<- 	println("UKN received: ", A, " ", B, " ", C, " from ", Sender);
-		.
-
-//+message("mobile", Sender, ["init_dissemination", HoveringName, DS])
-//	<- 	//println("Initial received: ", HoveringName, " of size ", DS, " from ", Sender);
-//		!allocate_init(HoveringName, DS);
-//		.
-
-//+message("mobile", Sender, [A, B, C])
-//	<- 	println("UKN received: ", A, " ", B, " ", C, " from ", Sender);
-//		.
-
-//+message("mobile", Sender, canICome(Size))
-//	<- 	allocateData(Sender, Size, Res);
-//				
-//	.
-
 +new_neighbour(ID).
 	//<- 	//println("New neighbour: ", ID);
 		//sendMessage(ID, "mobile", "Hi!!")
@@ -120,6 +118,17 @@
 +neighbour_gone(ID).
 	//<- println("Neighbour gone: ", ID).
 
++performing_arakiri [source(Name)] // TODO: deallocate hovering. Delete info about it
+	<- 	!removeHovering(Name).
+	
+@remHovering[atomic] +!removeHovering(Name)
+	<-	removeData(Name);
+		?pieces(OldList);
+		.delete(Name, OldList, List);
+		-pieces(_);
+		+pieces(List);
+		.
+
 +!receiveMessage : stop_receiving.
 +!discoverNeighbour : stop_discovering.
 
@@ -127,17 +136,17 @@
 	<- 	?artifacts(resource, MResID);
 		receiveMessage("mobile", Res, Sender, SenderName, Message) [artifact_id(MResID)];
 		if(Res) {
-			!manage_message(Sender, Message);	
+			!manage_message(Sender, SenderName, Message);	
 		}
 		.wait(500);
-		!receiveMessage;
+		!!receiveMessage;
 		.
 
 +!discoverNeighbour : not stop_discovering
 	<-	?artifacts(resource, MResID);
 		discoverNeighbour(_) [artifact_id(MResID)];
 		.wait(1000);
-		!discoverNeighbour;
+		!!discoverNeighbour;
 		.
 
 +?inquire(Range, Storage, OccStorage, PList) [source(self)] : range(Range) & storage(Storage) & free_space(FreeSpace) & pieces(Pieces)

@@ -4,7 +4,9 @@ package it.unibo.sisma.hi.mas.environment;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
@@ -19,6 +21,8 @@ import cartago.OpFeedbackParam;
 
 public class EnvironmentArtifact extends Artifact {
 
+	private Map<RecentCommunication, RecentCommunication> commMap;
+
 	private ConcurrentHashMap<Object, ReentrantReadWriteLock> locks;
 	private ConcurrentHashMap<Object, double[]> positions;
 	private ConcurrentHashMap<Object, String> deviceNames;
@@ -28,6 +32,8 @@ public class EnvironmentArtifact extends Artifact {
 	private double worldHeight;
 
 	void init(double worldWidth, double worldHeight) {
+		commMap = new HashMap<>();
+
 		this.worldWidth = worldWidth;
 		this.worldHeight = worldHeight;
 		locks = new ConcurrentHashMap<>();
@@ -42,7 +48,8 @@ public class EnvironmentArtifact extends Artifact {
 	 */
 
 	@OPERATION
-	void createPointInterest(Object ID, double posx, double posy, double comm_range) {
+	void createPointInterest(Object ID, double posx, double posy,
+			double comm_range) {
 		points.put(ID, new double[] { posx, posy, comm_range });
 	}
 
@@ -182,47 +189,92 @@ public class EnvironmentArtifact extends Artifact {
 		}
 		r.lock();
 		messages.get(receiverID).insertMessage(
-				new Message(message, receiverName, "__BACKDOOR__"));
+				new Message(message, receiverName, "__BACKDOOR__",
+						"__Initiator__"));
 		r.unlock();
 	}
 
 	@LINK
-	void sendMessage(Object senderID, Number commRange, Object receiverID,
-			Object receiverName, Object message) {
+	void sendMessage(Object senderID, Object senderName, Number commRange,
+			Object receiverID, Object receiverName, Object message) {
 		double[] mypos;
-		ReadLock mr;
+		ReadLock mr = null;
+		ReadLock r = null;
 		try {
-			mr = readLock(senderID);
-			mr.lock();
-			mypos = positions.get(senderID);
-		} catch (Exception e) {
-			throw new RuntimeException("Sender not found!");
+			try {
+				mr = readLock(senderID);
+				mr.lock();
+				mypos = positions.get(senderID);
+			} catch (Exception e) {
+				failed("Sender not found!");
+				return;
+			}
+			if (mypos == null) {
+				failed("Sender not found!");
+				return;
+			}
+			// TODO: add list recently messaged
+			r = readLock(receiverID);
+			if (r == null) {
+				failed("Receiver not found!");
+				return;
+			}
+			r.lock();
+			double[] destPos = positions.get(receiverID);
+			if (inRange(mypos, destPos, commRange)) {
+				messages.get(receiverID)
+						.insertMessage(
+								new Message(message, receiverName, senderID,
+										senderName));
+				addNewRecentCommunication(senderID, receiverID);
+			} else {
+				failed("Receiver not in range!");
+				return;
+			}
+		} finally {
+			if (r != null) {
+				r.unlock();
+			}
+			if (mr != null) {
+				mr.unlock();
+			}
 		}
-		if (mypos == null) {
-			throw new RuntimeException("Sender not found!");
-		}
+	}
 
-		ReadLock r = readLock(receiverID);
-		if (r == null) {
-			throw new RuntimeException("Receiver not found!");
+	@INTERNAL_OPERATION
+	synchronized void addNewRecentCommunication(Object senderID,
+			Object receiverID) {
+		RecentCommunication newRc = new RecentCommunication(senderID,
+				receiverID);
+		RecentCommunication oldRc = commMap.remove(newRc);
+		if (oldRc != null) {
+			oldRc.update();
+			newRc = oldRc;
 		}
-		r.lock();
-		double[] destPos = positions.get(receiverID);
-		if (inRange(mypos, destPos, commRange)) {
-			messages.get(receiverID).insertMessage(
-					new Message(message, receiverName, senderID));
-		} else {
-			throw new RuntimeException("Receiver not in range!");
+		commMap.put(newRc, newRc);
+	}
+
+	@INTERNAL_OPERATION
+	synchronized Object[][] generateRecentCommList() {
+		ArrayList<Object[]> list = new ArrayList<>();
+		ArrayList<RecentCommunication> toRemove = new ArrayList<>();
+		for (RecentCommunication rc : commMap.keySet()) {
+			if (rc.isExpired()) {
+				toRemove.add(rc);
+			} else {
+				list.add(rc.toObjectArray());
+			}
 		}
-		r.unlock();
-		if (senderID != null) {
-			mr.unlock();
+		for (RecentCommunication rc : toRemove) {
+			commMap.remove(rc);
 		}
+		return list.toArray(new Object[list.size()][]);
 	}
 
 	@LINK
 	void receiveMessage(Object ID, Object receiverName,
-			OpFeedbackParam<Object> senderID, OpFeedbackParam<Object> message) {
+			OpFeedbackParam<Object> senderID,
+			OpFeedbackParam<Object> senderName, OpFeedbackParam<Object> message) {
 		ReadLock r = readLock(ID);
 		r.lock();
 		MessageQueue queue = messages.get(ID);
@@ -233,6 +285,7 @@ public class EnvironmentArtifact extends Artifact {
 				message.set(null);
 			} else {
 				senderID.set(m.getSenderID());
+				senderName.set(m.getSenderName());
 				message.set(m.getMessage());
 			}
 		} catch (InterruptedException e) {
@@ -256,11 +309,13 @@ public class EnvironmentArtifact extends Artifact {
 	@LINK
 	void inquireEnvironment(OpFeedbackParam<Object[]> people,
 			OpFeedbackParam<Object[]> pointOfInterest,
+			OpFeedbackParam<Object[][]> listRecentComm,
 			OpFeedbackParam<Double> worldWidth,
 			OpFeedbackParam<Double> worldHeight) {
 		List<Object> pl = new ArrayList<>();
 		List<Object> potl = new ArrayList<>();
-
+		listRecentComm.set(generateRecentCommList());
+		// listRecentComm.set(new Object[0][2]);
 		for (Entry<Object, ReentrantReadWriteLock> l : locks.entrySet()) {
 			ReadLock r = l.getValue().readLock();
 			r.lock();

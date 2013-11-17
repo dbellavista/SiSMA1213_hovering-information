@@ -42,11 +42,11 @@
 		!start.
 
 +!start:  configured & artifact(sim, _, SimArtID)
-	<- 	inquireEnvironment(People, PoTs, WWidth, WHeight) [artifact_id(SimArtID)];
+	<- 	inquireEnvironment(People, PoTs, RecentList, WWidth, WHeight) [artifact_id(SimArtID)];
 		!inquireNodes(People, NodesInformation);
-		showSimulation(NodesInformation, PoTs, WWidth, WHeight) [artifact_id(SimArtID)];
+		showSimulation(NodesInformation, PoTs, RecentList, WWidth, WHeight) [artifact_id(SimArtID)];
 		.wait(200);		
-		!start;
+		!!start;
 		.
 
 +!inquireNodes([], []).
@@ -65,9 +65,10 @@
 +!inquirePieces([], []).
 +!inquirePieces([P | PT], [[HoverName, Size] | FPT])
 	<-	.send(P, askOne, inquire(_, _), inquire(HoverName, Size));
-		!inquirePieces(PT, FPT);
 		.
-		
+-!inquirePieces([_ | PT], [[_ , Size] | FPT])
+	<- !inquirePieces(PT, FPT);
+	.
 		
 		
 		

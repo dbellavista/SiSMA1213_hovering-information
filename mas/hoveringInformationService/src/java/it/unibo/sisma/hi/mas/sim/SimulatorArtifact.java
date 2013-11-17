@@ -20,6 +20,7 @@ import cartago.OperationException;
 		@OUTPORT(name = "ui-port") })
 public class SimulatorArtifact extends Artifact {
 
+	@SuppressWarnings("unused")
 	private int guiRefresh;
 
 	void init(int guiRefresh) {
@@ -34,11 +35,12 @@ public class SimulatorArtifact extends Artifact {
 	@OPERATION
 	void inquireEnvironment(OpFeedbackParam<Object[]> people,
 			OpFeedbackParam<Object[]> pointOfInterest,
+			OpFeedbackParam<Object[][]> listRecent,
 			OpFeedbackParam<Double> worldWidth,
 			OpFeedbackParam<Double> worldHeight) {
 		try {
 			execLinkedOp("inq-env-port", "inquireEnvironment", people,
-					pointOfInterest, worldWidth, worldHeight);
+					pointOfInterest, listRecent, worldWidth, worldHeight);
 		} catch (Exception e) {
 			e.printStackTrace();
 			failed("Environment linked operation failed", "fail", e);
@@ -46,12 +48,12 @@ public class SimulatorArtifact extends Artifact {
 	}
 
 	@OPERATION
-	void showSimulation(Object nodes, Object pointOfInterest,
+	void showSimulation(Object[] nodes, Object[] pointOfInterest, Object[] listRecent,
 			double worldWidth, double worldHeight) {
 		GUIEnvironmentFactory factory = new GUIEnvironmentFactory();
 		try {
 			execLinkedOp("ui-port", "render", factory.createWorld(worldWidth,
-					worldHeight, (Object[]) nodes, (Object[]) pointOfInterest));
+					worldHeight, nodes, pointOfInterest, listRecent));
 		} catch (OperationException e) {
 			e.printStackTrace();
 			failed("UI linked operation failed", "fail", e);
