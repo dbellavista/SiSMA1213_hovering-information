@@ -16,7 +16,7 @@
 		+id(NodeID);
 		joinWorkspace(WspName, WspId);
 		cartago.set_current_wsp(WspId);
-		+workspace(world, WspId);
+		+workspace(world, WspName, WspId);
 		lookupArtifact(EAName, EnvArtID);
 		-+artifacts(environment, EnvArtID);
 		
@@ -27,7 +27,7 @@
 		.concat("NodeWorkspace_", Name, WNName);
 		createWorkspace(WNName);
 		joinWorkspace(WNName, WNid);
-		+workspace(node, WNid);
+		+workspace(node, WNName, WNid);
 		
 		makeArtifact("MobileResource", "it.unibo.sisma.hi.mas.hs.MobileResourceArtifact",[NodeID, DR, DS],MResID);
 		+artifacts(resource, MResID);
@@ -47,7 +47,7 @@
 		.concat("RangeWorkspace_", Name, WRName);
 		createWorkspace(WRName);
 		joinWorkspace(WRName, WRid);
-		+workspace(range, WRid);
+		+workspace(range, WRName, WRid);
 		
 		cartago.set_current_wsp(WNid);
 		-~configured;
@@ -88,7 +88,6 @@
 		}
 		if(Res) {
 			?pieces(L);
-
 			-+pieces([HTerm | L]);
 			.send(HTerm, achieve, start);
 		} else {
@@ -102,14 +101,49 @@
 	<-	?free_space(FS);
 		.my_name(Name);
 		if(FS >= DS) {
-			sendMessage(Name, Sender, SenderName, [reply_ok_space], _);
+			obtainPosition(P);
+			P = [X, Y];
+			sendMessage(Name, Sender, SenderName, [reply_ok_space, X, Y], _);
 		} else {
 			sendMessage(Name, Sender, SenderName, [reply_no_space], _);
 		}.
 
-+!manage_message(Sender, L)
-	<- 	println("UKN received: ", L, " from ", Sender);
+@permLanding[atomic] +!manage_message(Sender, SenderName, ["permission_to_land", DS])
+	<-	allocateData(SenderName, DS, Res);
+		.my_name(Name);
+		if(Res) {
+			sendMessage(Name, Sender, SenderName, [permission_granted], SendRes);
+			if(not SendRes) {
+				removeData(SenderName);
+			}
+		} else {
+			sendMessage(Name, Sender, SenderName, [permission_denied], _);
+		}.
+
+@abortLanding[atomic] +!manage_message(Sender, SenderName, ["landing_aborted", DS])
+	<-	removeData(SenderName);
 		.
+
+@land[atomic] +!manage_message(Sender, SenderName, ["land", PackedAgent])
+	<-	// Real world: unpack the agent and start it!
+		.my_name(HostName);
+		.print("Landing ", SenderName);
+		?node_id(HostID);
+		?workspace(node, MobileWsp, _);
+		?pieces(L);
+		if(.string(SenderName)) {
+			.term2string(HTerm, SenderName);
+		} else {
+			HTerm = SenderName;
+		}
+		-+pieces([HTerm | L]);
+		.send(SenderName, tell, you_can_resume(HostID, HostName, MobileWsp));		
+		.
+
++!manage_message(Sender, SenderName, L)
+	<- 	.print("UKN received: ", L, " from ", Sender, " ", SenderName);
+		.
+
 +new_neighbour(ID).
 	//<- 	//println("New neighbour: ", ID);
 		//sendMessage(ID, "mobile", "Hi!!")
@@ -118,7 +152,7 @@
 +neighbour_gone(ID).
 	//<- println("Neighbour gone: ", ID).
 
-+performing_arakiri [source(Name)] // TODO: deallocate hovering. Delete info about it
++performing_arakiri [source(Name)]
 	<- 	!removeHovering(Name).
 	
 @remHovering[atomic] +!removeHovering(Name)

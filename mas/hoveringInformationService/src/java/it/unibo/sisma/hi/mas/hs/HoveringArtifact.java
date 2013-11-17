@@ -34,7 +34,13 @@ public class HoveringArtifact extends Artifact {
 	void exp(OpFeedbackParam<Double> ret, double ex) {
 		ret.set(Math.exp(ex));
 	}
-	
+
+	@OPERATION
+	void distance(OpFeedbackParam<Double> ret, double x1, double y1, double x2,
+			double y2) {
+		ret.set(Math.sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2)));
+	}
+
 	@OPERATION
 	void computePositionalData(double x, double y, double anchorX,
 			double anchorY, OpFeedbackParam<Double> speedRet,

@@ -192,8 +192,8 @@ behaviour("none", none).
 	<-	?artifact(init, _, InitArt); 
 		?parameter("people", NP);
 		// Random: for each person, give a piece with probability p
-		toss_coin(0.8, DissRes);
-		!random_dissemination(ID, NH, Anchor, Size, NP, 0.8, 1, DissRes);
+		toss_coin(1.0, DissRes);
+		!random_dissemination(ID, NH, Anchor, Size, NP, 1.0, 1, DissRes);
 		.
 
 +!random_dissemination(I, NH, A, S, NP, P, IX, _) : 

@@ -60,13 +60,14 @@
 		}
 		InfoH = [ID, MB, Pos, Range, Storage, OccStorage, FinalPieces];
 		!inquireNodes(Rest, InfoT);
-		.		
+		.
 		
 +!inquirePieces([], []).
 +!inquirePieces([P | PT], [[HoverName, Size] | FPT])
 	<-	.send(P, askOne, inquire(_, _), inquire(HoverName, Size));
+		!inquirePieces(PT, FPT);
 		.
--!inquirePieces([_ | PT], [[_ , Size] | FPT])
+-!inquirePieces([H | PT], [H1 | FPT])
 	<- !inquirePieces(PT, FPT);
 	.
 		

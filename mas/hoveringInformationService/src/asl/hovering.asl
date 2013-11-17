@@ -43,7 +43,8 @@
 		
 		.concat("NodeWorkspace_", DeviceName, WNName);
 		joinWorkspace(WNName, WspNodeId);
-		+workspace(host, WspNodeId);		
+		cartago.set_current_wsp(WspNodeId);
+		+workspace(host, WspNodeId);
 		lookupArtifact("MobileResource", HostResID);
 		+artifacts(resource, HostResID);
 		
@@ -69,7 +70,7 @@
 +sorry_after_init <-
 			// Uff.. so much effort for nothing
 			!stop.
-
+			
 +!stop <- +stop_surviving;
 		+stop_receiving;
 		?host(HostID, HostName);
@@ -87,7 +88,7 @@
 +!getOld(Speed, Distance, Direct, AnchorVect, Speed, Distance, Direct, AnchorVect).
 
 +!updateZone(Distance) : zone(Zone, Min, Max) & Distance >= Min & Distance < Max
-	<- -current_zone; +current_zone(Zone).
+	<- -current_zone(_); +current_zone(Zone).
 
 @upBelieves[atomic] +!updateBelieves([PX, PY]) : artifacts(hovering, HArtID) & anchor(AX, AY, Area)
 	<-	computePositionalData(PX, PY, AX, AY, Speed, Distance, Direct, AnchorVect) [artifact_id(HArtID)];
@@ -176,38 +177,28 @@
 	.
 
 +!doWhatIsNecessary : cur_defcon(3, CurPoints) & current_zone(Z) & distance(D) & zone(death_zone, Max_Dist, _)
-	<-	?artifacts(resource, MResID);
-		discoverNeighbour(List) [artifact_id(MResID)];
-		?size(S);
-		for(.member(N, List)) {
-			!send_to_neighbor(N);
-		}
-	.
+	<-	!probe_neighbor
+		.
 
-+!send_to_neighbor(N) : ask_neighbor(N, K) & K > 0
-	<-	-ask_neighbor(N, K);
-		+ask_neighbor(N, K-1);
++!doWhatIsNecessary : cur_defcon(2, CurPoints) & asked_landing(N, K)
+	<-	-asked_landing(N, K);
+		+asked_landing(N, K-1);
 		.
-+!send_to_neighbor(N) :  (not ask_neighbor(N,_) | ask_neighbor(N, 0)) & reply_neighbot_ok(N, K) & K > 0
-	<-	-reply_neighbot_ok(N, K);
-		+reply_neighbot_ok(N, K-1);
-		.
-+!send_to_neighbor(N) :  (not ask_neighbor(N,_) | ask_neighbor(N, 0)) & reply_neighbot_no(N, K) & K > 0
-	<-	-reply_neighbot_no(N, K);
-		+reply_neighbot_no(N, K-1);
-		.
-+!send_to_neighbor(N) :  (not ask_neighbor(N,_) &
-							(	(not reply_neighbor_ok(N, _) | reply_neighbor_ok(N, 0)) &
-								(not reply_neighbor_no(N, _) | reply_neighbor_no(N, 0))
-							)) | ask_neighbor(N, 0)
-	<- 	-ask_neighbor(N,_);
-		-reply_neighbor_no(N,_);
-		-reply_neighbor_no(N,_);
-		+ask_neighbor(N, 10);			
-		.my_name(Name);
-		sendMessage(Name, N, "mobile", [there_is_space, S], Res);
-		if(not Res) {
-			-ask_neighbor(N, _);	
+
++!doWhatIsNecessary : cur_defcon(2, CurPoints) & (not asked_landing | asked_landing(_, 0)) 
+	<-	-asked_landing(_, _);
+		!probe_neighbor;
+		.findall(D, reply_neighbor_ok(_,_,D), L);
+		if(not .empty(L)) {
+			.min(L, Min);
+			?reply_neighbor_ok(N, _, Min);
+			.my_name(Name);
+			+asked_landing(N, 20);
+			?size(S);
+			sendMessage(Name, N, "mobile", [permission_to_land, S], Res);
+			if(not Res) {
+				-asked_landing(N, _);
+			}
 		}
 		.
 
@@ -215,7 +206,43 @@
 	//<-	// println("Current defcon: ", CurDef, " (", CurPoints, ") in ", Z);
 	.
 
-+!survive : not stop_surviving & anchor(AX, AY, Area)
++!probe_neighbor
+	<-	?artifacts(resource, MResID);
+		discoverNeighbour(List) [artifact_id(MResID)];
+		?size(S);
+		for(.member(N, List)) {
+			!send_to_neighbor(N);
+		}
+	.
++!send_to_neighbor(N) : ask_neighbor(N, K) & K > 0
+	<-	-ask_neighbor(N, K);
+		+ask_neighbor(N, K-1);
+		.
++!send_to_neighbor(N) :  (not ask_neighbor(N,_) | ask_neighbor(N, 0)) & reply_neighbor_ok(N, K, D) & K > 0
+	<-	-reply_neighbor_ok(N, K, D);
+		+reply_neighbor_ok(N, K-1, D);
+		.
++!send_to_neighbor(N) :  (not ask_neighbor(N,_) | ask_neighbor(N, 0)) & reply_neighbor_no(N, K) & K > 0
+	<-	-reply_neighbor_no(N, K);
+		+reply_neighbor_no(N, K-1);
+		.
++!send_to_neighbor(N) :  (not ask_neighbor(N,_) &
+							(	(not reply_neighbor_ok(N, _, _) | reply_neighbor_ok(N, 0, _)) &
+								(not reply_neighbor_no(N, _) | reply_neighbor_no(N, 0))
+							)) | ask_neighbor(N, 0)
+	<- 	-ask_neighbor(N,_);
+		-reply_neighbor_no(N,_);
+		-reply_neighbor_ok(N,_,_);
+		+ask_neighbor(N, 10);			
+		.my_name(Name);
+		?size(S);
+		sendMessage(Name, N, "mobile", [there_is_space, S], Res);
+		if(not Res) {
+			-ask_neighbor(N, _);	
+		}
+		.
+
++!survive : not stop_surviving & anchor(AX, AY, Area) & not landing(_)
 	<-	?artifacts(resource, MResID);
 		obtainPosition(P) [artifact_id(MResID)];
 		!updateBelieves(P);
@@ -225,7 +252,9 @@
 		!!survive;
 		.
 
-+!receiveMessage : not stop_receiving
++!survive : landing(_) <- .wait(500); !!survive.
+
++!receiveMessage : not stop_receiving & not landing(_)
 	<- 	?artifacts(resource, MResID);
 		.my_name(Name);
 		receiveMessage(Name, Res, Sender, SenderName, Message) [artifact_id(MResID)];
@@ -236,16 +265,76 @@
 		!!receiveMessage;
 		.
 
++!receiveMessage : landing(_) <- .wait(500); !!receiveMessage.
+
 +!manage_message(Sender, SenderName, ["reply_no_space"])
 	<- 	+reply_neighbor_no(Sender, 10);
 		.
-+!manage_message(Sender, SenderName, ["reply_ok_space"])
-	<- 	+reply_neighbor_ok(Sender, 5);
++!manage_message(Sender, SenderName, ["reply_ok_space", X, Y])
+	<- 	?anchor(AX, AY, Area);
+		?artifacts(hovering, HArtID);
+		distance(D, X, Y, AX, AY) [artifact_id(HArtID)];
+		+reply_neighbor_ok(Sender, 5, D);
 		.
 
++!manage_message(Sender, SenderName, ["permission_granted"]) : asked_landing(Sender, _)
+	<- 	// In real life now the agent should pack itself.
+		?host(_, Host);
+		+landing(Sender);
+		.my_name(Name);
+		sendMessage(Name, Sender, "mobile", [land, "packed!"], Res);
+		.print("Leaving ", Host, " for ", Sender, " => ", Res);
+		-asked_landing(Sender, _);
+		// In real life the agent should stop. For "idon'twanttoimplementit" reasons,
+		// the agent communicate to the host the migration and pause itself. 
+		if(Res) {
+			.send(Host, tell, performing_arakiri);
+			?workspace(host, WspNodeId);
+			cartago.set_current_wsp(WspNodeId);
+			quitWorkspace;
+			?workspace(world, WspId);
+			cartago.set_current_wsp(WspId);			
+			// TODO: leaveWorkspace(WspNodeId);
+			-workspace(host, _);
+			-artifacts(resource, _);
+			-host(_, Host) [source(_)];
+			+i_can_resume(Sender);
+		} else {
+			-landing(Sender);
+		}
+		.
+
++!manage_message(Sender, SenderName, ["permission_granted"]) : not asked_landing(Sender, _)
+	<- 	.my_name(Name);
+		sendMessage(Name, Sender, "mobile", [landing_aborted], _);
+		.
+
++!manage_message(Sender, SenderName, ["permission_denied"])
+	<- 	-asked_landing(Sender).
+
 +!manage_message(Sender, SenderName, L)
-	<- 	println("UKN received: ", L, " from ", Sender, " ", SenderName);
+	<- 	.print("UKN received: ", L, " from ", Sender, " ", SenderName);
+		.
+
++you_can_resume(HostID, HostName, MobileWsp)
+	<-  !resume(HostID, HostName, MobileWsp).
+
++!resume(HostID, HostName, MobileWsp) : landing(HostID) & not i_can_resume(HostID)
+	<-	.wait(500);
+		!resume(HostID, HostName, MobileWsp).
+
+@resumeFromLanding[atomic] +!resume(HostID, HostName, MobileWsp) : landing(HostID) & i_can_resume(HostID)
+	<- 	println("Resuming in ", HostName);
+		.term2string(HostName, HostNameStr);
+		+host(HostID, HostNameStr);
+		joinWorkspace(MobileWsp, WspNodeId);
+		+workspace(host, WspNodeId);
+		lookupArtifact("MobileResource", HostResID);
+		+artifacts(resource, HostResID);
+		-landing(_);
+		-i_can_resume(_);
+		-you_can_resume(_, _, _) [source(_)];
 		.
 
 +?inquire(HoverName, Size) : size(S) & hover_name(HN)
-<- HoverName = HN; Size = S.
+	<-	HoverName = HN; Size = S.
