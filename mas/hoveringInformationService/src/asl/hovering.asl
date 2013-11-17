@@ -8,7 +8,9 @@
 !init.
 
 /* Plans */
-
+/****************************************************************************************
+ * * INITIALIZATION, STARTING AND STOPPING PLANS
+ ****************************************************************************************/
 +!init : ~inited & worldWsp(WspName) & anchor(X, Y, Area) & size(S) &
 		hover_name(HoverName) & host(DeviceID, DeviceName)
 	<-	-~inited;
@@ -66,11 +68,10 @@
 		!!survive;
 		!!receiveMessage;
 		.
-		
-+sorry_after_init <-
-			// Uff.. so much effort for nothing
-			!stop.
-			
+
+/**
+ * Stops the normal plans, tells the host about the stopping and kills itself.
+ */
 +!stop <- +stop_surviving;
 		+stop_receiving;
 		?host(HostID, HostName);
@@ -80,16 +81,73 @@
 		.kill_agent(Name)
 		.
 
+/**
+ * Sent by the mobile node if the initial dissemination is not feasible
+ */ 
++sorry_after_init <-
+			// Uff.. so much effort for nothing
+			!stop.
+
+/****************************************************************************************
+ * * INQUISITION PLANS
+ ****************************************************************************************/
+
+/**
+ * Asked from the simulator Agent. Replies with the hover's name and the size.
+ */
++?inquire(HoverName, Size) : size(S) & hover_name(HN)
+	<-	HoverName = HN; Size = S.		
+
+/****************************************************************************************
+ * * BASIC PLANS: SURVIVE AND RECEIVE MESSAGES
+ ****************************************************************************************/
+
+/**
+ * Survive plan.
+ */
++!survive : not stop_surviving & anchor(AX, AY, Area) & not landing(_)
+	<-	?artifacts(resource, MResID);
+		obtainPosition(P) [artifact_id(MResID)];
+		!updateBelieves(P);
+		!decideDefcon;
+		!doWhatIsNecessary;
+		.wait(500);
+		!!survive;
+		.
++!survive : landing(_) <- .wait(500); !!survive.
 +!survive : stop_surviving.
+
+/**
+ * Receive Message Plan
+ */
++!receiveMessage : not stop_receiving & not landing(_)
+	<- 	?artifacts(resource, MResID);
+		.my_name(Name);
+		receiveMessage(Name, Res, Sender, SenderName, Message) [artifact_id(MResID)];
+		if(Res) {
+			!manage_message(Sender, SenderName, Message);	
+		}
+		.wait(500);
+		!!receiveMessage;
+		.
+
++!receiveMessage : landing(_) <- .wait(500); !!receiveMessage.
+
 +!receiveMessage : stop_receiving.
 
-+!getOld(_, _, _, _, OldSpeed, OldDistance, OldDirect, OldAnchorVect) : speed(OldSpeed) & distance(OldDistance) &
-															direction(OldDirect) & anchor_vector(OldAnchorVect).
-+!getOld(Speed, Distance, Direct, AnchorVect, Speed, Distance, Direct, AnchorVect).
+/**
+ * Debug: unknown message received!
+ */
++!manage_message(Sender, SenderName, L)
+	<- 	.print("UKN received: ", L, " from ", Sender, " ", SenderName);
+		.
 
-+!updateZone(Distance) : zone(Zone, Min, Max) & Distance >= Min & Distance < Max
-	<- -current_zone(_); +current_zone(Zone).
-
+/****************************************************************************************
+ * * UPDATE BELIEVES PLANS: gather and process data about position and speed
+ ****************************************************************************************/
+/**
+ * Gather the positional data and process them, for instance by setting the new zone.
+ */
 @upBelieves[atomic] +!updateBelieves([PX, PY]) : artifacts(hovering, HArtID) & anchor(AX, AY, Area)
 	<-	computePositionalData(PX, PY, AX, AY, Speed, Distance, Direct, AnchorVect) [artifact_id(HArtID)];
 		!getOld(Speed, Distance, Direct, AnchorVect, OldSpeed, OldDistance, OldDirect, OldAnchorVect);
@@ -107,12 +165,22 @@
 		-+direction(Direct);
 		-+anchor_vector(AnchorVect);
 		.
+/**
+ * Unifies with the previous known data if possible, otherwise with the current data
+ */
++!getOld(_, _, _, _, OldSpeed, OldDistance, OldDirect, OldAnchorVect) : speed(OldSpeed) & distance(OldDistance) &
+															direction(OldDirect) & anchor_vector(OldAnchorVect).
++!getOld(Speed, Distance, Direct, AnchorVect, Speed, Distance, Direct, AnchorVect).
 
-// *** approach_level(AL)
-// *** approach_variation(AV)
-//
-// If I'm leaving AL < 0. If I'm approaching, AL > 0 
-// The speed of approaching or leaving is given by AV
+/**
+ * Update the current zone, basing on the current distance from the Hovering Anchor.
+ */
++!updateZone(Distance) : zone(Zone, Min, Max) & Distance >= Min & Distance < Max
+	<- -current_zone(_); +current_zone(Zone).
+
+/****************************************************************************************
+ * * DECIDE DEFCON PLANS: from the new information, to decide the new defcon level 
+ ****************************************************************************************/
 // 
 // The possibile behaviours can be:
 //   - DEFCON 5: nessun bisogno di comunicare con il mondo esterno, se non per rispondere
@@ -122,21 +190,9 @@
 //	 - DEFCON 2: Migrazione dell'hovering sul neighbor più vicino all'anchor.
 //	 - DEFCON 1: Copia dell'hovering sui neighbor più vicini.
 
-+!setDefcon(NewPoints) : cur_defcon(CurDef, CurPoint) & defcon(CurDef, MaxThr, MinThr)
-	<-	-cur_defcon(_, _);
-		if(NewPoints > MaxThr & CurDef < 5) {
-			
-			+cur_defcon(CurDef + 1, NewPoints)
-		} else {
-			if(NewPoints < MinThr & CurDef > 1) {
-				+cur_defcon(CurDef - 1, NewPoints)		
-			} else {
-				+cur_defcon(CurDef, NewPoints)	
-			}
-		}
-		.
-
-// I'm leaving!
+/**
+ * Decides the defcon basing on a (TODO) linear combination between exponential functions.
+ */
 @defconDec[atomic] +!decideDefcon : approach_level(AL) & approach_variation(AV) & speed(SP) & current_zone(Zone) &
 									 cur_defcon(CurDef, CurPoint) & defcon(CurDef, MinThr, MaxThr) &
 									 distance(Dist) & zone(death_zone, Max_Dist, _)
@@ -164,6 +220,28 @@
 		!setDefcon(NewPoints);
 		.
 
+/**
+ * Set the defcon, basing on the points.
+ * The defcon change is always a transition and can never skip a level.
+ */
++!setDefcon(NewPoints) : cur_defcon(CurDef, CurPoint) & defcon(CurDef, MaxThr, MinThr)
+	<-	-cur_defcon(_, _);
+		if(NewPoints > MaxThr & CurDef < 5) {
+			
+			+cur_defcon(CurDef + 1, NewPoints)
+		} else {
+			if(NewPoints < MinThr & CurDef > 1) {
+				+cur_defcon(CurDef - 1, NewPoints)		
+			} else {
+				+cur_defcon(CurDef, NewPoints)	
+			}
+		}
+		.
+
+/****************************************************************************************
+ * * DO WHAT IS NECESSARY basing on the current defcon level! 
+ ****************************************************************************************/
+
 +!doWhatIsNecessary : current_zone(death_zone)
 	<-	!stop
 		.
@@ -188,24 +266,21 @@
 +!doWhatIsNecessary : cur_defcon(2, CurPoints) & (not asked_landing | asked_landing(_, 0)) 
 	<-	-asked_landing(_, _);
 		!probe_neighbor;
-		.findall(D, reply_neighbor_ok(_,_,D), L);
-		if(not .empty(L)) {
-			.min(L, Min);
-			?reply_neighbor_ok(N, _, Min);
-			.my_name(Name);
-			+asked_landing(N, 20);
-			?size(S);
-			sendMessage(Name, N, "mobile", [permission_to_land, S], Res);
-			if(not Res) {
-				-asked_landing(N, _);
-			}
-		}
+		!land_on_best_neighbor;
 		.
 
 +!doWhatIsNecessary : cur_defcon(CurDef, CurPoints) & current_zone(Z) & distance(D) & zone(death_zone, Max_Dist, _)
 	//<-	// println("Current defcon: ", CurDef, " (", CurPoints, ") in ", Z);
 	.
 
+
+/****************************************************************************************
+ * * PROBE NEIGHBOR PLANS: discover and gather information on the neighbors.
+ ****************************************************************************************/
+
+/**
+ * Lists the neighbors and sends an information request. 
+ */
 +!probe_neighbor
 	<-	?artifacts(resource, MResID);
 		discoverNeighbour(List) [artifact_id(MResID)];
@@ -214,6 +289,10 @@
 			!send_to_neighbor(N);
 		}
 	.
+/**
+ * The information request can be sent only if there isn't a pending (not expired) request and
+ * there isn't a non expired response.
+ */
 +!send_to_neighbor(N) : ask_neighbor(N, K) & K > 0
 	<-	-ask_neighbor(N, K);
 		+ask_neighbor(N, K-1);
@@ -242,31 +321,9 @@
 		}
 		.
 
-+!survive : not stop_surviving & anchor(AX, AY, Area) & not landing(_)
-	<-	?artifacts(resource, MResID);
-		obtainPosition(P) [artifact_id(MResID)];
-		!updateBelieves(P);
-		!decideDefcon;
-		!doWhatIsNecessary;
-		.wait(500);
-		!!survive;
-		.
-
-+!survive : landing(_) <- .wait(500); !!survive.
-
-+!receiveMessage : not stop_receiving & not landing(_)
-	<- 	?artifacts(resource, MResID);
-		.my_name(Name);
-		receiveMessage(Name, Res, Sender, SenderName, Message) [artifact_id(MResID)];
-		if(Res) {
-			!manage_message(Sender, SenderName, Message);	
-		}
-		.wait(500);
-		!!receiveMessage;
-		.
-
-+!receiveMessage : landing(_) <- .wait(500); !!receiveMessage.
-
+/**
+ * This messages are the replies to the probe information
+ */
 +!manage_message(Sender, SenderName, ["reply_no_space"])
 	<- 	+reply_neighbor_no(Sender, 10);
 		.
@@ -277,6 +334,46 @@
 		+reply_neighbor_ok(Sender, 5, D);
 		.
 
+
+
+/****************************************************************************************
+ * * MIGRATION (LANDING) PLANS: asking and performing the jump toward another mobile node
+ ****************************************************************************************/
+
+/**
+ * Find the best neighbor to migrate to, and ask for permission.
+ */
++!land_on_best_neighbor
+	<-	.findall(D, reply_neighbor_ok(_,_,D), L);
+		if(not .empty(L)) {
+			.min(L, Min);
+			?reply_neighbor_ok(N, _, Min);
+			.my_name(Name);
+			+asked_landing(N, 20);
+			?size(S);
+			sendMessage(Name, N, "mobile", [permission_to_land, S], Res);
+			if(not Res) {
+				-asked_landing(N, _);
+			}
+		}
+		.
+/**
+ * Replied by the mobile node if the space has been allocated, but the request doesn't exists
+ */
++!manage_message(Sender, SenderName, ["permission_granted"]) : not asked_landing(Sender, _)
+	<- 	.my_name(Name);
+		sendMessage(Name, Sender, "mobile", [landing_aborted], _);
+		.
+
+/**
+ * Replied by the mobile node if the space has not been allocated.
+ */
++!manage_message(Sender, SenderName, ["permission_denied"])
+	<- 	-asked_landing(Sender).
+
+/**
+ * Replied when there's space for the migration. Suspends the activities, while waits for the final confirms.
+ */
 +!manage_message(Sender, SenderName, ["permission_granted"]) : asked_landing(Sender, _)
 	<- 	// In real life now the agent should pack itself.
 		?host(_, Host);
@@ -303,26 +400,22 @@
 			-landing(Sender);
 		}
 		.
-
-+!manage_message(Sender, SenderName, ["permission_granted"]) : not asked_landing(Sender, _)
-	<- 	.my_name(Name);
-		sendMessage(Name, Sender, "mobile", [landing_aborted], _);
-		.
-
-+!manage_message(Sender, SenderName, ["permission_denied"])
-	<- 	-asked_landing(Sender).
-
-+!manage_message(Sender, SenderName, L)
-	<- 	.print("UKN received: ", L, " from ", Sender, " ", SenderName);
-		.
-
+/**
+ * Told by the mobile node: the migration is completed, normal activities can be resumed. 
+ */
 +you_can_resume(HostID, HostName, MobileWsp)
 	<-  !resume(HostID, HostName, MobileWsp).
 
+/**
+ * Internal synch: wait for the cleanup to be completed before resuming.
+ */
 +!resume(HostID, HostName, MobileWsp) : landing(HostID) & not i_can_resume(HostID)
 	<-	.wait(500);
 		!resume(HostID, HostName, MobileWsp).
 
+/**
+ * Resuming: updating host, workspace and artifact
+ */
 @resumeFromLanding[atomic] +!resume(HostID, HostName, MobileWsp) : landing(HostID) & i_can_resume(HostID)
 	<- 	println("Resuming in ", HostName);
 		.term2string(HostName, HostNameStr);
@@ -335,6 +428,3 @@
 		-i_can_resume(_);
 		-you_can_resume(_, _, _) [source(_)];
 		.
-
-+?inquire(HoverName, Size) : size(S) & hover_name(HN)
-	<-	HoverName = HN; Size = S.
