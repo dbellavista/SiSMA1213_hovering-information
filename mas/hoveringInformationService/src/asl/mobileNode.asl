@@ -115,29 +115,55 @@
 			sendMessage(Name, Sender, SenderName, [permission_granted], SendRes);
 			if(not SendRes) {
 				removeData(SenderName);
+			} else {
+				.at("now +20 seconds", {+!abort_landing(Sender, SenderName)})
 			}
 		} else {
 			sendMessage(Name, Sender, SenderName, [permission_denied], _);
 		}.
+
+@abortLandingTimeour[atomic] +!abort_landing(Sender, SenderName)
+	<- 	?pieces(L);
+		if(.string(SenderName)) {
+			.term2string(HTerm, SenderName);
+		} else {
+			HTerm = SenderName;
+		}
+		for(.member(X, L)) {
+			if(X == HTerm) {
+				.fail
+			}
+		}
+		removeData(SenderName).
+
+-!abort_landing(Sender, SenderName).
 
 @abortLanding[atomic] +!manage_message(Sender, SenderName, ["landing_aborted", DS])
 	<-	removeData(SenderName);
 		.
 
 @land[atomic] +!manage_message(Sender, SenderName, ["land", PackedAgent])
-	<-	// Real world: unpack the agent and start it!
-		.my_name(HostName);
-		.print("Landing ", SenderName);
-		?node_id(HostID);
-		?workspace(node, MobileWsp, _);
-		?pieces(L);
-		if(.string(SenderName)) {
-			.term2string(HTerm, SenderName);
+	<-	// Check if the space is allocated
+		getData(SenderName, _, Res);
+		if(Res) {
+			// Real world: unpack the agent and start it!
+			.my_name(HostName);
+			.print("Landing ", SenderName);
+			?node_id(HostID);
+			?workspace(node, MobileWsp, _);
+			?pieces(L);
+			if(.string(SenderName)) {
+				.term2string(HTerm, SenderName);
+			} else {
+				HTerm = SenderName;
+			}
+			-+pieces([HTerm | L]);
+			.send(SenderName, tell, you_can_resume(HostID, HostName, MobileWsp));
 		} else {
-			HTerm = SenderName;
+			// Invalid request. Sorry for the piece.
+			.print("Land aborted ", SenderName);
+			.send(SenderName, tell, sorry_land_failed(HostID, HostName, MobileWsp));
 		}
-		-+pieces([HTerm | L]);
-		.send(SenderName, tell, you_can_resume(HostID, HostName, MobileWsp));		
 		.
 
 +!manage_message(Sender, SenderName, L)

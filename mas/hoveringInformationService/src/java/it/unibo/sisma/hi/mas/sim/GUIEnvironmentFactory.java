@@ -50,7 +50,6 @@ public class GUIEnvironmentFactory {
 			mobileNodes.add(mn);
 			pieceOfHoveringInformation.addAll(tmpPieces);
 		}
-		System.err.println("");
 		
 		for(Object o : listRecent_tmp) {
 			Object[] val = (Object[]) o;

@@ -24,7 +24,11 @@ public class MobileStorage {
 	}
 	
 	public synchronized String getData(Object ID) {
-		return storage.get(ID).getValue();
+		Data data = storage.get(ID);
+		if(data == null) {
+			return null;
+		}
+		return data.getValue();
 	}
 	
 	public synchronized Object[] getAllData() {
@@ -36,7 +40,7 @@ public class MobileStorage {
 			return false;
 		}
 		freeSpace -= size;
-		storage.put(ID, new Data(null, size));
+		storage.put(ID, new Data("__no_data__", size));
 		return true;
 	}
 	

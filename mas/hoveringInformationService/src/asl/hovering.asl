@@ -77,9 +77,9 @@
 		?host(HostID, HostName);
 		.send(HostName, tell, performing_arakiri);
 		// ARAKIRI
-		.my_name(Name);
-		.kill_agent(Name)
-		.
+		!arakiri;.
+
+-!arakiri <- .my_name(Name); .kill_agent(Name).
 
 /**
  * Sent by the mobile node if the initial dissemination is not feasible
@@ -134,13 +134,6 @@
 +!receiveMessage : landing(_) <- .wait(500); !!receiveMessage.
 
 +!receiveMessage : stop_receiving.
-
-/**
- * Debug: unknown message received!
- */
-+!manage_message(Sender, SenderName, L)
-	<- 	.print("UKN received: ", L, " from ", Sender, " ", SenderName);
-		.
 
 /****************************************************************************************
  * * UPDATE BELIEVES PLANS: gather and process data about position and speed
@@ -334,8 +327,6 @@
 		+reply_neighbor_ok(Sender, 5, D);
 		.
 
-
-
 /****************************************************************************************
  * * MIGRATION (LANDING) PLANS: asking and performing the jump toward another mobile node
  ****************************************************************************************/
@@ -406,6 +397,17 @@
 +you_can_resume(HostID, HostName, MobileWsp)
 	<-  !resume(HostID, HostName, MobileWsp).
 
++sorry_land_failed(HostID, HostName, MobileWsp)
+	<-  !abort_landing(HostID, HostName, MobileWsp).
+
++!abort_landing(HostID, HostName, MobileWsp) : landing(HostID) & not i_can_resume(HostID)
+	<-	.wait(500);
+		!abort_landing(HostID, HostName, MobileWsp).
+
++!abort_landing(HostID, HostName, MobileWsp) : landing(HostID) & i_can_resume(HostID)
+	<- 	// Curses!
+		!arakiri;.
+
 /**
  * Internal synch: wait for the cleanup to be completed before resuming.
  */
@@ -427,4 +429,15 @@
 		-landing(_);
 		-i_can_resume(_);
 		-you_can_resume(_, _, _) [source(_)];
+		.
+		
+/****************************************************************************************
+ * * FALLBACK PLANS
+ ****************************************************************************************/
+
+/**
+ * Debug/Fallback: unknown message received!
+ */
++!manage_message(Sender, SenderName, L)
+	<- 	.print("UKN received: ", L, " from ", Sender, " ", SenderName);
 		.

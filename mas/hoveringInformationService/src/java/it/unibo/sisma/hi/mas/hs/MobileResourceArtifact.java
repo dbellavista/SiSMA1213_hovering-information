@@ -132,6 +132,13 @@ public class MobileResourceArtifact extends Artifact {
 		ObsProperty dataProp = getObsProperty("data");
 		dataProp.updateValue(this.storage.getAllData());
 	}
+	
+	@OPERATION
+	void getData(Object ID, OpFeedbackParam<String> data, OpFeedbackParam<Boolean> res) {
+		String datastr = storage.getData(ID);
+		data.set(datastr);
+		res.set(datastr != null);		
+	}
 
 	@OPERATION
 	void obtainPosition(OpFeedbackParam<double[]> position) {
