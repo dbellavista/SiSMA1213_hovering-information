@@ -72,6 +72,7 @@
 	<- 	+pieces([]);
 		!!discoverNeighbour;
 		!!receiveMessage;
+		!!cleanup;
 		.
 
 +!stop : configured
@@ -88,7 +89,8 @@
 		}
 		if(Res) {
 			?pieces(L);
-			-+pieces([HTerm | L]);
+			.send(HoveringName, askOne, hover_name(X), hover_name(HoverName));
+			-+pieces([[HTerm, HoverName] | L]);
 			.send(HTerm, achieve, start);
 		} else {
 			.send(HTerm, tell, sorry_after_init);
@@ -97,13 +99,18 @@
 		}
 		.
 
-@askSpace[atomic] +!manage_message(Sender, SenderName, ["there_is_space", DS])
+@askSpace[atomic] +!manage_message(Sender, SenderName, ["there_is_space", DS, HName])
 	<-	?free_space(FS);
 		.my_name(Name);
 		if(FS >= DS) {
 			obtainPosition(P);
 			P = [X, Y];
-			sendMessage(Name, Sender, SenderName, [reply_ok_space, X, Y], _);
+			?pieces(PL);
+			if(.member([_, HName], PL)) {
+				sendMessage(Name, Sender, SenderName, [reply_ok_space, X, Y, true], _);	
+			} else {
+				sendMessage(Name, Sender, SenderName, [reply_ok_space, X, Y, false], _);
+			}				
 		} else {
 			sendMessage(Name, Sender, SenderName, [reply_no_space], _);
 		}.
@@ -129,19 +136,20 @@
 		} else {
 			HTerm = SenderName;
 		}
-		for(.member(X, L)) {
-			if(X == HTerm) {
-				.fail
-			}
+		if(.member([HTerm, _], L)) {
+			.fail
 		}
 		removeData(SenderName).
 
 -!abort_landing(Sender, SenderName).
 
-@abortLanding[atomic] +!manage_message(Sender, SenderName, ["landing_aborted", DS])
+@abortLanding[atomic] +!manage_message(Sender, SenderName, ["landing_aborted"])
 	<-	removeData(SenderName);
 		.
 
+/**
+ * Landing procedure: the agent exists, it's to be awaken
+ */
 @land[atomic] +!manage_message(Sender, SenderName, ["land", PackedAgent])
 	<-	// Check if the space is allocated
 		getData(SenderName, _, Res);
@@ -157,12 +165,48 @@
 			} else {
 				HTerm = SenderName;
 			}
-			-+pieces([HTerm | L]);
+			.send(SenderName, askOne, hover_name(X), hover_name(HoverName));
+			-+pieces([[HTerm, HoverName] | L]);
 			.send(SenderName, tell, you_can_resume(HostID, HostName, MobileWsp));
 		} else {
 			// Invalid request. Sorry for the piece.
 			.print("Land aborted ", SenderName);
 			.send(SenderName, tell, sorry_land_failed(HostID, HostName, MobileWsp));
+		}
+		.
+
+/**
+ * Cloning procedure: the agent must be created
+ */
+@clone[atomic] +!manage_message(Sender, SenderName, ["clone", AX, AY, Area, Size, HoverName, AgentName])
+	<-	// Check if the space is allocated
+		getData(SenderName, _, Res);
+		if(Res) {
+			// Real world: unpack the agent and start it!
+			.my_name(HostName);
+			?node_id(HostID);
+			?workspace(world, WorldWsp, _);
+			.print("Cloning ", SenderName);
+			
+			.create_agent(AgentName, "hovering.asl", [agentArchClass("c4jason.CAgentArch")]);
+
+			.send(AgentName, tell, [worldWsp(WorldWsp), hover_name(HoverName), 
+									anchor(AX, AY, Area), size(Size), host(HostID, HostName)]
+									);
+						
+			?pieces(L);
+			if(.string(AgentName)) {
+				.term2string(HTerm, AgentName);
+			} else {
+				HTerm = AgentName;
+			}
+			-+pieces([[HTerm, HoverName] | L]);
+			
+			.send(HTerm, achieve, start);
+		} else {
+			// Invalid request. Sorry for the piece.
+			.print("Clone aborted ", SenderName);
+			.send(SenderName, tell, sorry_clone_failed(HostID, HostName, MobileWsp));
 		}
 		.
 
@@ -184,7 +228,7 @@
 @remHovering[atomic] +!removeHovering(Name)
 	<-	removeData(Name);
 		?pieces(OldList);
-		.delete(Name, OldList, List);
+		.delete([Name, _], OldList, List);
 		-pieces(_);
 		+pieces(List);
 		.
@@ -207,6 +251,19 @@
 		discoverNeighbour(_) [artifact_id(MResID)];
 		.wait(1000);
 		!!discoverNeighbour;
+		.
+
++!cleanup
+	<-	.wait(2000);
+		?pieces(L);
+		for(.member([PName, HName], L)) {
+			for(.member([PName2, HName], L)) {
+				if(not (PName2  == PName)) {
+					// Duplicate!
+					.send(PName2, tell, please_die);
+				}
+			}		
+		}		
 		.
 
 +?inquire(Range, Storage, OccStorage, PList) [source(self)] : range(Range) & storage(Storage) & free_space(FreeSpace) & pieces(Pieces)

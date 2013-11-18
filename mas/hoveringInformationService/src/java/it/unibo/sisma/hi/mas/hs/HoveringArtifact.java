@@ -2,10 +2,14 @@
 
 package it.unibo.sisma.hi.mas.hs;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 import cartago.*;
 
 public class HoveringArtifact extends Artifact {
 
+	private static final AtomicInteger incrementalInt = new AtomicInteger(); 
+	
 	private double[] curr_position = null;
 	private byte[] data;
 	@SuppressWarnings("unused")
@@ -42,12 +46,17 @@ public class HoveringArtifact extends Artifact {
 	}
 
 	@OPERATION
-	void computePositionalData(double x, double y, double anchorX,
-			double anchorY, OpFeedbackParam<Double> speedRet,
+	void computePositionalData(Number xN, Number yN, Number anchorXN,
+			Number anchorYN, OpFeedbackParam<Double> speedRet,
 			OpFeedbackParam<Double> distanceRet,
 			OpFeedbackParam<double[]> motionDirectionRet,
 			OpFeedbackParam<double[]> anchorVectorRet) {
 
+		double x = xN.doubleValue();
+		double y = yN.doubleValue();
+		double anchorX = anchorXN.doubleValue();
+		double anchorY = anchorYN.doubleValue();
+		
 		double speed;
 		double[] direction = new double[2];
 		double[] anchorVector = new double[2];
@@ -85,5 +94,20 @@ public class HoveringArtifact extends Artifact {
 		curr_position[0] = x;
 		curr_position[1] = y;
 		lastTime = curTime;
+	}
+	
+	@OPERATION
+	void generateUniqueName(OpFeedbackParam<String> ret, String baseName) {
+		String str = "";
+		if(baseName.contains("_c")) {
+			String[] names = baseName.split("_");
+			for(int i = 0; i < names.length - 1; i++) {
+				str += names[i] + "_";
+			}
+			str += "" + incrementalInt.getAndIncrement();
+		} else {
+			str = baseName + "_c_" + incrementalInt.getAndIncrement(); 
+		}
+		ret.set(str);
 	}
 }

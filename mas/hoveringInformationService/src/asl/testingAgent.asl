@@ -7,15 +7,14 @@
 
 +!test1
 	<-
-		+pippo(1);
-		+pippo(2);
-		+pippo(3);
-		+pippo(4);
-		.findall(X, pippo(X), R);
-		if( pippo(5) ) {
-			.print("OK");
-		}
-		.print(R);
+	A = [[1,2],[3,4],[5,6],[7,8]];
+	if(.member([_,2], A)) {
+		.print("Ok");	
+	}
+	if(.member([3,_], A)) {
+		.print("Ok2");
+	}
+	.print("Done");
 	.
 
 +!test_link

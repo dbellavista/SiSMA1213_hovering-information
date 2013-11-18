@@ -63,7 +63,7 @@
 		.
 		
 +!inquirePieces([], []).
-+!inquirePieces([P | PT], [[HoverName, Size] | FPT])
++!inquirePieces([[P, _] | PT], [[HoverName, Size] | FPT])
 	<-	.send(P, askOne, inquire(_, _), inquire(HoverName, Size));
 		!inquirePieces(PT, FPT);
 		.

@@ -33,6 +33,7 @@
 		
 		+approach_level(0);
 		+approach_variation(0);
+		+num_neighbors(0);
 		+current_zone(ok);
 
 		+defcon(5, 1.0, 0.8);
@@ -64,8 +65,7 @@
 		.
 
 +!start : configured
-	<- 	+pieces([]);
-		!!survive;
+	<- 		!!survive;
 		!!receiveMessage;
 		.
 
@@ -86,6 +86,10 @@
  */ 
 +sorry_after_init <-
 			// Uff.. so much effort for nothing
+			!stop.
+
++please_die <-
+			// I have been deallocated :(
 			!stop.
 
 /****************************************************************************************
@@ -153,6 +157,11 @@
 		NAL = (DX*AVX) + (DY*AVY);
 		+approach_level(NAL);
 		
+		?artifacts(resource, MResID);
+		discoverNeighbour(List) [artifact_id(MResID)];
+		.length(List, NNeigh);
+		
+		-+num_neighbors(NNeigh);
 		-+speed(Speed);
 		-+distance(Distance);
 		-+direction(Direct);
@@ -188,7 +197,7 @@
  */
 @defconDec[atomic] +!decideDefcon : approach_level(AL) & approach_variation(AV) & speed(SP) & current_zone(Zone) &
 									 cur_defcon(CurDef, CurPoint) & defcon(CurDef, MinThr, MaxThr) &
-									 distance(Dist) & zone(death_zone, Max_Dist, _)
+									 distance(Dist) & zone(death_zone, Max_Dist, _) & num_neighbors(NumNeigh)
 	<-	if(Zone == ok) {
 			Mul = 1
 		} else {
@@ -209,8 +218,12 @@
 	
 		// TODO: use the approach level to consider the direction
 		?artifacts(hovering, HArtID);
-		exp(NewPoints, -Mul*(Dist / Max_Dist)) [artifact_id(HArtID)];
-		!setDefcon(NewPoints);
+		exp(DistancePoints, -Mul*(Dist / Max_Dist)) [artifact_id(HArtID)];
+		exp(NeighborPoints_tmp, NumNeigh / 10) [artifact_id(HArtID)];
+		NeighborPoints = NeighborPoints_tmp - 1;
+		.print("DistanceP: ", DistancePoints, " - NeighP (",NumNeigh,") ", NeighborPoints, " = ", 0.5 * DistancePoints + 0.5 * NeighborPoints);
+		
+		!setDefcon(0.5 * DistancePoints + 0.5 * NeighborPoints);
 		.
 
 /**
@@ -255,13 +268,22 @@
 	<-	-asked_landing(N, K);
 		+asked_landing(N, K-1);
 		.
-
-+!doWhatIsNecessary : cur_defcon(2, CurPoints) & (not asked_landing | asked_landing(_, 0)) 
++!doWhatIsNecessary : cur_defcon(2, CurPoints) & (not asked_landing(_, _) | asked_landing(_, 0)) 
 	<-	-asked_landing(_, _);
 		!probe_neighbor;
 		!land_on_best_neighbor;
 		.
+		
++!doWhatIsNecessary : cur_defcon(1, CurPoints) & asked_cloning(N, K)
+	<-	-asked_cloning(N, K);
+		+asked_cloning(N, K-1);
+		.
 
++!doWhatIsNecessary : cur_defcon(1, CurPoints) & (not asked_cloning(_, _) | asked_landing(_, 0)) 
+	<-	-asked_cloning(_, _);
+		!probe_neighbor;
+		!clone_on_best_neighbor;
+		.
 +!doWhatIsNecessary : cur_defcon(CurDef, CurPoints) & current_zone(Z) & distance(D) & zone(death_zone, Max_Dist, _)
 	//<-	// println("Current defcon: ", CurDef, " (", CurPoints, ") in ", Z);
 	.
@@ -290,25 +312,26 @@
 	<-	-ask_neighbor(N, K);
 		+ask_neighbor(N, K-1);
 		.
-+!send_to_neighbor(N) :  (not ask_neighbor(N,_) | ask_neighbor(N, 0)) & reply_neighbor_ok(N, K, D) & K > 0
-	<-	-reply_neighbor_ok(N, K, D);
-		+reply_neighbor_ok(N, K-1, D);
++!send_to_neighbor(N) :  (not ask_neighbor(N,_) | ask_neighbor(N, 0)) & reply_neighbor_ok(N, K, D, A) & K > 0
+	<-	-reply_neighbor_ok(N, K, D, A);
+		+reply_neighbor_ok(N, K-1, D, A);
 		.
 +!send_to_neighbor(N) :  (not ask_neighbor(N,_) | ask_neighbor(N, 0)) & reply_neighbor_no(N, K) & K > 0
 	<-	-reply_neighbor_no(N, K);
 		+reply_neighbor_no(N, K-1);
 		.
 +!send_to_neighbor(N) :  (not ask_neighbor(N,_) &
-							(	(not reply_neighbor_ok(N, _, _) | reply_neighbor_ok(N, 0, _)) &
+							(	(not reply_neighbor_ok(N, _, _, _) | reply_neighbor_ok(N, 0, _, _)) &
 								(not reply_neighbor_no(N, _) | reply_neighbor_no(N, 0))
 							)) | ask_neighbor(N, 0)
 	<- 	-ask_neighbor(N,_);
 		-reply_neighbor_no(N,_);
-		-reply_neighbor_ok(N,_,_);
+		-reply_neighbor_ok(N,_,_,_);
 		+ask_neighbor(N, 10);			
 		.my_name(Name);
 		?size(S);
-		sendMessage(Name, N, "mobile", [there_is_space, S], Res);
+		?hover_name(HName);
+		sendMessage(Name, N, "mobile", [there_is_space, S, HName], Res);
 		if(not Res) {
 			-ask_neighbor(N, _);	
 		}
@@ -320,38 +343,63 @@
 +!manage_message(Sender, SenderName, ["reply_no_space"])
 	<- 	+reply_neighbor_no(Sender, 10);
 		.
-+!manage_message(Sender, SenderName, ["reply_ok_space", X, Y])
++!manage_message(Sender, SenderName, ["reply_ok_space", X, Y, AlreadyHere])
 	<- 	?anchor(AX, AY, Area);
 		?artifacts(hovering, HArtID);
 		distance(D, X, Y, AX, AY) [artifact_id(HArtID)];
-		+reply_neighbor_ok(Sender, 5, D);
+		+reply_neighbor_ok(Sender, 5, D, AlreadyHere);
 		.
 
 /****************************************************************************************
- * * MIGRATION (LANDING) PLANS: asking and performing the jump toward another mobile node
+ * * LANDING AND CLONING PRE-PROTOCOL
  ****************************************************************************************/
 
 /**
  * Find the best neighbor to migrate to, and ask for permission.
  */
 +!land_on_best_neighbor
-	<-	.findall(D, reply_neighbor_ok(_,_,D), L);
+	<-	?distance(MyDistance);
+		.findall(D, reply_neighbor_ok(_,_,D, false), L);
 		if(not .empty(L)) {
 			.min(L, Min);
-			?reply_neighbor_ok(N, _, Min);
-			.my_name(Name);
-			+asked_landing(N, 20);
-			?size(S);
-			sendMessage(Name, N, "mobile", [permission_to_land, S], Res);
-			if(not Res) {
-				-asked_landing(N, _);
+			if(Min < MyDistance) {
+				?reply_neighbor_ok(N, _, Min, _);
+				.my_name(Name);
+				+asked_landing(N, 20);
+				?size(S);
+				sendMessage(Name, N, "mobile", [permission_to_land, S], Res);
+				if(not Res) {
+					-asked_landing(N, _);
+				}
 			}
 		}
 		.
+
+/**
+ * Find the best neighbor to copy in, and ask for permission.
+ */
++!clone_on_best_neighbor
+	<-	.findall(D, reply_neighbor_ok(_,_,D, false), L);
+		if(not .empty(L)) {
+			.min(L, Min);
+			?zone(death_zone, Max, _);
+			if(Min < Max) {
+				?reply_neighbor_ok(N, _, Min, _);
+				.my_name(Name);
+				+asked_cloning(N, 20);
+				?size(S);
+				sendMessage(Name, N, "mobile", [permission_to_land, S], Res);
+				if(not Res) {
+					-asked_cloning(N, _);
+				}
+			}
+		}
+		.
+
 /**
  * Replied by the mobile node if the space has been allocated, but the request doesn't exists
  */
-+!manage_message(Sender, SenderName, ["permission_granted"]) : not asked_landing(Sender, _)
++!manage_message(Sender, SenderName, ["permission_granted"]) : (not asked_landing(Sender, _) | not asked_cloning(Sender, _))
 	<- 	.my_name(Name);
 		sendMessage(Name, Sender, "mobile", [landing_aborted], _);
 		.
@@ -360,7 +408,36 @@
  * Replied by the mobile node if the space has not been allocated.
  */
 +!manage_message(Sender, SenderName, ["permission_denied"])
-	<- 	-asked_landing(Sender).
+	<- 	-asked_landing(Sender, _).
+
+
+/****************************************************************************************
+ * * CLONING PROCEDURE
+ ****************************************************************************************/
+
+
+/**
+ * Replied when there's space for the migration. Clone case: send the information.
+ */
++!manage_message(Sender, SenderName, ["permission_granted"]) : asked_cloning(Sender, _)
+	<- 	// In real life now the agent should pack it's data.
+		?host(_, Host);
+		.my_name(Name);
+		?artifacts(hovering, HArtID);
+		generateUniqueName(AgentName, Name) [artifact_id(HArtID)];
+		?anchor(X, Y, Area);
+		?size(S);
+		?hover_name(HoverName);
+		sendMessage(Name, Sender, "mobile", [clone, X, Y, Area, S, HoverName, AgentName], Res);
+		-asked_cloning(Sender, _);
+		.
+
++sorry_clone_failed(HostID, HostName).
+
+/****************************************************************************************
+ * * LANDING PROCEDURE
+ ****************************************************************************************/
+
 
 /**
  * Replied when there's space for the migration. Suspends the activities, while waits for the final confirms.
@@ -391,6 +468,7 @@
 			-landing(Sender);
 		}
 		.
+
 /**
  * Told by the mobile node: the migration is completed, normal activities can be resumed. 
  */
@@ -430,7 +508,7 @@
 		-i_can_resume(_);
 		-you_can_resume(_, _, _) [source(_)];
 		.
-		
+
 /****************************************************************************************
  * * FALLBACK PLANS
  ****************************************************************************************/
