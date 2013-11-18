@@ -15,7 +15,6 @@ import java.util.concurrent.Semaphore;
 
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 public class TestPaint {
@@ -58,17 +57,17 @@ public class TestPaint {
 
 	@Test
 	public void testBounds() throws Exception {
-		HoveringInformation hi = new HoveringInformation(0, 0, 100);
+		HoveringInformation hi = new HoveringInformation("H1", 0, 0, 100);
 		hoveringInformations.add(hi);
-		hi = new HoveringInformation(width, 0, 100);
+		hi = new HoveringInformation("H2", width, 0, 100);
 		hoveringInformations.add(hi);
-		hi = new HoveringInformation(0, height, 100);
+		hi = new HoveringInformation("H3", 0, height, 100);
 		hoveringInformations.add(hi);
-		hi = new HoveringInformation(width, height, 100);
+		hi = new HoveringInformation("H4", width, height, 100);
 		hoveringInformations.add(hi);
-		hi = new HoveringInformation(width / 2, height / 2, width);
+		hi = new HoveringInformation("H5", width / 2, height / 2, width);
 		hoveringInformations.add(hi);
-		hi = new HoveringInformation(width / 2, height / 2, height);
+		hi = new HoveringInformation("H6", width / 2, height / 2, height);
 		hoveringInformations.add(hi);
 
 		testFrame.setVisible(true);
@@ -80,13 +79,12 @@ public class TestPaint {
 	}
 
 	@Test
-	@Ignore
 	public void testHoveringInformation() throws Exception {
 
 		Random r = new Random();
 
 		for (int i = 0; i < 40; i++) {
-			HoveringInformation h1 = new HoveringInformation(
+			HoveringInformation h1 = new HoveringInformation("H" + i,
 					r.nextInt(width - 100) + 10, r.nextInt(height - 100) + 10,
 					r.nextInt(Math.min(width, height) - 50) + 10);
 			hoveringInformations.add(h1);
@@ -101,20 +99,21 @@ public class TestPaint {
 	}
 
 	@Test
-	@Ignore
 	public void testMobileNodes() throws Exception {
 
 		Random r = new Random();
 
-		MobileNode mn = new MobileNode(100, 80, 12, r.nextInt(width),
-				r.nextInt(height), Collections.<MobileNode> emptyList(),
+		MobileNode mn = new MobileNode("Mobile1", 100, 80, 12,
+				r.nextInt(width), r.nextInt(height),
+				Collections.<MobileNode> emptyList(),
 				Collections.<PieceOfHoveringInformation> emptyList());
 		mobilenodes.add(mn);
 		for (int i = 0; i < 40; i++) {
 			int s = r.nextInt(mobilenodes.size());
-			mn = new MobileNode(100, 80, 12, r.nextInt(width),
-					r.nextInt(height), new ArrayList<>(mobilenodes.subList(s,
-							r.nextInt(mobilenodes.size() - s) + s)),
+			mn = new MobileNode("Mobile" + (2 + i), 100, 80, 12,
+					r.nextInt(width), r.nextInt(height), new ArrayList<>(
+							mobilenodes.subList(s,
+									r.nextInt(mobilenodes.size() - s) + s)),
 					Collections.<PieceOfHoveringInformation> emptyList());
 			mobilenodes.add(mn);
 		}
@@ -128,19 +127,18 @@ public class TestPaint {
 	}
 
 	@Test
-	@Ignore
 	public void testMobileHovering() throws Exception {
 
 		Random r = new Random();
 
 		for (int i = 0; i < 10; i++) {
-			HoveringInformation h1 = new HoveringInformation(
+			HoveringInformation h1 = new HoveringInformation("H" + i,
 					r.nextInt(width - 100) + 10, r.nextInt(height - 100) + 10,
 					r.nextInt(Math.min(width, height) / 4) + 10);
 			hoveringInformations.add(h1);
 		}
 
-		MobileNode mn = new MobileNode(100, 80, 12, r.nextInt(width),
+		MobileNode mn = new MobileNode("H1", 100, 80, 12, r.nextInt(width),
 				r.nextInt(height), Collections.<MobileNode> emptyList(),
 				Collections.<PieceOfHoveringInformation> emptyList());
 		mobilenodes.add(mn);
@@ -155,9 +153,11 @@ public class TestPaint {
 			pieces.addAll(tmpl);
 
 			int s = r.nextInt(mobilenodes.size());
-			mn = new MobileNode(100, (j + 1) * 10, 12, r.nextInt(width),
-					r.nextInt(height), new ArrayList<>(mobilenodes.subList(s,
-							r.nextInt(mobilenodes.size() - s) + s)), tmpl);
+			mn = new MobileNode("Mobile" + (2 + i), 100, (j + 1) * 10, 12,
+					r.nextInt(width), r.nextInt(height), new ArrayList<>(
+							mobilenodes.subList(s,
+									r.nextInt(mobilenodes.size() - s) + s)),
+					tmpl);
 			mobilenodes.add(mn);
 		}
 

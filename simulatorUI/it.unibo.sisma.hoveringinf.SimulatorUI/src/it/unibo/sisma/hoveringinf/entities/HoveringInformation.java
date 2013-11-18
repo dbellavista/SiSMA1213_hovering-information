@@ -15,10 +15,12 @@ public class HoveringInformation {
 	private double yAnchor;
 	private double anchorRange;
 	private List<PieceOfHoveringInformation> children;
+	private String name;
 
-	public HoveringInformation(double xAnchor, double yAnchor,
+	public HoveringInformation(String name, double xAnchor, double yAnchor,
 			double anchorRange) {
 		super();
+		this.name = name;
 		this.xAnchor = xAnchor;
 		this.yAnchor = yAnchor;
 		this.anchorRange = anchorRange;
@@ -39,6 +41,10 @@ public class HoveringInformation {
 
 	public double getAnchorRange() {
 		return anchorRange;
+	}
+	
+	public String getName() {
+		return name;
 	}
 
 	@Override

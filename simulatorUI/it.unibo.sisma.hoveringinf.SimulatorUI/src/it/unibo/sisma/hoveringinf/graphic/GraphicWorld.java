@@ -130,6 +130,8 @@ public class GraphicWorld extends JComponent {
 		g2d.setColor(Color.black);
 		g2d.draw(new Ellipse2D.Double(mXpos - personSize / 2, mYpos
 				- personSize / 2, personSize, personSize));
+		
+		g2d.drawString(mn.getName(), (int) (mXpos - personSize - + personSize/5), (int) (mYpos + personSize + personSize/10));
 
 		double j = 0;
 		for (PieceOfHoveringInformation phi : mn.getHosted()) {
@@ -185,6 +187,8 @@ public class GraphicWorld extends JComponent {
 				- info.getAnchorRange() / 2), my(info.getyAnchor()
 				- info.getAnchorRange() / 2), mx(info.getAnchorRange()),
 				my(info.getAnchorRange())));
+		g2d.setColor(Color.black);
+		g2d.drawString(info.getName(), (int) mx(info.getxAnchor()), (int) my(info.getyAnchor()));
 		// Anchor
 		// g2d.setColor(Color.RED.darker());
 		// g2d.draw(new Ellipse2D.Double(info.getxAnchor(), info.getyAnchor(),

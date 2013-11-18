@@ -24,8 +24,8 @@ public class GUIEnvironmentFactory {
 		for (int i = 0; i < pointOfInterest.length; i++) {
 			Object[] p = (Object[]) pointOfInterest[i];
 			Object[] pos = (Object[]) p[1];
-			HoveringInformation hi = new HoveringInformation(toDouble(pos[0]),
-					toDouble(pos[1]), toDouble(pos[2]));
+			HoveringInformation hi = new HoveringInformation((String) p[0],
+					toDouble(pos[0]), toDouble(pos[1]), toDouble(pos[2]));
 			hoveringInformations.add(hi);
 			hovering_names.put((String) p[0], hi);
 		}
@@ -42,18 +42,19 @@ public class GUIEnvironmentFactory {
 			}
 
 			List<MobileNode> connList = new ArrayList<>();
-			
-			MobileNode mn = new MobileNode(toInt(p[4]), toInt(p[5]),
-					toInt(p[3]), toDouble(pos[0]), toDouble(pos[1]), connList,
-					tmpPieces);
+
+			MobileNode mn = new MobileNode((String) p[0], toInt(p[4]),
+					toInt(p[5]), toInt(p[3]), toDouble(pos[0]),
+					toDouble(pos[1]), connList, tmpPieces);
 			mobNodesNames.put((String) p[0], mn);
 			mobileNodes.add(mn);
 			pieceOfHoveringInformation.addAll(tmpPieces);
 		}
-		
-		for(Object o : listRecent_tmp) {
+
+		for (Object o : listRecent_tmp) {
 			Object[] val = (Object[]) o;
-			mobNodesNames.get(val[0]).getConnectedNodes().add(mobNodesNames.get(val[1]));
+			mobNodesNames.get(val[0]).getConnectedNodes()
+					.add(mobNodesNames.get(val[1]));
 		}
 
 		return new World(hoveringInformations, mobileNodes,

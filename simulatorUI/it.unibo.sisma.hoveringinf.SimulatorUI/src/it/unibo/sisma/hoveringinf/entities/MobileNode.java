@@ -20,11 +20,13 @@ public class MobileNode {
 
 	private List<MobileNode> connectedNodes;
 	private List<PieceOfHoveringInformation> hosted;
+	private String name;
 
-	public MobileNode(int bufferSize, int bufferUsage, double commRange,
+	public MobileNode(String name, int bufferSize, int bufferUsage, double commRange,
 			double xPos, double yPos, List<MobileNode> connectedNodes,
 			List<PieceOfHoveringInformation> hosted) {
 		super();
+		this.name = name;
 		this.bufferSize = bufferSize;
 		this.bufferUsage = bufferUsage;
 		this.commRange = commRange;
@@ -65,6 +67,10 @@ public class MobileNode {
 
 	public List<PieceOfHoveringInformation> getHosted() {
 		return hosted;
+	}
+	
+	public String getName() {
+		return name;
 	}
 
 }

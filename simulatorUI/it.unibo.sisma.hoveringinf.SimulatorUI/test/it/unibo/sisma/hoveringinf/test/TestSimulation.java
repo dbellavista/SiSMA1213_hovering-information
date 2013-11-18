@@ -68,15 +68,16 @@ public class TestSimulation {
 			Random r = new Random();
 
 			for (int i = 0; i < 10; i++) {
-				HoveringInformation h1 = new HoveringInformation(
+				HoveringInformation h1 = new HoveringInformation("H" + (i),
 						r.nextInt(width - 100) + 10,
 						r.nextInt(height - 100) + 10, r.nextInt(Math.min(width,
 								height) / 4) + 10);
 				hoveringInformations.add(h1);
 			}
 
-			MobileNode mn = new MobileNode(100, 80, 12, r.nextInt(width),
-					r.nextInt(height), Collections.<MobileNode> emptyList(),
+			MobileNode mn = new MobileNode("Mobile1", 100, 80, 12,
+					r.nextInt(width), r.nextInt(height),
+					Collections.<MobileNode> emptyList(),
 					Collections.<PieceOfHoveringInformation> emptyList());
 			mobilenodes.add(mn);
 			for (int i = 0; i < 40; i++) {
@@ -91,10 +92,10 @@ public class TestSimulation {
 				pieces.addAll(tmpl);
 
 				int s = r.nextInt(mobilenodes.size());
-				mn = new MobileNode(100, (j + 1) * 10, 12, r.nextInt(width),
-						r.nextInt(height), new ArrayList<>(mobilenodes.subList(
-								s, r.nextInt(mobilenodes.size() - s) + s)),
-						tmpl);
+				mn = new MobileNode("Mobile" + (2 + i), 100, (j + 1) * 10, 12,
+						r.nextInt(width), r.nextInt(height),
+						new ArrayList<>(mobilenodes.subList(s,
+								r.nextInt(mobilenodes.size() - s) + s)), tmpl);
 				mobilenodes.add(mn);
 			}
 			simulator.render(world);
