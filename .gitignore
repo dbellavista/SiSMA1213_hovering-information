@@ -34,3 +34,5 @@
 report/main.pdf
 papers/*
 old/
+simulatorUI/RemoteSystemsTempFiles/
+mas/test/
