@@ -278,20 +278,19 @@ public class EnvironmentArtifact extends Artifact {
 		ReadLock r = readLock(ID);
 		r.lock();
 		MessageQueue queue = messages.get(ID);
-		try {
-			Message m = queue.getMessage(receiverName, false);
-			if (m == null) {
-				senderID.set(null);
-				message.set(null);
-			} else {
-				senderID.set(m.getSenderID());
-				senderName.set(m.getSenderName());
-				message.set(m.getMessage());
-			}
-		} catch (InterruptedException e) {
-			throw new RuntimeException("Receiving interrupted!");
-		} finally {
-			r.unlock();
+		r.unlock();
+
+		GetMessageCmd getCmd = new GetMessageCmd(queue, receiverName);
+		await(getCmd);
+		Message m = getCmd.getFinalMsg();
+		// Message m = queue.getMessage(receiverName, false);
+		if (m == null) {
+			senderID.set(null);
+			message.set(null);
+		} else {
+			senderID.set(m.getSenderID());
+			senderName.set(m.getSenderName());
+			message.set(m.getMessage());
 		}
 	}
 

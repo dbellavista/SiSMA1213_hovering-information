@@ -131,7 +131,6 @@
 		if(Res) {
 			!manage_message(Sender, SenderName, Message);	
 		}
-		.wait(500);
 		!!receiveMessage;
 		.
 
