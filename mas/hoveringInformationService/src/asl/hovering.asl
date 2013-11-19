@@ -398,7 +398,7 @@
 /**
  * Replied by the mobile node if the space has been allocated, but the request doesn't exists
  */
-+!manage_message(Sender, SenderName, ["permission_granted"]) : (not asked_landing(Sender, _) | not asked_cloning(Sender, _))
++!manage_message(Sender, SenderName, ["permission_granted"]) : (not asked_landing(Sender, _) & not asked_cloning(Sender, _))
 	<- 	.my_name(Name);
 		sendMessage(Name, Sender, "mobile", [landing_aborted], _);
 		.
