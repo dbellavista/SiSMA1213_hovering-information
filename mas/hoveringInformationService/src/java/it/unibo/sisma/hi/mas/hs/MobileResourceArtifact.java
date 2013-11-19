@@ -141,9 +141,12 @@ public class MobileResourceArtifact extends Artifact {
 	}
 
 	@OPERATION
-	void obtainPosition(OpFeedbackParam<double[]> position) {
+	void obtainPosition(OpFeedbackParam<Double> x, OpFeedbackParam<Double> y) {
 		try {
+			OpFeedbackParam<double[]> position = new OpFeedbackParam<>();
 			execLinkedOp("env-link", "obtainPosition", ID, position);
+			x.set(position.get()[0]);
+			y.set(position.get()[1]);
 			ObsProperty psProp = getObsProperty("position");
 			psProp.updateValue(position.get());
 		} catch (Exception e) {

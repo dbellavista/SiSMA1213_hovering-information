@@ -111,8 +111,8 @@
  */
 +!survive : not stop_surviving & anchor(AX, AY, Area) & not landing(_)
 	<-	?artifacts(resource, MResID);
-		obtainPosition(P) [artifact_id(MResID)];
-		!updateBelieves(P);
+		obtainPosition(X, Y) [artifact_id(MResID)];
+		!updateBelieves(X, Y);
 		!decideDefcon;
 		!doWhatIsNecessary;
 		.wait(500);
@@ -144,7 +144,7 @@
 /**
  * Gather the positional data and process them, for instance by setting the new zone.
  */
-@upBelieves[atomic] +!updateBelieves([PX, PY]) : artifacts(hovering, HArtID) & anchor(AX, AY, Area)
+@upBelieves[atomic] +!updateBelieves(PX, PY) : artifacts(hovering, HArtID) & anchor(AX, AY, Area)
 	<-	computePositionalData(PX, PY, AX, AY, Speed, Distance, Direct, AnchorVect) [artifact_id(HArtID)];
 		!getOld(Speed, Distance, Direct, AnchorVect, OldSpeed, OldDistance, OldDirect, OldAnchorVect);
 		Direct = [DX, DY];

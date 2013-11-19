@@ -103,8 +103,7 @@
 	<-	?free_space(FS);
 		.my_name(Name);
 		if(FS >= DS) {
-			obtainPosition(P);
-			P = [X, Y];
+			obtainPosition(X, Y);
 			?pieces(PL);
 			if(.member([_, HName], PL)) {
 				sendMessage(Name, Sender, SenderName, [reply_ok_space, X, Y, true], _);	
