@@ -8,7 +8,10 @@
 !init.
 
 /* Plans */
-
+/****************************************************************************************
+ * * INITIALIZATION, STARTING AND STOPPING PLANS
+ ****************************************************************************************/
+ 
 +!init : ~inited & initiator(InitName) & worldWsp(WspName) & node_id(NodeID) &
 		 range(DR) & storage(DS) & envArt(EAName) & ui_name(AUName)
 	<-	-~inited;
@@ -80,6 +83,10 @@
 		+stop_discovering;
 		.
 
+/****************************************************************************************
+ * * PIECES IN-OUT MANAGEMENT
+ ****************************************************************************************/
+
 @allocInit[atomic] +!manage_message(Sender, SenderName, ["init_dissemination", HoveringName, DS])
 	<- 	allocateData(HoveringName, DS, Res);
 		if(.string(HoveringName)) {
@@ -99,6 +106,18 @@
 		}
 		.
 
+
+@remHovering[atomic] +!removeHovering(Name)
+	<-	removeData(Name);
+		?pieces(OldList);
+		.delete([Name, _], OldList, List);
+		-pieces(_);
+		+pieces(List);
+		.
+
+/****************************************************************************************
+ * * PRE-PROTOCOL FOR LANDING OR CLONING 
+ ****************************************************************************************/
 @askSpace[atomic] +!manage_message(Sender, SenderName, ["there_is_space", DS, HName])
 	<-	?free_space(FS);
 		.my_name(Name);
@@ -146,6 +165,9 @@
 	<-	removeData(SenderName);
 		.
 
+/****************************************************************************************
+ * * LANDING PROCEDURE
+ ****************************************************************************************/
 /**
  * Landing procedure: the agent exists, it's to be awaken
  */
@@ -171,7 +193,10 @@
 			.send(SenderName, tell, sorry_land_failed(HostID, HostName, MobileWsp));
 		}
 		.
-
+		
+/****************************************************************************************
+ * * CLONE PROCEDURE
+ ****************************************************************************************/
 /**
  * Cloning procedure: the agent must be created
  */
@@ -205,31 +230,30 @@
 		}
 		.
 
-+!manage_message(Sender, SenderName, L)
-	<- 	.print("UKN received: ", L, " from ", Sender, " ", SenderName);
-		.
 
+/****************************************************************************************
+ * * NEIGHBOR MANAGEMENT
+ ****************************************************************************************/
 +new_neighbour(ID).
-	//<- 	//println("New neighbour: ", ID);
-		//sendMessage(ID, "mobile", "Hi!!")
-		//.
-	
 +neighbour_gone(ID).
-	//<- println("Neighbour gone: ", ID).
 
++!discoverNeighbour : stop_discovering.
+
++!discoverNeighbour : not stop_discovering
+	<-	?artifacts(resource, MResID);
+		discoverNeighbour(_) [artifact_id(MResID)];
+		.wait(1000);
+		!!discoverNeighbour;
+		.
+		
 +performing_arakiri [source(Name)]
 	<- 	!removeHovering(Name).
 	
-@remHovering[atomic] +!removeHovering(Name)
-	<-	removeData(Name);
-		?pieces(OldList);
-		.delete([Name, _], OldList, List);
-		-pieces(_);
-		+pieces(List);
-		.
 
+/****************************************************************************************
+ * * RECEIVE MESSAGE LOOP
+ ****************************************************************************************/
 +!receiveMessage : stop_receiving.
-+!discoverNeighbour : stop_discovering.
 
 +!receiveMessage : not stop_receiving
 	<- 	?artifacts(resource, MResID);
@@ -240,12 +264,9 @@
 		!!receiveMessage;
 		.
 
-+!discoverNeighbour : not stop_discovering
-	<-	?artifacts(resource, MResID);
-		discoverNeighbour(_) [artifact_id(MResID)];
-		.wait(1000);
-		!!discoverNeighbour;
-		.
+/****************************************************************************************
+ * * CLEANUP PLANS (for removing duplicate pieces)
+ ****************************************************************************************/
 
 +!cleanup
 	<-	.wait(2000);
@@ -262,9 +283,22 @@
 		.
 -!cleanup <- !cleanup;.
 
+/****************************************************************************************
+ * * INQUISITION PLANS
+ ****************************************************************************************/
+ 
 +?inquire(Range, Storage, OccStorage, PList) [source(self)] : range(Range) & storage(Storage) & free_space(FreeSpace) & pieces(Pieces)
 	<-  OccStorage = (Storage - FreeSpace); PList = Pieces.
 
 +?inquire(Range, Storage, OccStorage, PList) [source(self)] : range(Range) & storage(Storage) & free_space(FreeSpace) & not pieces(Pieces)
 	<-  .wait(200);
 		?inquire(Range, Storage, OccStorage, PList).
+		
+
+/****************************************************************************************
+ * * FALLBACK PLANS
+ ****************************************************************************************/
+ 
++!manage_message(Sender, SenderName, L)
+	<- 	.print("UKN received: ", L, " from ", Sender, " ", SenderName);
+		.
