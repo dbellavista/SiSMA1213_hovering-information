@@ -155,7 +155,6 @@
 		if(Res) {
 			// Real world: unpack the agent and start it!
 			.my_name(HostName);
-			.print("Landing ", SenderName);
 			?node_id(HostID);
 			?workspace(node, MobileWsp, _);
 			?pieces(L);
@@ -169,7 +168,6 @@
 			.send(SenderName, tell, you_can_resume(HostID, HostName, MobileWsp));
 		} else {
 			// Invalid request. Sorry for the piece.
-			.print("Land aborted ", SenderName);
 			.send(SenderName, tell, sorry_land_failed(HostID, HostName, MobileWsp));
 		}
 		.
@@ -185,7 +183,6 @@
 			.my_name(HostName);
 			?node_id(HostID);
 			?workspace(world, WorldWsp, _);
-			.print("Cloning ", SenderName);
 			
 			.create_agent(AgentName, "hovering.asl", [agentArchClass("c4jason.CAgentArch")]);
 
@@ -204,7 +201,6 @@
 			.send(HTerm, achieve, start);
 		} else {
 			// Invalid request. Sorry for the piece.
-			.print("Clone aborted ", SenderName);
 			.send(SenderName, tell, sorry_clone_failed(HostID, HostName, MobileWsp));
 		}
 		.
@@ -261,8 +257,10 @@
 					.send(PName2, tell, please_die);
 				}
 			}		
-		}		
+		}
+		!!cleanup;
 		.
+-!cleanup <- !cleanup;.
 
 +?inquire(Range, Storage, OccStorage, PList) [source(self)] : range(Range) & storage(Storage) & free_space(FreeSpace) & pieces(Pieces)
 	<-  OccStorage = (Storage - FreeSpace); PList = Pieces.

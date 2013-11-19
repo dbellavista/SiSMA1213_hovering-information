@@ -220,7 +220,6 @@
 		exp(DistancePoints, -Mul*(Dist / Max_Dist)) [artifact_id(HArtID)];
 		exp(NeighborPoints_tmp, NumNeigh / 10) [artifact_id(HArtID)];
 		NeighborPoints = NeighborPoints_tmp - 1;
-		.print("DistanceP: ", DistancePoints, " - NeighP (",NumNeigh,") ", NeighborPoints, " = ", 0.5 * DistancePoints + 0.5 * NeighborPoints);
 		
 		!setDefcon(0.5 * DistancePoints + 0.5 * NeighborPoints);
 		.
@@ -326,7 +325,7 @@
 	<- 	-ask_neighbor(N,_);
 		-reply_neighbor_no(N,_);
 		-reply_neighbor_ok(N,_,_,_);
-		+ask_neighbor(N, 10);			
+		+ask_neighbor(N, 6);			
 		.my_name(Name);
 		?size(S);
 		?hover_name(HName);
@@ -340,13 +339,13 @@
  * This messages are the replies to the probe information
  */
 +!manage_message(Sender, SenderName, ["reply_no_space"])
-	<- 	+reply_neighbor_no(Sender, 10);
+	<- 	+reply_neighbor_no(Sender, 1);
 		.
 +!manage_message(Sender, SenderName, ["reply_ok_space", X, Y, AlreadyHere])
 	<- 	?anchor(AX, AY, Area);
 		?artifacts(hovering, HArtID);
 		distance(D, X, Y, AX, AY) [artifact_id(HArtID)];
-		+reply_neighbor_ok(Sender, 5, D, AlreadyHere);
+		+reply_neighbor_ok(Sender, 2, D, AlreadyHere);
 		.
 
 /****************************************************************************************
@@ -364,7 +363,7 @@
 			if(Min < MyDistance) {
 				?reply_neighbor_ok(N, _, Min, _);
 				.my_name(Name);
-				+asked_landing(N, 20);
+				+asked_landing(N, 6);
 				?size(S);
 				sendMessage(Name, N, "mobile", [permission_to_land, S], Res);
 				if(not Res) {
@@ -385,7 +384,7 @@
 			if(Min < Max) {
 				?reply_neighbor_ok(N, _, Min, _);
 				.my_name(Name);
-				+asked_cloning(N, 20);
+				+asked_cloning(N, 10);
 				?size(S);
 				sendMessage(Name, N, "mobile", [permission_to_land, S], Res);
 				if(not Res) {
@@ -447,7 +446,6 @@
 		+landing(Sender);
 		.my_name(Name);
 		sendMessage(Name, Sender, "mobile", [land, "packed!"], Res);
-		.print("Leaving ", Host, " for ", Sender, " => ", Res);
 		-asked_landing(Sender, _);
 		// In real life the agent should stop. For "idon'twanttoimplementit" reasons,
 		// the agent communicate to the host the migration and pause itself. 
