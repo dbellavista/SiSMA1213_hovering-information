@@ -158,7 +158,7 @@ public class EnvironmentArtifact extends Artifact {
 	 * MOBILE RESOURCE METHODS
 	 */
 	@LINK
-	void discoverNeighbour(Object ID, Number commRange,
+	void discoverNeighbors(Object ID, Number commRange,
 			OpFeedbackParam<Object[]> mobileIDs) {
 		ReadLock mr = readLock(ID);
 		mr.lock();

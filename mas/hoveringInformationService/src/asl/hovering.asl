@@ -157,7 +157,7 @@
 		+approach_level(NAL);
 		
 		?artifacts(resource, MResID);
-		discoverNeighbour(List) [artifact_id(MResID)];
+		discoverNeighbors(List) [artifact_id(MResID)];
 		.length(List, NNeigh);
 		
 		-+num_neighbors(NNeigh);
@@ -296,7 +296,7 @@
  */
 +!probe_neighbor
 	<-	?artifacts(resource, MResID);
-		discoverNeighbour(List) [artifact_id(MResID)];
+		discoverNeighbors(List) [artifact_id(MResID)];
 		?size(S);
 		for(.member(N, List)) {
 			!send_to_neighbor(N);
@@ -494,8 +494,7 @@
  * Resuming: updating host, workspace and artifact
  */
 @resumeFromLanding[atomic] +!resume(HostID, HostName, MobileWsp) : landing(HostID) & i_can_resume(HostID)
-	<- 	println("Resuming in ", HostName);
-		.term2string(HostName, HostNameStr);
+	<- 	.term2string(HostName, HostNameStr);
 		+host(HostID, HostNameStr);
 		joinWorkspace(MobileWsp, WspNodeId);
 		+workspace(host, WspNodeId);

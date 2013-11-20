@@ -63,8 +63,8 @@
 	<- 	.wait(500);
 		!init.
 
-+start_command <- !start.
-+stop_command <- !stop.
++start_command <- !start; -start_comand [source(_)];.
++stop_command <- !stop; -stop_command [source(_)];.
 
 +!start : ~configured | not configured
 	<- 	.wait(1000);
@@ -73,7 +73,7 @@
 
 +!start : configured
 	<- 	+pieces([]);
-		!!discoverNeighbour;
+		!!discoverNeighbors;
 		!!receiveMessage;
 		!!cleanup;
 		.
@@ -234,16 +234,16 @@
 /****************************************************************************************
  * * NEIGHBOR MANAGEMENT
  ****************************************************************************************/
-+new_neighbour(ID).
-+neighbour_gone(ID).
++new_neighbor(ID) <- -new_neighbor(ID) [source(_)];.
++neighbor_gone(ID) <- -neighbor_gone(ID) [source(_)].
 
-+!discoverNeighbour : stop_discovering.
++!discoverNeighbors : stop_discovering.
 
-+!discoverNeighbour : not stop_discovering
++!discoverNeighbors : not stop_discovering
 	<-	?artifacts(resource, MResID);
-		discoverNeighbour(_) [artifact_id(MResID)];
+		discoverNeighbors(_) [artifact_id(MResID)];
 		.wait(1000);
-		!!discoverNeighbour;
+		!!discoverNeighbors;
 		.
 		
 +performing_arakiri [source(Name)]

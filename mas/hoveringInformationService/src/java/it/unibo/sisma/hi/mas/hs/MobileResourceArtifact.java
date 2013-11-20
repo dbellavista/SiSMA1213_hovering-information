@@ -26,7 +26,7 @@ public class MobileResourceArtifact extends Artifact {
 		this.ID = ID;
 		this.range = range.doubleValue();
 		this.storage = new MobileStorage(storage.doubleValue());
-		defineObsProperty("neighbours", (Object) new Object[0]);
+		defineObsProperty("neighbors", (Object) new Object[0]);
 		defineObsProperty("position", (Object) new Object[0]);
 
 		defineObsProperty("total_space", this.storage.getTotalSpace());
@@ -35,10 +35,10 @@ public class MobileResourceArtifact extends Artifact {
 	}
 
 	@OPERATION
-	void discoverNeighbour(OpFeedbackParam<Object[]> mobileIDs) {
+	void discoverNeighbors(OpFeedbackParam<Object[]> mobileIDs) {
 		try {
-			execLinkedOp("env-link", "discoverNeighbour", ID, range, mobileIDs);
-			ObsProperty neighbours = getObsProperty("neighbours");
+			execLinkedOp("env-link", "discoverNeighbors", ID, range, mobileIDs);
+			ObsProperty neighbours = getObsProperty("neighbors");
 			List<Object> oldNeigh = Arrays.asList((Object[]) neighbours
 					.getValue());
 			List<Object> newNeigh = new ArrayList<>(Arrays.asList(mobileIDs
@@ -57,20 +57,20 @@ public class MobileResourceArtifact extends Artifact {
 					}
 				}
 				if (!found) {
-					signal("neighbour_gone", old);
+					signal("neighbor_gone", old);
 				}
 			}
 			Iterator<Object> nit = newNeigh.iterator();
 			while (nit.hasNext()) {
 				Object newn = nit.next();
-				signal("new_neighbour", newn);
+				signal("new_neighbor", newn);
 			}
 
 			neighbours.updateValue(mobileIDs.get());
 
 		} catch (Exception e) {
 			e.printStackTrace();
-			failed("DiscoverNeighbour linked operation failed", "fail", ID, e);
+			failed("DiscoverNeighbors linked operation failed", "fail", ID, e);
 		}
 	}
 
