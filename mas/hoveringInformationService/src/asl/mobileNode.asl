@@ -115,6 +115,9 @@
 		+pieces(List);
 		.
 
++performing_arakiri [source(Name)]
+	<- 	!removeHovering(Name).
+
 /****************************************************************************************
  * * PRE-PROTOCOL FOR LANDING OR CLONING 
  ****************************************************************************************/
@@ -245,10 +248,6 @@
 		.wait(1000);
 		!!discoverNeighbors;
 		.
-		
-+performing_arakiri [source(Name)]
-	<- 	!removeHovering(Name).
-	
 
 /****************************************************************************************
  * * RECEIVE MESSAGE LOOP
