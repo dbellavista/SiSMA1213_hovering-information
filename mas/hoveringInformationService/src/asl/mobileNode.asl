@@ -125,13 +125,14 @@
 	<-	?free_space(FS);
 		.my_name(Name);
 		if(FS >= DS) {
-			obtainPosition(X, Y);
+			obtainPosition(_, _);
+			?position([X, Y]);
 			?pieces(PL);
-			if(.member([_, HName], PL)) {
+			if(.member([_, HName, _], PL)) {
 				sendMessage(Name, Sender, SenderName, [reply_ok_space, X, Y, true], _);	
 			} else {
 				sendMessage(Name, Sender, SenderName, [reply_ok_space, X, Y, false], _);
-			}				
+			}
 		} else {
 			sendMessage(Name, Sender, SenderName, [reply_no_space], _);
 		}.
