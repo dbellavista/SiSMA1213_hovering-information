@@ -226,7 +226,7 @@ public class EnvironmentArtifact extends Artifact {
 						.insertMessage(
 								new Message(message, receiverName, senderID,
 										senderName));
-				addNewRecentCommunication(senderID, receiverID);
+				execInternalOp("addNewRecentCommunication", senderID, receiverID);
 			} else {
 				failed("Receiver not in range!");
 				return;
@@ -255,7 +255,7 @@ public class EnvironmentArtifact extends Artifact {
 	}
 
 	@INTERNAL_OPERATION
-	synchronized Object[][] generateRecentCommList() {
+	synchronized void generateRecentCommList(OpFeedbackParam<Object[][]> ret) {
 		ArrayList<Object[]> list = new ArrayList<>();
 		ArrayList<RecentCommunication> toRemove = new ArrayList<>();
 		for (RecentCommunication rc : commMap.keySet()) {
@@ -268,7 +268,7 @@ public class EnvironmentArtifact extends Artifact {
 		for (RecentCommunication rc : toRemove) {
 			commMap.remove(rc);
 		}
-		return list.toArray(new Object[list.size()][]);
+		ret.set(list.toArray(new Object[list.size()][]));
 	}
 
 	@LINK
@@ -313,7 +313,7 @@ public class EnvironmentArtifact extends Artifact {
 			OpFeedbackParam<Double> worldHeight) {
 		List<Object> pl = new ArrayList<>();
 		List<Object> potl = new ArrayList<>();
-		listRecentComm.set(generateRecentCommList());
+		execInternalOp("generateRecentCommList", listRecentComm);
 		// listRecentComm.set(new Object[0][2]);
 		for (Entry<Object, ReentrantReadWriteLock> l : locks.entrySet()) {
 			ReadLock r = l.getValue().readLock();
@@ -333,8 +333,7 @@ public class EnvironmentArtifact extends Artifact {
 		pointOfInterest.set(potl.toArray(new Object[potl.size()]));
 	}
 
-	@INTERNAL_OPERATION
-	WriteLock writeLock(Object ID) {
+	private WriteLock writeLock(Object ID) {
 		ReentrantReadWriteLock s = locks.get(ID);
 		if (s == null) {
 			failed("Operation failure", "fail", ID, "Null lock");
@@ -343,8 +342,7 @@ public class EnvironmentArtifact extends Artifact {
 		return s.writeLock();
 	}
 
-	@INTERNAL_OPERATION
-	ReadLock readLock(Object ID) {
+	private ReadLock readLock(Object ID) {
 		ReentrantReadWriteLock s = locks.get(ID);
 		if (s == null) {
 			failed("Operation failure", "fail", ID, "Null lock");
@@ -353,14 +351,12 @@ public class EnvironmentArtifact extends Artifact {
 		return s.readLock();
 	}
 
-	@INTERNAL_OPERATION
-	boolean inRange(double[] pos1, double[] pos2, Number range) {
+	private boolean inRange(double[] pos1, double[] pos2, Number range) {
 		return (sq(pos1[0] - pos2[0]) + sq(pos1[1] - pos2[1])) <= sq(range
 				.doubleValue());
 	}
 
-	@INTERNAL_OPERATION
-	double sq(double p) {
+	private double sq(double p) {
 		return p * p;
 	}
 
