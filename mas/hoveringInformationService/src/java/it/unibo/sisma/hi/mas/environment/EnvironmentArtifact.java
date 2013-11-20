@@ -159,11 +159,11 @@ public class EnvironmentArtifact extends Artifact {
 	 */
 	@LINK
 	void discoverNeighbors(Object ID, Number commRange,
-			OpFeedbackParam<Object[]> mobileIDs) {
+			OpFeedbackParam<HashMap<Object, Object>> mobileIDs) {
 		ReadLock mr = readLock(ID);
 		mr.lock();
 		double[] mypos = positions.get(ID);
-		Collection<Object> ids = new ArrayList<>();
+		HashMap<Object, Object> ids = new HashMap<>();
 		for (Entry<Object, ReentrantReadWriteLock> l : locks.entrySet()) {
 			if (l.getKey().equals(ID)) {
 				continue;
@@ -172,12 +172,12 @@ public class EnvironmentArtifact extends Artifact {
 			r.lock();
 			double[] pos = positions.get(l.getKey());
 			if (inRange(mypos, pos, commRange)) {
-				ids.add(l.getKey());
+				ids.put(l.getKey(), l.getKey());
 			}
 			r.unlock();
 		}
 		mr.unlock();
-		mobileIDs.set(ids.toArray(new Object[ids.size()]));
+		mobileIDs.set(ids);
 	}
 
 	@OPERATION

@@ -4,6 +4,8 @@ package it.unibo.sisma.hi.mas.hs;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
@@ -16,17 +18,20 @@ import cartago.OpFeedbackParam;
 
 @ARTIFACT_INFO(outports = { @OUTPORT(name = "env-link") })
 public class MobileResourceArtifact extends Artifact {
-	
+
 	private double range;
 	private MobileStorage storage;
 	private Object ID;
+	Collection<Object> neighbors;
 
 	void init(Object ID, Number range, Number storage) {
-		
+
 		this.ID = ID;
 		this.range = range.doubleValue();
+		neighbors = new ArrayList<>();
 		this.storage = new MobileStorage(storage.doubleValue());
-		defineObsProperty("neighbors", (Object) new Object[0]);
+		defineObsProperty("neighbors",
+				(Object) neighbors.toArray(new Object[neighbors.size()]));
 		defineObsProperty("position", (Object) new Object[0]);
 
 		defineObsProperty("total_space", this.storage.getTotalSpace());
@@ -37,36 +42,36 @@ public class MobileResourceArtifact extends Artifact {
 	@OPERATION
 	void discoverNeighbors(OpFeedbackParam<Object[]> mobileIDs) {
 		try {
-			execLinkedOp("env-link", "discoverNeighbors", ID, range, mobileIDs);
-			ObsProperty neighbours = getObsProperty("neighbors");
-			List<Object> oldNeigh = Arrays.asList((Object[]) neighbours
-					.getValue());
-			List<Object> newNeigh = new ArrayList<>(Arrays.asList(mobileIDs
-					.get()));
+			OpFeedbackParam<HashMap<Object, Object>> mobHash = new OpFeedbackParam<>();
+			execLinkedOp("env-link", "discoverNeighbors", ID, range, mobHash);
 
-			Iterator<Object> oit = oldNeigh.iterator();
+			HashMap<Object, Object> newNeigh = mobHash.get();
+			mobileIDs.set(newNeigh.keySet()
+					.toArray(new Object[newNeigh.size()]));
+
+			Iterator<Object> oit = neighbors.iterator();
+			boolean changes = false;
 			while (oit.hasNext()) {
 				Object old = oit.next();
-				Iterator<Object> nit = newNeigh.iterator();
-				boolean found = false;
-				while (!found && nit.hasNext()) {
-					Object newn = nit.next();
-					if (old.equals(newn)) {
-						found = true;
-						nit.remove();
-					}
-				}
-				if (!found) {
+				if (newNeigh.containsKey(old)) {
+					newNeigh.remove(old);
+				} else {
 					signal("neighbor_gone", old);
+					oit.remove();
+					changes = true;
 				}
 			}
-			Iterator<Object> nit = newNeigh.iterator();
-			while (nit.hasNext()) {
-				Object newn = nit.next();
-				signal("new_neighbor", newn);
+			changes = changes || newNeigh.size() > 0;
+			for (Object key : newNeigh.keySet()) {
+				signal("new_neighbor", key);
+				neighbors.add(key);
 			}
-
-			neighbours.updateValue(mobileIDs.get());
+			if (changes) {
+				getObsProperty("neighbors")
+						.updateValue(
+								(Object) neighbors.toArray(new Object[neighbors
+										.size()]));
+			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -75,14 +80,15 @@ public class MobileResourceArtifact extends Artifact {
 	}
 
 	@OPERATION
-	void sendMessage(Object senderName, Object receiverID, Object receiverName, Object message, OpFeedbackParam<Boolean> Res) {
+	void sendMessage(Object senderName, Object receiverID, Object receiverName,
+			Object message, OpFeedbackParam<Boolean> Res) {
 		try {
-			execLinkedOp("env-link", "sendMessage", ID, senderName, range, receiverID,
-					receiverName, message);
+			execLinkedOp("env-link", "sendMessage", ID, senderName, range,
+					receiverID, receiverName, message);
 			Res.set(true);
 		} catch (Exception e) {
-			//e.printStackTrace();
-			//failed("sendMessage linked operation failed", "fail", ID, e);
+			// e.printStackTrace();
+			// failed("sendMessage linked operation failed", "fail", ID, e);
 			Res.set(false);
 		}
 	}
@@ -132,12 +138,13 @@ public class MobileResourceArtifact extends Artifact {
 		ObsProperty dataProp = getObsProperty("data");
 		dataProp.updateValue(this.storage.getAllData());
 	}
-	
+
 	@OPERATION
-	void getData(Object ID, OpFeedbackParam<String> data, OpFeedbackParam<Boolean> res) {
+	void getData(Object ID, OpFeedbackParam<String> data,
+			OpFeedbackParam<Boolean> res) {
 		String datastr = storage.getData(ID);
 		data.set(datastr);
-		res.set(datastr != null);		
+		res.set(datastr != null);
 	}
 
 	@OPERATION
