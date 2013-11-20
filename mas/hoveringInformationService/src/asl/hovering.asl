@@ -262,9 +262,8 @@
 	<-	!probe_neighbor
 		.
 
-+!doWhatIsNecessary : cur_defcon(2, CurPoints) & asked_landing(N, K)
-	<-	-asked_landing(N, K);
-		+asked_landing(N, K-1);
++!doWhatIsNecessary : cur_defcon(2, CurPoints) & asked_landing(N, K) & K > 0
+	<-	-+asked_landing(N, K - 1);
 		.
 +!doWhatIsNecessary : cur_defcon(2, CurPoints) & (not asked_landing(_, _) | asked_landing(_, 0)) 
 	<-	-asked_landing(_, _);
@@ -272,12 +271,11 @@
 		!land_on_best_neighbor;
 		.
 		
-+!doWhatIsNecessary : cur_defcon(1, CurPoints) & asked_cloning(N, K)
-	<-	-asked_cloning(N, K);
-		+asked_cloning(N, K-1);
++!doWhatIsNecessary : cur_defcon(1, CurPoints) & asked_cloning(N, K) & K > 0
+	<-	-+asked_cloning(N, K - 1);
 		.
 
-+!doWhatIsNecessary : cur_defcon(1, CurPoints) & (not asked_cloning(_, _) | asked_landing(_, 0)) 
++!doWhatIsNecessary : cur_defcon(1, CurPoints) & (not asked_cloning(_, _) | asked_cloning(_, 0)) 
 	<-	-asked_cloning(_, _);
 		!probe_neighbor;
 		!clone_on_best_neighbor;
@@ -310,7 +308,7 @@
 	<-	-ask_neighbor(N, K);
 		+ask_neighbor(N, K-1);
 		.
-+!send_to_neighbor(N) :  (not ask_neighbor(N,_) | ask_neighbor(N, 0)) & reply_neighbor_ok(N, K, D, A) & K > 0
++!send_to_neighbor(N) :  (not ask_neighbor(N,_) | ask_neighbor(N, F)) & reply_neighbor_ok(N, K, D, A) & K > 0
 	<-	-reply_neighbor_ok(N, K, D, A);
 		+reply_neighbor_ok(N, K-1, D, A);
 		.
