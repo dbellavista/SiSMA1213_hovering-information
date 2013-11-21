@@ -110,3 +110,27 @@ Hovering:
     anchor_radius: 100
     data_size: 20
     data: "Super h4 data!"
+  - name: 'h5'
+    xanchor: 600
+    yanchor: 60
+    anchor_radius: 200
+    data_size: 20
+    data: "Super h5 data!"
+  - name: 'h6'
+    xanchor: 700
+    yanchor: 700
+    anchor_radius: 100
+    data_size: 20
+    data: "Super h6 data!"
+  - name: 'h7'
+    xanchor: 500
+    yanchor: 500
+    anchor_radius: 200
+    data_size: 20
+    data: "Super h7 data!"
+  - name: 'h8'
+    xanchor: 400
+    yanchor: 700
+    anchor_radius: 100
+    data_size: 20
+    data: "Super h8 data!"

@@ -14,13 +14,13 @@
  ****************************************************************************************/
 
 // Needed for initialization concurrency  
-+?anchor(X, Y, Area) [source(_)]  : anchor(X, Y, Area) <- .print("Replying: ", X, ", ", Y, ", ", Area).
++?anchor(X, Y, Area) [source(_)]  : anchor(X, Y, Area) [source(_)].
 -?anchor(X, Y, Area) [source(_)]  <- .wait(500); ?anchor(X, Y, Area).
 
-+?hover_name(HoverName) [source(_)] : hover_name(HoverName).
++?hover_name(HoverName) [source(_)] : hover_name(HoverName)  [source(_)].
 -?hover_name(HoverName) [source(_)]  <- .wait(500); ?hover_name(HoverName).
 
-+?data(Data) [source(_)] : data(Data).
++?data(Data) [source(_)] : data(Data) [source(_)].
 -?data(Data) [source(_)]  <- .wait(500); ?data(Data).
  
 +!init : ~inited & worldWsp(WspName) & anchor(X, Y, Area) & size(S) &
@@ -76,7 +76,12 @@
 		.
 
 +!start : configured
-	<- 		!!survive;
+	<- 	?host(HostID, HostName);
+		?data(Data);
+		?hover_name(HoverName);
+		.my_name(Name);
+		.send(HostName, tell, my_data(Name, HoverName, Data));
+		!!survive;
 		!!receiveMessage;
 		.
 
@@ -86,8 +91,11 @@
 +!stop <- +stop_surviving;
 		+stop_receiving;
 		?host(HostID, HostName);
+		?data(Data);
+		?hover_name(HoverName);
 		.my_name(Name);
 		.send(HostName, tell, performing_arakiri(Name));
+		.send(HostName, untell, my_data(Name, HoverName, Data));
 		// ARAKIRI
 		!arakiri;.
 

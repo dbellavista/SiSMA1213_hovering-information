@@ -125,7 +125,7 @@
 		!send_info_to_all;
 		.
 
-+!newPiece(AgentName, HoverName, AX, AY, Area)
+@newPiece[atomic] +!newPiece(AgentName, HoverName, AX, AY, Area)
 	<-	?pieces(L);
 		if(.string(AgentName)) {
 			.term2string(HTerm, AgentName);
@@ -133,9 +133,10 @@
 			HTerm = AgentName;
 		}
 		-+pieces([[HTerm, HoverName, anchor(AX, AY, Area)] | L]);
-		
+		// ##################################################################
 		//.send(HTerm, askOne, data(_), data(Data));
 		//editData(HTerm, Data);
+		// ##################################################################
 		!send_info_to_all;
 		.
 
@@ -143,9 +144,16 @@
 	<- 	!manage_arakiri(Name);
 		.
 		
+//+my_data(Name, Data) [source (_)]
+//	<- 	!add_data(Name, Data);
+//		.
+
+//+!add_data(Name, Data)
+//	<- editData(Name, Data).
+
 +!manage_arakiri(Name)
 	<- 	!removeHovering(Name);
-		+managed_arakiri(Name);
+		//+managed_arakiri(Name);
 		-performing_arakiri(Name) [source(_)].
 
 //+position([X, Y]) <- .print("Pos: ", X, Y).
@@ -302,11 +310,7 @@
 
 @send_info[atomic] +!send_information(ID, List)
 	<-	?id(NodeID);
-		if(.ground(Res)) {
-			sendMessage(NodeID, ID, "mobile", [my_info, List], Res2);	
-		} else {
-			sendMessage(NodeID, ID, "mobile", [my_info, List], Res);
-		}
+		sendMessage(NodeID, ID, "mobile", [my_info, List]);
 		.
 
 +!prepare_info([], []).
@@ -338,25 +342,46 @@
  * * DATABASE ELABORATION
  ****************************************************************************************/
 //+position([X,Y]) <- .print(X, Y).
-//+database(_, []).
-//+database(ID, DB) <- !elaborate_db(ID, DB).
++database(_, []).
++database(ID, DB) <- !elaborate_db(ID, DB).
 
 +!elaborate_db(ID, []).
-+!elaborate_db(ID, [[_, False] | T]) <- !elaborate_db(ID, T).
++!elaborate_db(ID, [[_, false] | T]) <- !elaborate_db(ID, T).
 
 // Mien DB
-+!elaborate_db(ID, [[HName, True] | T]) : node_id(ID)
-	<- 	?pieces(L);
-		if(.member([Hover, HName, _], L)) {
-			//getData(Hover, Data, Res);
-			//if(Res) {
-				.print("I HAVE THE DATA: ");
-			//}
-		}
++!elaborate_db(ID, [[HName, true] | T]) : node_id(ID) & my_data(_, HName, Data) 
+	<- 	.print("I HAVE THE DATA: ", Data);
 		!elaborate_db(ID, T);
 		.
 
-+!elaborate_db(ID, [[HName, True] | T]) <- !elaborate_db(ID, T);.
++!elaborate_db(ID, [[HName, true] | T]) 
+	<- 	?id(NodeID);
+		sendMessage(NodeID, ID, "mobile", [please_data, HName]);
+		!elaborate_db(ID, T);
+		.
+
+@please_ok[atomic] +!manage_message(Sender, SenderName, ["please_data", HName]) : my_data(_, HName, Data) [source(_)]
+	<-	?id(NodeID);
+		sendMessage(NodeID, H, "mobile", [here_you_are, HName, Data]);
+		.
+
+@please_no[atomic] +!manage_message(Sender, SenderName, ["please_data", HName]).
+		
+@hereyouare[atomic] +!manage_message(Sender, SenderName, ["here_you_are", HName, Data])
+	<-	.print("Yehy! ", Data);
+		.
+
+//@please_not_ok[atomic] +!manage_message(Sender, SenderName, ["please_data", HName])
+//	<-	?id(NodeID);
+//		.findall(db(X, Y), database(X, Y), DBs);
+//		for(.member(db(Id, Db), DBs)) {
+//			if(not ((Id == NodeID) | (Id == Sender)) ) {
+//				if(.member([HName, _], Db)) {
+//					sendMessage(NodeID, Id, "mobile", [HName, Data]);			
+//				}
+//			}
+//		}
+//		.
 
 /****************************************************************************************
  * * RECEIVE MESSAGE LOOP
@@ -384,7 +409,7 @@
 				if(not (PName2  == PName)) {
 					// Duplicate!
 					.send(PName2, tell, please_die);
-					.fail;
+					.fail; // break :P
 				}
 			}		
 		}

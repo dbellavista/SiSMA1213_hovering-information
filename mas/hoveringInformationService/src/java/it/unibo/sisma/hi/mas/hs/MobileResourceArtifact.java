@@ -96,6 +96,19 @@ public class MobileResourceArtifact extends Artifact {
 			Res.set(false);
 		}
 	}
+	
+	@OPERATION
+	void sendMessage(Object senderName, Object receiverID, Object receiverName,
+			Object message) {
+		try {
+			execLinkedOp("env-link", "sendMessage", ID, senderName, range,
+					receiverID, receiverName, message);
+		} catch (Exception e) {
+			// e.printStackTrace();
+			// failed("sendMessage linked operation failed", "fail", ID, e);
+		}
+	}
+
 
 	@OPERATION
 	void imIn(Number x, Number y, Number ax, Number ay, Number area,
