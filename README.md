@@ -1,50 +1,40 @@
-# SiSMA1213 - Hovering Information implementation and simulation using MAS and complex networks theory.
+# SiSMA1213 - Hovering Information using MAS.
 
 This project, developed for Multi-Agents System course, is aimed to
 realize an *Hovering Information* system using a multi-agent approach
-for implementation and simulation and concept and models from complex
-network theory for analysis.
+for implementation.
 
 ## Project Content
 
 The repository is structured as following:
 
-* Report
-	* Introduction
-	* AOSE process (SODA)
-	* Simulator implementation
-	* Analysis Results
-* MAS implementation
-* Simulator Implementation
-* Network analysis implementation
-* Presentation
+  * Report
+    * Introduction
+    * AOSE process (SODA)
+    * System implementation
+  * MAS implementation
+  * Presentation
 
 ## Background
 ### Hovering Information
 
-> Hovering Information - Infrastructure-Free Self-Organising Location-Aware Information Dissemination Service, Alfredo A. Villalba Castro, Giovanna Di Marzo Serugendo, and Dimitri Konstantas
+    Hovering Information - Infrastructure-Free Self-Organising Location-Aware Information Dissemination Service, Alfredo A. Villalba Castro, Giovanna Di Marzo Serugendo, and Dimitri Konstantas
 
-### Simulation
+### Moving people
 
 A possible approach:
 
-> Human Mobility in Shopping Mall Environments, Adriano Galati, Chris Greenhalgh
+    Human Mobility in Shopping Mall Environments, Adriano Galati, Chris Greenhalgh
 
-### Data Analysis
-
-*TODO*
+For now, people move randomly.
 
 ## MAS Engineering methodology
 
 SODA (Societies in Open and Distributed Agent spaces) methodology used.
 
-> http://www.alice.unibo.it/xwiki/bin/view/SODA/Documents
+    http://www.alice.unibo.it/xwiki/bin/view/SODA/Documents
 
-## Simulator Design
+## GUI Design
 
 2D graphical simulator
-
-## Complex System Analysis
-
-*TODO*
 
