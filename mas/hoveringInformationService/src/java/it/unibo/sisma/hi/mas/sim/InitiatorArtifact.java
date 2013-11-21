@@ -60,23 +60,21 @@ public class InitiatorArtifact extends Artifact {
 					break;
 				case "Simulation":
 					defineObsProperty("parameter", "simulation");
-					execInternalOp("readSimulation",
-							(LinkedHashMap<String, Object>) entry.getValue());
+					readSimulation((LinkedHashMap<String, Object>) entry
+							.getValue());
 					break;
 				case "Analysis":
 					defineObsProperty("parameter", "analysis");
-					execInternalOp("readAnalysis",
-							(LinkedHashMap<String, Object>) entry.getValue());
+					readAnalysis((LinkedHashMap<String, Object>) entry
+							.getValue());
 					break;
 				case "People":
 					defineObsProperty("parameter", "people");
-					execInternalOp("readPeople",
-							(ArrayList<Object>) entry.getValue());
+					readPeople((ArrayList<Object>) entry.getValue());
 					break;
 				case "Hovering":
 					defineObsProperty("parameter", "hovering");
-					execInternalOp("readHovering",
-							(ArrayList<Object>) entry.getValue());
+					readHovering((ArrayList<Object>) entry.getValue());
 					break;
 				}
 			}
@@ -204,6 +202,10 @@ public class InitiatorArtifact extends Artifact {
 					break;
 				case "data_size":
 					defineObsProperty("parameter", "hovering", id, "data_size",
+							entry.getValue());
+					break;
+				case "data":
+					defineObsProperty("parameter", "hovering", id, "data",
 							entry.getValue());
 					break;
 				}

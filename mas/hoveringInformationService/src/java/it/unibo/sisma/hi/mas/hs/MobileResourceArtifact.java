@@ -2,12 +2,12 @@
 
 package it.unibo.sisma.hi.mas.hs;
 
+import it.unibo.sisma.hi.mas.environment.SleepCmd;
+
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 
 import cartago.ARTIFACT_INFO;
 import cartago.Artifact;
@@ -22,7 +22,9 @@ public class MobileResourceArtifact extends Artifact {
 	private double range;
 	private MobileStorage storage;
 	private Object ID;
-	Collection<Object> neighbors;
+	private Collection<Object> neighbors;
+	private SleepCmd sleepCmd;
+	private boolean obtainingPos;
 
 	void init(Object ID, Number range, Number storage) {
 
@@ -30,9 +32,11 @@ public class MobileResourceArtifact extends Artifact {
 		this.range = range.doubleValue();
 		neighbors = new ArrayList<>();
 		this.storage = new MobileStorage(storage.doubleValue());
+		sleepCmd = new SleepCmd(500);
+
 		defineObsProperty("neighbors",
 				(Object) neighbors.toArray(new Object[neighbors.size()]));
-		defineObsProperty("position", (Object) new Object[0]);
+		defineObsProperty("position", (Object) new double[2]);
 
 		defineObsProperty("total_space", this.storage.getTotalSpace());
 		defineObsProperty("free_space", this.storage.getFreeSpace());
@@ -94,6 +98,17 @@ public class MobileResourceArtifact extends Artifact {
 	}
 
 	@OPERATION
+	void imIn(Number x, Number y, Number ax, Number ay, Number area,
+			OpFeedbackParam<Boolean> Res) {
+		double dx = x.doubleValue();
+		double dy = y.doubleValue();
+		double dax = ax.doubleValue();
+		double day = ay.doubleValue();
+		double darea = area.doubleValue();
+		Res.set(Math.sqrt((dx - dax) * (dx - dax) + (dy - day) * (dy - day)) < darea);
+	}
+
+	@OPERATION
 	void receiveMessage(Object receiverName, OpFeedbackParam<Boolean> res,
 			OpFeedbackParam<Object> sender, OpFeedbackParam<Object> senderName,
 			OpFeedbackParam<Object> message) {
@@ -148,18 +163,65 @@ public class MobileResourceArtifact extends Artifact {
 	}
 
 	@OPERATION
-	void obtainPosition(OpFeedbackParam<Double> x, OpFeedbackParam<Double> y) {
-		try {
-			OpFeedbackParam<double[]> position = new OpFeedbackParam<>();
-			execLinkedOp("env-link", "obtainPosition", ID, position);
-			x.set(position.get()[0]);
-			y.set(position.get()[1]);
-			ObsProperty psProp = getObsProperty("position");
-			psProp.updateValue(position.get());
-		} catch (Exception e) {
-			e.printStackTrace();
-			failed("obtainPosition linked operation failed", "fail", ID, e);
+	void stopObtainingPosition() {
+		obtainingPos = false;
+	}
+
+	@OPERATION
+	void startObtainingPosition() {
+		obtainingPos = true;
+
+		OpFeedbackParam<double[]> position = new OpFeedbackParam<>();
+		while (obtainingPos) {
+			await(sleepCmd);
+			try {
+				ObsProperty psProp = getObsProperty("position");
+				obtainPositionIn(position);
+				double[] newPos = position.get();
+				double[] pos = (double[]) psProp.getValue();
+				if (pos[0] != newPos[0] || pos[1] != newPos[1]) {
+					pos[0] = newPos[0];
+					pos[1] = newPos[1];
+					psProp.updateValue(pos);
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
+	@OPERATION
+	void obtainPosition(OpFeedbackParam<Double> x, OpFeedbackParam<Double> y) {
+		if (!obtainingPos) {
+			try {
+				OpFeedbackParam<double[]> position = new OpFeedbackParam<>();
+				obtainPositionIn(position);
+				if (x != null && y != null) {
+					x.set(position.get()[0]);
+					y.set(position.get()[1]);
+				}
+				ObsProperty psProp = getObsProperty("position");
+				psProp.updateValue(position.get());
+			} catch (Exception e) {
+				e.printStackTrace();
+				failed("ObtainPosition operation failed", "fail", ID,
+						e.getMessage());
+			}
+		} else {
+			ObsProperty psProp = getObsProperty("position");
+			double[] tmp = (double[]) psProp.getValue();
+			x.set(tmp[0]);
+			y.set(tmp[1]);
+		}
+	}
+
+	private void obtainPositionIn(OpFeedbackParam<double[]> position) {
+		try {
+			execLinkedOp("env-link", "obtainPosition", ID, position);
+		} catch (Exception e) {
+			e.printStackTrace();
+			failed("Internal: obtainPosition linked operation failed", "fail",
+					ID, e);
+		}
+	}
 }

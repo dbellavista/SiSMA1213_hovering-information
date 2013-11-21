@@ -14,14 +14,14 @@ Analysis:
 People:
   - name: 'pippo'
     behaviour: 'random'
-    xpos: 'random'
-    ypos: 'random'
+    xpos: 10
+    ypos: 20
     device_range: 200
     device_storage: 100
   - name: 'pluto'
     behaviour: 'random'
-    xpos: 'random'
-    ypos: 'random'
+    xpos: 20
+    ypos: 10
     device_range: 200
     device_storage: 100
   - name: 'pippo'
@@ -84,25 +84,29 @@ People:
     ypos: 'random'
     device_range: 200
     device_storage: 100
-       
+
 Hovering:
   - name: 'h1'
     xanchor: 20
     yanchor: 70
     anchor_radius: 100
     data_size: 30
+    data: "Super h1 data!"
   - name: 'h2'
     xanchor: 100
     yanchor: 400
     anchor_radius: 100
     data_size: 40
+    data: "Super h2 data!"
   - name: 'h3'
     xanchor: 400
     yanchor: 400
-    anchor_radius: 200
+    anchor_radius: 50
     data_size: 40
+    data: "Super h3 data!"
   - name: 'h4'
     xanchor: 300
     yanchor: 70
     anchor_radius: 100
     data_size: 20
+    data: "Super h4 data!"

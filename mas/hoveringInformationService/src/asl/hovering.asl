@@ -8,13 +8,24 @@
 !init.
 
 /* Plans */
+
 /****************************************************************************************
  * * INITIALIZATION, STARTING AND STOPPING PLANS
  ****************************************************************************************/
+
+// Needed for initialization concurrency  
++?anchor(X, Y, Area) [source(_)]  : anchor(X, Y, Area) <- .print("Replying: ", X, ", ", Y, ", ", Area).
+-?anchor(X, Y, Area) [source(_)]  <- .wait(500); ?anchor(X, Y, Area).
+
++?hover_name(HoverName) [source(_)] : hover_name(HoverName).
+-?hover_name(HoverName) [source(_)]  <- .wait(500); ?hover_name(HoverName).
+
++?data(Data) [source(_)] : data(Data).
+-?data(Data) [source(_)]  <- .wait(500); ?data(Data).
+ 
 +!init : ~inited & worldWsp(WspName) & anchor(X, Y, Area) & size(S) &
-		hover_name(HoverName) & host(DeviceID, DeviceName)
+		hover_name(HoverName) & host(DeviceID, DeviceName) & data(Data)
 	<-	-~inited;
-		
 		joinWorkspace(WspName, WspId);
 		+workspace(world, WspId);
 		cartago.set_current_wsp(WspId);
@@ -75,11 +86,14 @@
 +!stop <- +stop_surviving;
 		+stop_receiving;
 		?host(HostID, HostName);
-		.send(HostName, tell, performing_arakiri);
+		.my_name(Name);
+		.send(HostName, tell, performing_arakiri(Name));
 		// ARAKIRI
 		!arakiri;.
 
--!arakiri <- .my_name(Name); .kill_agent(Name).
+-!stop <- !arakiri.
+
+-!arakiri <- .wait(2000); .my_name(Name); .kill_agent(Name).
 
 /**
  * Sent by the mobile node if the initial dissemination is not feasible
@@ -218,8 +232,14 @@
 		// TODO: use the approach level to consider the direction
 		?artifacts(hovering, HArtID);
 		exp(DistancePoints, -Mul*(Dist / Max_Dist)) [artifact_id(HArtID)];
-		exp(NeighborPoints_tmp, NumNeigh / 10) [artifact_id(HArtID)];
-		NeighborPoints = NeighborPoints_tmp - 1;
+		
+		if(.ground(NeighborPoints_tmp)) {
+			exp(NeighborPoints_tmp2, NumNeigh / 10) [artifact_id(HArtID)];
+			NeighborPoints = NeighborPoints_tmp2 - 1;
+		} else {
+			exp(NeighborPoints_tmp, NumNeigh / 10) [artifact_id(HArtID)];
+			NeighborPoints = NeighborPoints_tmp - 1;
+		}		
 		
 		!setDefcon(0.5 * DistancePoints + 0.5 * NeighborPoints);
 		.
@@ -424,7 +444,8 @@
 		?anchor(X, Y, Area);
 		?size(S);
 		?hover_name(HoverName);
-		sendMessage(Name, Sender, "mobile", [clone, X, Y, Area, S, HoverName, AgentName], Res);
+		?data(Data);
+		sendMessage(Name, Sender, "mobile", [clone, X, Y, Area, S, HoverName, AgentName, Data], Res);
 		-asked_cloning(Sender, _);
 		.
 
@@ -448,7 +469,7 @@
 		// In real life the agent should stop. For "idon'twanttoimplementit" reasons,
 		// the agent communicate to the host the migration and pause itself. 
 		if(Res) {
-			.send(Host, tell, performing_arakiri);
+			.send(Host, tell, performing_arakiri(Name));
 			?workspace(host, WspNodeId);
 			cartago.set_current_wsp(WspNodeId);
 			quitWorkspace;
@@ -479,7 +500,7 @@
 
 +!abort_landing(HostID, HostName, MobileWsp) : landing(HostID) & i_can_resume(HostID)
 	<- 	// Curses!
-		!arakiri;.
+		!stop;.
 
 /**
  * Internal synch: wait for the cleanup to be completed before resuming.

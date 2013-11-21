@@ -76,11 +76,26 @@
 		!!discoverNeighbors;
 		!!receiveMessage;
 		!!cleanup;
+		!!startObtainingPosition;
 		.
 
 +!stop : configured
-	<-	+stop_receiving;
+	<-	!stopObtainingPosition;	
+		+stop_receiving;
 		+stop_discovering;
+		.
+		
+/****************************************************************************************
+ * * POSITION MANAGEMENT
+ ****************************************************************************************/
++!startObtainingPosition
+	<-	?artifacts(resource, MResID);
+		startObtainingPosition [artifact_id(MResID)];
+		.
+
++!stopObtainingPosition
+	<-	?artifacts(resource, MResID);
+		stopObtainingPosition [artifact_id(MResID)];
 		.
 
 /****************************************************************************************
@@ -89,34 +104,51 @@
 
 @allocInit[atomic] +!manage_message(Sender, SenderName, ["init_dissemination", HoveringName, DS])
 	<- 	allocateData(HoveringName, DS, Res);
-		if(.string(HoveringName)) {
-			.term2string(HTerm, HoveringName);
-		} else {
-			HTerm = HoveringName;
-		}
 		if(Res) {
-			?pieces(L);
-			.send(HoveringName, askOne, hover_name(X), hover_name(HoverName));
-			-+pieces([[HTerm, HoverName] | L]);
-			.send(HTerm, achieve, start);
+			.send(HoveringName, askOne, hover_name(_), hover_name(HoverName));
+			.send(HoveringName, askOne, anchor(_, _, _), anchor(AX, AY, Area));
+			
+			!newPiece(HoveringName, HoverName, AX, AY, Area);
+			.send(HoveringName, achieve, start);
 		} else {
-			.send(HTerm, tell, sorry_after_init);
+			.send(HoveringName, tell, sorry_after_init);
 			 // ?node_id(MyNodeID);
 			// sendMessage(MyNodeID, HoveringName, [sorry_after_init]);
 		}
 		.
 
-
 @remHovering[atomic] +!removeHovering(Name)
 	<-	removeData(Name);
 		?pieces(OldList);
-		.delete([Name, _], OldList, List);
-		-pieces(_);
-		+pieces(List);
+		.delete([Name, _, _], OldList, List);
+		-+pieces(List);
+		!send_info_to_all;
 		.
 
-+performing_arakiri [source(Name)]
-	<- 	!removeHovering(Name).
++!newPiece(AgentName, HoverName, AX, AY, Area)
+	<-	?pieces(L);
+		if(.string(AgentName)) {
+			.term2string(HTerm, AgentName);
+		} else {
+			HTerm = AgentName;
+		}
+		-+pieces([[HTerm, HoverName, anchor(AX, AY, Area)] | L]);
+		
+		//.send(HTerm, askOne, data(_), data(Data));
+		//editData(HTerm, Data);
+		!send_info_to_all;
+		.
+
++performing_arakiri(Name)
+	<- 	!manage_arakiri(Name);
+		.
+		
++!manage_arakiri(Name)
+	<- 	!removeHovering(Name);
+		+managed_arakiri(Name);
+		-performing_arakiri(Name) [source(_)].
+
+//+position([X, Y]) <- .print("Pos: ", X, Y).
 
 /****************************************************************************************
  * * PRE-PROTOCOL FOR LANDING OR CLONING 
@@ -125,7 +157,6 @@
 	<-	?free_space(FS);
 		.my_name(Name);
 		if(FS >= DS) {
-			obtainPosition(_, _);
 			?position([X, Y]);
 			?pieces(PL);
 			if(.member([_, HName, _], PL)) {
@@ -158,7 +189,7 @@
 		} else {
 			HTerm = SenderName;
 		}
-		if(.member([HTerm, _], L)) {
+		if(.member([HTerm, _, _], L)) {
 			.fail
 		}
 		removeData(SenderName).
@@ -183,14 +214,12 @@
 			.my_name(HostName);
 			?node_id(HostID);
 			?workspace(node, MobileWsp, _);
-			?pieces(L);
-			if(.string(SenderName)) {
-				.term2string(HTerm, SenderName);
-			} else {
-				HTerm = SenderName;
-			}
-			.send(SenderName, askOne, hover_name(X), hover_name(HoverName));
-			-+pieces([[HTerm, HoverName] | L]);
+			
+			.send(SenderName, askOne, hover_name(_), hover_name(HoverName));
+			.send(SenderName, askOne, anchor(_, _, _), anchor(AX, AY, Area));
+			
+			!newPiece(SenderName, HoverName, AX, AY, Area);
+			
 			.send(SenderName, tell, you_can_resume(HostID, HostName, MobileWsp));
 		} else {
 			// Invalid request. Sorry for the piece.
@@ -204,7 +233,7 @@
 /**
  * Cloning procedure: the agent must be created
  */
-@clone[atomic] +!manage_message(Sender, SenderName, ["clone", AX, AY, Area, Size, HoverName, AgentName])
+@clone[atomic] +!manage_message(Sender, SenderName, ["clone", AX, AY, Area, Size, HoverName, AgentName, Data])
 	<-	// Check if the space is allocated
 		getData(SenderName, _, Res);
 		if(Res) {
@@ -216,18 +245,10 @@
 			.create_agent(AgentName, "hovering.asl", [agentArchClass("c4jason.CAgentArch")]);
 
 			.send(AgentName, tell, [worldWsp(WorldWsp), hover_name(HoverName), 
-									anchor(AX, AY, Area), size(Size), host(HostID, HostName)]
-									);
-						
-			?pieces(L);
-			if(.string(AgentName)) {
-				.term2string(HTerm, AgentName);
-			} else {
-				HTerm = AgentName;
-			}
-			-+pieces([[HTerm, HoverName] | L]);
+									anchor(AX, AY, Area), size(Size), host(HostID, HostName), data(Data)]);
 			
-			.send(HTerm, achieve, start);
+			!newPiece(AgentName, HoverName, AX, AY, Area);
+			.send(AgentName, achieve, start);
 		} else {
 			// Invalid request. Sorry for the piece.
 			.send(SenderName, tell, sorry_clone_failed(HostID, HostName, MobileWsp));
@@ -238,17 +259,104 @@
 /****************************************************************************************
  * * NEIGHBOR MANAGEMENT
  ****************************************************************************************/
-+new_neighbor(ID) <- -new_neighbor(ID) [source(_)];.
-+neighbor_gone(ID) <- -neighbor_gone(ID) [source(_)].
++new_neighbor(ID) <-
+		!send_information(ID); 
+		-new_neighbor(ID) [source(_)];.
+
++neighbor_gone(ID) <- 
+		-database(ID, _);
+		-neighbor_gone(ID) [source(_)].
 
 +!discoverNeighbors : stop_discovering.
 
 +!discoverNeighbors : not stop_discovering
 	<-	?artifacts(resource, MResID);
 		discoverNeighbors(_) [artifact_id(MResID)];
-		.wait(1000);
+		.wait(500);
 		!!discoverNeighbors;
 		.
+
+/****************************************************************************************
+ * * DATABASE DISTRIBUTION
+ ****************************************************************************************/
+
++!send_info_to_all
+	<-	?neighbors(NList);
+		?pieces(PList);
+		!prepare_info(PList, ResList);
+		!update_my_info(ResList);
+		!send_info_to_all(NList, ResList);
+		.
+
++!send_info_to_all([], _).
++!send_info_to_all([ID | Tail], ResList)
+	<-	!send_information(ID, ResList);
+		!send_info_to_all(Tail, ResList);
+		.
+
++!send_information(ID)
+	<- 	?pieces(List);
+		!prepare_info(List, ResList);
+		!send_information(ID, ResList);
+	.
+
+@send_info[atomic] +!send_information(ID, List)
+	<-	?id(NodeID);
+		if(.ground(Res)) {
+			sendMessage(NodeID, ID, "mobile", [my_info, List], Res2);	
+		} else {
+			sendMessage(NodeID, ID, "mobile", [my_info, List], Res);
+		}
+		.
+
++!prepare_info([], []).
++!prepare_info([[_, HName, anchor(AX, AY, Area)] | T1], [[HName, AX, AY, Area] | T2]) <- !prepare_info(T1, T2).
+
+
+@my_info[atomic] +!manage_message(Sender, SenderName, ["my_info", List])
+	<-	!add_db(Sender, List, DB);
+		-database(Sender, _);
+		+database(Sender, DB);
+	.
+
++!update_my_info(ResList)
+	<-	?node_id(ID);
+		!add_db(ID, ResList, DB);
+		-database(ID, _);
+		+database(ID, DB);
+	.
+
++!add_db(Sender, [], []).
++!add_db(Sender, [[HName, AX, AY, Area] | T1], [[HName, ImIn] | T2])
+	<-  ?artifacts(resource, MResID);
+		?position([X, Y]);
+		imIn(X, Y, AX, AY, Area, ImIn) [artifact_id(MResID)];
+		!add_db(Sender, T1, T2);
+		.
+
+/****************************************************************************************
+ * * DATABASE ELABORATION
+ ****************************************************************************************/
+//+position([X,Y]) <- .print(X, Y).
+//+database(_, []).
+//+database(ID, DB) <- !elaborate_db(ID, DB).
+
++!elaborate_db(ID, []).
++!elaborate_db(ID, [[_, False] | T]) <- !elaborate_db(ID, T).
+
+// Mien DB
++!elaborate_db(ID, [[HName, True] | T]) : node_id(ID)
+	<- 	?pieces(L);
+		if(.member([Hover, HName, _], L)) {
+			//getData(Hover, Data, Res);
+			//if(Res) {
+				.print("I HAVE THE DATA: ");
+			//}
+		}
+		!elaborate_db(ID, T);
+		.
+
++!elaborate_db(ID, [[HName, True] | T]) <- !elaborate_db(ID, T);.
 
 /****************************************************************************************
  * * RECEIVE MESSAGE LOOP
@@ -269,13 +377,14 @@
  ****************************************************************************************/
 
 +!cleanup
-	<-	.wait(2000);
+	<-	.wait(500);
 		?pieces(L);
-		for(.member([PName, HName], L)) {
-			for(.member([PName2, HName], L)) {
+		for(.member([PName, HName, _], L)) {
+			for(.member([PName2, HName, _], L)) {
 				if(not (PName2  == PName)) {
 					// Duplicate!
 					.send(PName2, tell, please_die);
+					.fail;
 				}
 			}		
 		}

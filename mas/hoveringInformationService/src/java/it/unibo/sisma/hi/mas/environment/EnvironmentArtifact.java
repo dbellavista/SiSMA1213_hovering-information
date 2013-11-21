@@ -14,7 +14,6 @@ import java.util.concurrent.locks.ReentrantReadWriteLock.ReadLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock.WriteLock;
 
 import cartago.Artifact;
-import cartago.INTERNAL_OPERATION;
 import cartago.LINK;
 import cartago.OPERATION;
 import cartago.OpFeedbackParam;
@@ -226,7 +225,7 @@ public class EnvironmentArtifact extends Artifact {
 						.insertMessage(
 								new Message(message, receiverName, senderID,
 										senderName));
-				execInternalOp("addNewRecentCommunication", senderID, receiverID);
+				addNewRecentCommunication(senderID, receiverID);
 			} else {
 				failed("Receiver not in range!");
 				return;
@@ -241,8 +240,7 @@ public class EnvironmentArtifact extends Artifact {
 		}
 	}
 
-	@INTERNAL_OPERATION
-	synchronized void addNewRecentCommunication(Object senderID,
+	private synchronized void addNewRecentCommunication(Object senderID,
 			Object receiverID) {
 		RecentCommunication newRc = new RecentCommunication(senderID,
 				receiverID);
@@ -254,8 +252,7 @@ public class EnvironmentArtifact extends Artifact {
 		commMap.put(newRc, newRc);
 	}
 
-	@INTERNAL_OPERATION
-	synchronized void generateRecentCommList(OpFeedbackParam<Object[][]> ret) {
+	private synchronized Object[][] generateRecentCommList() {
 		ArrayList<Object[]> list = new ArrayList<>();
 		ArrayList<RecentCommunication> toRemove = new ArrayList<>();
 		for (RecentCommunication rc : commMap.keySet()) {
@@ -268,7 +265,7 @@ public class EnvironmentArtifact extends Artifact {
 		for (RecentCommunication rc : toRemove) {
 			commMap.remove(rc);
 		}
-		ret.set(list.toArray(new Object[list.size()][]));
+		return list.toArray(new Object[list.size()][]);
 	}
 
 	@LINK
@@ -313,7 +310,7 @@ public class EnvironmentArtifact extends Artifact {
 			OpFeedbackParam<Double> worldHeight) {
 		List<Object> pl = new ArrayList<>();
 		List<Object> potl = new ArrayList<>();
-		execInternalOp("generateRecentCommList", listRecentComm);
+		listRecentComm.set(generateRecentCommList());
 		// listRecentComm.set(new Object[0][2]);
 		for (Entry<Object, ReentrantReadWriteLock> l : locks.entrySet()) {
 			ReadLock r = l.getValue().readLock();

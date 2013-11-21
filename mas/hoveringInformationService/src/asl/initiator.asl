@@ -164,6 +164,7 @@ behaviour("none", none).
 		?parameter("hovering", NH, "yanchor", Y);
 		?parameter("hovering", NH, "anchor_radius", AR);
 		?parameter("hovering", NH, "data_size", DS);
+		?parameter("hovering", NH, "data", Data);
 		?parameter("simulation", "dissemination", DISS);
 
 		// Add point of interest
@@ -177,47 +178,46 @@ behaviour("none", none).
 		?wsp(default, DWspId);
 		cartago.set_current_wsp(DWspId);
 		
+		// Disseminate hovering information among people
+		!disseminate(IDHover, NH, anchor(X, Y, AR), size(DS), data(Data), DISS);
 		println("Hovering ",Name," configuration",
 				"\n   * anchor=(",X,", ",Y,")",
 				"\n   * anchor_radius=",AR,
 				"\n   * data_size=",DS,
-				"\n   * Disseminations:"
+				"\n   * data=",Data
 		);
-		// Disseminate hovering information among people
-		!disseminate(IDHover, NH, anchor(X, Y, AR), size(DS), DISS);
 		!setup_hovering(NH - 1);
 	.
 	
-+!disseminate(ID, NH, Anchor, Size, random)
++!disseminate(ID, NH, Anchor, Size, Data, random)
 	<-	?artifact(init, _, InitArt); 
 		?parameter("people", NP);
 		// Random: for each person, give a piece with probability p
 		toss_coin(1.0, DissRes);
-		!random_dissemination(ID, NH, Anchor, Size, NP, 1.0, 1, DissRes);
+		!random_dissemination(ID, NH, Anchor, Size, Data, NP, 1.0, 1, DissRes);
 		.
 
-+!random_dissemination(I, NH, A, S, NP, P, IX, _) : 
++!random_dissemination(I, NH, A, S, D, NP, P, IX, _) : 
 		NP <= 0.
 
-+!random_dissemination(ID, NH, Anchor, Size, NP, Prob, Index, true) :
++!random_dissemination(ID, NH, Anchor, Size, Data, NP, Prob, Index, true) :
 		person(NP, PersonAgent)
 	<-	.concat(ID, "_", NameT);
 		.concat(NameT, Index, HoveringAgent);
 		.concat("device_", PersonAgent, DeviceName);
-		!create_hovering_agent(HoveringAgent, ID, Anchor, Size, PersonAgent, DeviceName);		
+		!create_hovering_agent(HoveringAgent, ID, Anchor, Size, Data, PersonAgent, DeviceName);		
 		// DRY trick
-		!random_dissemination(ID, NH, Anchor, Size, NP, Prob, Index + 1, false);
+		!random_dissemination(ID, NH, Anchor, Size, Data, NP, Prob, Index + 1, false);
 		.
 
-+!random_dissemination(ID, NH, Anchor, Size, NP, Prob, Index, false) : person(NP, PersonAgent)
++!random_dissemination(ID, NH, Anchor, Size, Data, NP, Prob, Index, false) : person(NP, PersonAgent)
 	<-	toss_coin(Prob, DissRes);
-		!random_dissemination(ID, NH, Anchor, Size, NP - 1, Prob, Index, DissRes).
+		!random_dissemination(ID, NH, Anchor, Size, Data, NP - 1, Prob, Index, DissRes).
 
-+!create_hovering_agent(Name, HoverName, Anchor, size(Size), DeviceID, DeviceName)
++!create_hovering_agent(Name, HoverName, Anchor, size(Size), Data, DeviceID, DeviceName)
 	<- 	.create_agent(Name, "hovering.asl", [agentArchClass("c4jason.CAgentArch")]);
 		?wsp(world, WspName, _);
-		.send(Name, tell, [worldWsp(WspName), hover_name(HoverName), Anchor, size(Size), host(DeviceID, DeviceName)]);
-		// TODO: insert the hovering information inside the mobile node
+		.send(Name, tell, [worldWsp(WspName), hover_name(HoverName), Anchor, size(Size), Data, host(DeviceID, DeviceName)]);
 		?artifact(env, "EnvArtifact", EAid);
 		backdoorSendMessage(DeviceID, "mobile", [init_dissemination, Name, Size]) [artifact_id(EAid)];
 		.
