@@ -12,125 +12,155 @@ Analysis:
   analysis_rate: 1000
   
 People:
-  - name: 'pippo'
+  - name: 'ricci'
     behaviour: 'random'
     xpos: 10
     ypos: 20
     device_range: 200
     device_storage: 100
-  - name: 'pluto'
+  - name: 'viroli'
     behaviour: 'random'
     xpos: 20
     ypos: 10
     device_range: 200
     device_storage: 100
-  - name: 'pippo'
+  - name: 'omicini'
     behaviour: 'random'
     xpos: 'random'
     ypos: 'random'
     device_range: 200
     device_storage: 100
-  - name: 'pluto'
+  - name: 'roli'
     behaviour: 'random'
     xpos: 'random'
     ypos: 'random'
     device_range: 200
     device_storage: 100
-  - name: 'pippo'
+  - name: 'callegati'
     behaviour: 'random'
     xpos: 'random'
     ypos: 'random'
     device_range: 200
     device_storage: 100
-  - name: 'pluto'
+  - name: 'cerroni'
     behaviour: 'random'
     xpos: 'random'
     ypos: 'random'
     device_range: 200
     device_storage: 100
-  - name: 'pippo'
+  - name: 'natali'
     behaviour: 'random'
     xpos: 'random'
     ypos: 'random'
     device_range: 200
     device_storage: 100
-  - name: 'pluto'
+  - name: 'bevilacqua'
     behaviour: 'random'
     xpos: 'random'
     ypos: 'random'
     device_range: 200
     device_storage: 100
-  - name: 'pippo'
+  - name: 'baldacci'
     behaviour: 'random'
     xpos: 'random'
     ypos: 'random'
     device_range: 200
     device_storage: 100
-  - name: 'pluto'
+  - name: 'salmoncinotti'
     behaviour: 'random'
     xpos: 'random'
     ypos: 'random'
     device_range: 200
     device_storage: 100
-  - name: 'pippo'
+  - name: 'naldi'
     behaviour: 'random'
     xpos: 'random'
     ypos: 'random'
     device_range: 200
     device_storage: 100
-  - name: 'pluto'
+  - name: 'lumini'
     behaviour: 'random'
     xpos: 'random'
     ypos: 'random'
     device_range: 200
     device_storage: 100
-
+  - name: 'morigi'
+    behaviour: 'random'
+    xpos: 'random'
+    ypos: 'random'
+    device_range: 200
+    device_storage: 100
+    
 Hovering:
-  - name: 'h1'
+  - name: 'sma'
     xanchor: 20
     yanchor: 70
-    anchor_radius: 100
+    anchor_radius: 150
     data_size: 30
-    data: "Super h1 data!"
-  - name: 'h2'
+    data: "The agent is strong in this one!"
+  - name: 'iss'
     xanchor: 100
     yanchor: 400
     anchor_radius: 100
     data_size: 40
-    data: "Super h2 data!"
-  - name: 'h3'
-    xanchor: 400
-    yanchor: 400
-    anchor_radius: 50
+    data: "This is a meta-meta-meta-information."
+  - name: 'pcd'
+    xanchor: 300
+    yanchor: 300
+    anchor_radius: 150
     data_size: 40
-    data: "Super h3 data!"
-  - name: 'h4'
+    data: "The CTFoMator will never work!"
+  - name: 'ia'
     xanchor: 300
     yanchor: 70
     anchor_radius: 100
     data_size: 20
-    data: "Super h4 data!"
-  - name: 'h5'
-    xanchor: 600
-    yanchor: 60
-    anchor_radius: 200
+    data: "Never send a human to do a machine's job."
+  - name: 'mmsd'
+    xanchor: 700
+    yanchor: 80
+    anchor_radius: 100
     data_size: 20
-    data: "Super h5 data!"
-  - name: 'h6'
+    data: "I know you can walk better than this!"
+  - name: 'rt'
     xanchor: 700
     yanchor: 700
     anchor_radius: 100
     data_size: 20
-    data: "Super h6 data!"
-  - name: 'h7'
+    data: "Nagle was right!"
+  - name: 'sisinfo'
     xanchor: 500
     yanchor: 500
-    anchor_radius: 200
+    anchor_radius: 110
     data_size: 20
-    data: "Super h7 data!"
-  - name: 'h8'
+    data: "This ain't no sql."
+  - name: 'sei'
     xanchor: 400
+    yanchor: 700
+    anchor_radius: 120
+    data_size: 20
+    data: "We fly much higher than this!"
+  - name: 'fcg'
+    xanchor: 30
     yanchor: 700
     anchor_radius: 100
     data_size: 20
-    data: "Super h8 data!"
+    data: "This isn't a proper 3d model..."
+  - name: 'fei'
+    xanchor: 600
+    yanchor: 200
+    anchor_radius: 110
+    data_size: 20
+    data: "What about performances? Oh right, jason."
+  - name: 'lmc'
+    xanchor: 700
+    yanchor: 400
+    anchor_radius: 140
+    data_size: 20
+    data: "Not a single language was given that day."
+  - name: 'seta'
+    xanchor: 200
+    yanchor: 600
+    anchor_radius: 120
+    data_size: 20
+    data: "They should have introduced Stuxnet..."
