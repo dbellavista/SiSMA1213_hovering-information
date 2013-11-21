@@ -4,42 +4,32 @@ package it.unibo.sisma.hi.mas.hs;
 
 import cartago.*;
 
-@ARTIFACT_INFO(
-		outports = {
-				@OUTPORT(name = "to-device")
-				}
-		)
+@ARTIFACT_INFO(outports = { @OUTPORT(name = "to-device") })
 public class MobileUIArtifact extends Artifact {
-	
-	void init() {
-		
-	}
-	
-	@OPERATION void createInformation() {
-		try {
-			execLinkedOp("to-device", "createInformation");
 
-		} catch (Exception e) {
-			e.printStackTrace();
-			failed("CreateInformation linked operation failed", "fail", e);
-		}
+	void init() {
+
 	}
-	
-	@LINK void showInformation() {
-		
+
+	@LINK
+	void showInformation(Object hoverName, Object data) {
+		signal("information", hoverName, data);
 	}
-	
-	@OPERATION void startDevice() {
+
+	@OPERATION
+	void startDevice() {
 		try {
 			execLinkedOp("to-device", "startDevice");
 
 		} catch (Exception e) {
 			e.printStackTrace();
-			failed("startDevice linked operation failed", "fail", e.getMessage());
+			failed("startDevice linked operation failed", "fail",
+					e.getMessage());
 		}
 	}
-	
-	@OPERATION void stopDevice() {
+
+	@OPERATION
+	void stopDevice() {
 		try {
 			execLinkedOp("to-device", "stopDevice");
 
@@ -49,4 +39,3 @@ public class MobileUIArtifact extends Artifact {
 		}
 	}
 }
-

@@ -21,7 +21,7 @@
 		cartago.set_current_wsp(WspId);
 		+workspace(world, WspName, WspId);
 		lookupArtifact(EAName, EnvArtID);
-		-+artifacts(environment, EnvArtID);
+		+artifacts(environment, EnvArtID);
 		
 		makeArtifact(AUName, "it.unibo.sisma.hi.mas.hs.MobileUIArtifact",[], UResID);
 		+artifacts(ui, UResID);
@@ -318,57 +318,60 @@
 
 
 @my_info[atomic] +!manage_message(Sender, SenderName, ["my_info", List])
-	<-	!add_db(Sender, List, DB);
-		-database(Sender, _);
-		+database(Sender, DB);
+	<-	-database(Sender, _);	
+		!add_db(Sender, List);
 	.
 
 +!update_my_info(ResList)
 	<-	?node_id(ID);
-		!add_db(ID, ResList, DB);
 		-database(ID, _);
-		+database(ID, DB);
+		!add_db(ID, ResList);
 	.
 
-+!add_db(Sender, [], []).
-+!add_db(Sender, [[HName, AX, AY, Area] | T1], [[HName, ImIn] | T2])
++!add_db(Sender, []).
++!add_db(Sender, [[HName, AX, AY, Area] | T1])
 	<-  ?artifacts(resource, MResID);
 		?position([X, Y]);
-		imIn(X, Y, AX, AY, Area, ImIn) [artifact_id(MResID)];
-		!add_db(Sender, T1, T2);
+		if( ((AX-X)*(AX-X) + (AY-Y)*(AY-Y)) > Area) {
+			+database(ID, HName, true);	
+		} else {
+			+database(ID, HName, false);
+		}
+		!add_db(Sender, T1);
 		.
 
 /****************************************************************************************
  * * DATABASE ELABORATION
  ****************************************************************************************/
 //+position([X,Y]) <- .print(X, Y).
-+database(_, []).
-+database(ID, DB) <- !elaborate_db(ID, DB).
++database(ID, HName, In) <- !elaborate_db(ID, HName, In).
 
-+!elaborate_db(ID, []).
-+!elaborate_db(ID, [[_, false] | T]) <- !elaborate_db(ID, T).
++!elaborate_db(_, _, false).
 
 // Mien DB
-+!elaborate_db(ID, [[HName, true] | T]) : node_id(ID) & my_data(_, HName, Data) 
-	<- 	.print("I HAVE THE DATA: ", Data);
-		!elaborate_db(ID, T);
++!elaborate_db(ID, HName, true) : node_id(ID) & my_data(_, HName, Data) 
+	<-  ?artifacts(ui_if, UIfResID);
+		showInformation(HName, Data) [artifact_id(UIfResID)];
 		.
+		
++!elaborate_db(ID, HName, true) : node_id(ID).
 
-+!elaborate_db(ID, [[HName, true] | T]) 
++!elaborate_db(ID, HName, true) : node_id(NodeID) & not (ID == NodeID)  & not database(NodeID, HName, true)
 	<- 	?id(NodeID);
 		sendMessage(NodeID, ID, "mobile", [please_data, HName]);
-		!elaborate_db(ID, T);
 		.
 
-@please_ok[atomic] +!manage_message(Sender, SenderName, ["please_data", HName]) : my_data(_, HName, Data) [source(_)]
+@please_ok[atomic] +!manage_message(Sender, SenderName, ["please_data", HName])
 	<-	?id(NodeID);
+		?my_data(_, HName, Data)[source(_)];
 		sendMessage(NodeID, H, "mobile", [here_you_are, HName, Data]);
 		.
 
-@please_no[atomic] +!manage_message(Sender, SenderName, ["please_data", HName]).
+-!manage_message(Sender, SenderName, ["please_data", HName]).
 		
 @hereyouare[atomic] +!manage_message(Sender, SenderName, ["here_you_are", HName, Data])
-	<-	.print("Yehy! ", Data);
+	<-	?artifacts(ui_if, UIfResID);
+		showInformation(HName, Data) [artifact_id(UIfResID)];
 		.
 
 //@please_not_ok[atomic] +!manage_message(Sender, SenderName, ["please_data", HName])
@@ -408,8 +411,10 @@
 			for(.member([PName2, HName, _], L)) {
 				if(not (PName2  == PName)) {
 					// Duplicate!
-					.send(PName2, tell, please_die);
-					.fail; // break :P
+					if(.ground(PName2)) {
+						.send(PName2, tell, please_die);
+						.fail; // break :P
+					}
 				}
 			}		
 		}

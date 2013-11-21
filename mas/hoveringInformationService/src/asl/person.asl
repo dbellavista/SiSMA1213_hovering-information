@@ -9,6 +9,8 @@
 
 /* Plans */
 
++information(H, D) [artifact_name(Id, Name)].
+
 +!init : ~inited & initiator(InitName) & worldWsp(WspName) & envArt(EAName) & position(X, Y) &
 			ui_name(AUName) & behaviour(B) & device(DeviceAgent)
 	<-	-~inited;
@@ -22,7 +24,7 @@
 		makeArtifact(PersonBody, "it.unibo.sisma.hi.mas.social.BodyArtifact", [Name], ArtBodyID);
 		+artifacts(body, ArtBodyID);
 		lookupArtifact(EAName, EnvArtID);
-		-+artifacts(envSocial, EnvArtID);		
+		+artifacts(envSocial, EnvArtID);		
 		linkArtifacts(ArtBodyID, "env-link", EnvArtID);
 		!getDeviceUI;
 		-~configured;
@@ -37,7 +39,7 @@
 +!getDeviceUI : ui_name(AUName)
 	<-	lookupArtifact(AUName, UiArtd);
 		focus(UiArtd);
-		-+artifacts(mobileUI, UiArtd);
+		+artifacts(mobileUI, UiArtd);
 		.
 		
 -!getDeviceUI : not artifacts(mobileUI, _)
