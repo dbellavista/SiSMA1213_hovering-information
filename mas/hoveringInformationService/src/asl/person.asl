@@ -90,6 +90,3 @@
 		.wait(100);
 		!reach(DX,DY,Time-1, Speed);
 		.
-
-// Running behavior definition
-

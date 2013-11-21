@@ -112,8 +112,6 @@
 			.send(HoveringName, achieve, start);
 		} else {
 			.send(HoveringName, tell, sorry_after_init);
-			 // ?node_id(MyNodeID);
-			// sendMessage(MyNodeID, HoveringName, [sorry_after_init]);
 		}
 		.
 
@@ -133,10 +131,6 @@
 			HTerm = AgentName;
 		}
 		-+pieces([[HTerm, HoverName, anchor(AX, AY, Area)] | L]);
-		// ##################################################################
-		//.send(HTerm, askOne, data(_), data(Data));
-		//editData(HTerm, Data);
-		// ##################################################################
 		!send_info_to_all;
 		.
 
@@ -144,19 +138,10 @@
 	<- 	!manage_arakiri(Name);
 		.
 		
-//+my_data(Name, Data) [source (_)]
-//	<- 	!add_data(Name, Data);
-//		.
-
-//+!add_data(Name, Data)
-//	<- editData(Name, Data).
-
 +!manage_arakiri(Name)
 	<- 	!removeHovering(Name);
 		//+managed_arakiri(Name);
 		-performing_arakiri(Name) [source(_)].
-
-//+position([X, Y]) <- .print("Pos: ", X, Y).
 
 /****************************************************************************************
  * * PRE-PROTOCOL FOR LANDING OR CLONING 
@@ -373,18 +358,6 @@
 	<-	?artifacts(ui_if, UIfResID);
 		showInformation(HName, Data) [artifact_id(UIfResID)];
 		.
-
-//@please_not_ok[atomic] +!manage_message(Sender, SenderName, ["please_data", HName])
-//	<-	?id(NodeID);
-//		.findall(db(X, Y), database(X, Y), DBs);
-//		for(.member(db(Id, Db), DBs)) {
-//			if(not ((Id == NodeID) | (Id == Sender)) ) {
-//				if(.member([HName, _], Db)) {
-//					sendMessage(NodeID, Id, "mobile", [HName, Data]);			
-//				}
-//			}
-//		}
-//		.
 
 /****************************************************************************************
  * * RECEIVE MESSAGE LOOP

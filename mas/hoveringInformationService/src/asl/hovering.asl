@@ -204,17 +204,8 @@
 /****************************************************************************************
  * * DECIDE DEFCON PLANS: from the new information, to decide the new defcon level 
  ****************************************************************************************/
-// 
-// The possibile behaviours can be:
-//   - DEFCON 5: nessun bisogno di comunicare con il mondo esterno, se non per rispondere
-//   - DEFCON 4: si inizia a controllare la lista di neighbor. Se sono pochi, contattarli
-//				 ogni tanto per conoscere il loro stato.
-//	 - DEFCON 3: controllo di tutti i neighbor e del loro stato.
-//	 - DEFCON 2: Migrazione dell'hovering sul neighbor più vicino all'anchor.
-//	 - DEFCON 1: Copia dell'hovering sui neighbor più vicini.
-
 /**
- * Decides the defcon basing on a (TODO) linear combination between exponential functions.
+ * Decides the defcon basing on a linear combination between exponential functions.
  */
 @defconDec[atomic] +!decideDefcon : approach_level(AL) & approach_variation(AV) & speed(SP) & current_zone(Zone) &
 									 cur_defcon(CurDef, CurPoint) & defcon(CurDef, MinThr, MaxThr) &

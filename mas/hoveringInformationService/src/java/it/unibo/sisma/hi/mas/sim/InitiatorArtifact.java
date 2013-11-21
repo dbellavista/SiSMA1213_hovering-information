@@ -41,7 +41,7 @@ public class InitiatorArtifact extends Artifact {
 	@SuppressWarnings("unchecked")
 	@OPERATION
 	void input_data() {
-		String file = "simulation_light.yaml";
+		String file = "simulation.yaml";
 		Yaml yaml = new Yaml();
 		Object data;
 		try {

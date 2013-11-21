@@ -70,9 +70,6 @@
 	<-	.send(P, askOne, inquire(_, _), inquire(HoverName, Size));
 		!inquirePieces(PT, FPT);
 		.
-//-!inquirePieces([H | PT], [H1 | FPT])
-//	<-	!inquirePieces(PT, FPT);
-		//.
 		
 		
 		

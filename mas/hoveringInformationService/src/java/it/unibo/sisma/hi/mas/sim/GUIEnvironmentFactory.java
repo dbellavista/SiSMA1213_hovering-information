@@ -13,6 +13,7 @@ public class GUIEnvironmentFactory {
 
 	public World createWorld(double worldWidth, double worldHeight,
 			Object[] nodes, Object[] pointOfInterest, Object[] listRecent_tmp) {
+		// This isn't properly engineered..
 		List<HoveringInformation> hoveringInformations = new ArrayList<>(
 				pointOfInterest.length);
 		HashMap<String, HoveringInformation> hovering_names = new HashMap<>();
