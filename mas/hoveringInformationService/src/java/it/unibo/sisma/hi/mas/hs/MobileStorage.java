@@ -15,15 +15,15 @@ public class MobileStorage {
 		this.storage = new HashMap<>();
 	}
 
-	public synchronized double getTotalSpace() {
+	public double getTotalSpace() {
 		return totalSpace;
 	}
 
-	public synchronized double getFreeSpace() {
+	public double getFreeSpace() {
 		return freeSpace;
 	}
 	
-	public synchronized String getData(Object ID) {
+	public String getData(Object ID) {
 		Data data = storage.get(ID);
 		if(data == null) {
 			return null;
@@ -31,11 +31,11 @@ public class MobileStorage {
 		return data.getValue();
 	}
 	
-	public synchronized Object[] getAllData() {
+	public Object[] getAllData() {
 		return storage.values().toArray(new Object[storage.size()]);
 	}
 
-	public synchronized boolean allocateData(Object ID, double size) {
+	public boolean allocateData(Object ID, double size) {
 		if(freeSpace < size) {
 			return false;
 		}
@@ -44,7 +44,7 @@ public class MobileStorage {
 		return true;
 	}
 	
-	public synchronized void editData(Object ID, String newValue) {
+	public void editData(Object ID, String newValue) {
 		Data d = storage.get(ID);
 		if(d != null) {
 			d.setValue(newValue);
