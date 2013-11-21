@@ -184,9 +184,9 @@ public class GraphicWorld extends JComponent {
 		// Anchor area
 		g2d.setColor(colors.get(info));
 		g2d.fill(new Ellipse2D.Double(mx(info.getxAnchor()
-				- info.getAnchorRange() / 2), my(info.getyAnchor()
-				- info.getAnchorRange() / 2), mx(info.getAnchorRange()),
-				my(info.getAnchorRange())));
+				- info.getAnchorRange()), my(info.getyAnchor()
+				- info.getAnchorRange()), mx(info.getAnchorRange() * 2),
+				my(info.getAnchorRange() * 2)));
 		g2d.setColor(Color.black);
 		g2d.drawString(info.getName(), (int) mx(info.getxAnchor()), (int) my(info.getyAnchor()));
 		// Anchor
