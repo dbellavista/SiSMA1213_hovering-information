@@ -41,7 +41,7 @@ public class InitiatorArtifact extends Artifact {
 	@SuppressWarnings("unchecked")
 	@OPERATION
 	void input_data() {
-		String file = "simulation.yaml";
+		String file = "simulation_light.yaml";
 		Yaml yaml = new Yaml();
 		Object data;
 		try {
@@ -118,6 +118,10 @@ public class InitiatorArtifact extends Artifact {
 				break;
 			case "dissemination":
 				defineObsProperty("parameter", "simulation", "dissemination",
+						entry.getValue());
+				break;
+			case "dissemination_param":
+				defineObsProperty("parameter", "simulation", "dissemination_param",
 						entry.getValue());
 				break;
 			}

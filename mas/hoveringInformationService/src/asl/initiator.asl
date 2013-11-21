@@ -62,6 +62,7 @@ behaviour("none", none).
 		?parameter("simulation", "gui_height", H);
 		?parameter("simulation", "gui_refresh_rate", GR);
 		?parameter("simulation", "dissemination", Dt);
+		?parameter("simulation", "dissemination_param", DissParam);
 		?disseminations(Dt, D);
 		-+parameter("simulation", "dissemination", D);
 		?parameter("analysis", "analysis_rate", AR);
@@ -77,6 +78,7 @@ behaviour("none", none).
 				"\n   * gui_height=",H,
 				"\n   * gui_refresh_rate=",GR,
 				"\n   * dissemination=",D,
+				"\n   * dissemination_param=",DissParam,
 				"\n   * analysis_rate=",AR
 		);
 	.
@@ -192,9 +194,10 @@ behaviour("none", none).
 +!disseminate(ID, NH, Anchor, Size, Data, random)
 	<-	?artifact(init, _, InitArt); 
 		?parameter("people", NP);
+		?parameter("simulation", "dissemination_param", Prob);
 		// Random: for each person, give a piece with probability p
-		toss_coin(1.0, DissRes);
-		!random_dissemination(ID, NH, Anchor, Size, Data, NP, 1.0, 1, DissRes);
+		toss_coin(Prob, DissRes);
+		!random_dissemination(ID, NH, Anchor, Size, Data, NP, Prob, 1, DissRes);
 		.
 
 +!random_dissemination(I, NH, A, S, D, NP, P, IX, _) : 

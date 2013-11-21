@@ -7,6 +7,7 @@ Simulation:
   gui_height: 800
   gui_refresh_rate: 500
   dissemination: 'random'
+  dissemination_param: 0.5
   
 Analysis:
   analysis_rate: 1000

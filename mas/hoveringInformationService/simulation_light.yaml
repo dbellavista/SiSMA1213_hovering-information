@@ -1,0 +1,83 @@
+World:
+  width: 800
+  height: 800
+  
+Simulation:
+  gui_width: 800
+  gui_height: 800
+  gui_refresh_rate: 500
+  dissemination: 'random'
+  dissemination_param: 0.8
+  
+Analysis:
+  analysis_rate: 1000
+  
+People:
+  - name: 'ricci'
+    behaviour: 'random'
+    xpos: 10
+    ypos: 20
+    device_range: 200
+    device_storage: 100
+  - name: 'viroli'
+    behaviour: 'random'
+    xpos: 20
+    ypos: 10
+    device_range: 200
+    device_storage: 100
+  - name: 'omicini'
+    behaviour: 'random'
+    xpos: 'random'
+    ypos: 'random'
+    device_range: 200
+    device_storage: 100
+  - name: 'roli'
+    behaviour: 'random'
+    xpos: 'random'
+    ypos: 'random'
+    device_range: 200
+    device_storage: 100
+  - name: 'callegati'
+    behaviour: 'random'
+    xpos: 'random'
+    ypos: 'random'
+    device_range: 200
+    device_storage: 100
+  - name: 'natali'
+    behaviour: 'random'
+    xpos: 'random'
+    ypos: 'random'
+    device_range: 200
+    device_storage: 100
+    
+Hovering:
+  - name: 'sma'
+    xanchor: 20
+    yanchor: 70
+    anchor_radius: 150
+    data_size: 30
+    data: "The agent is strong in this one!"
+  - name: 'iss'
+    xanchor: 100
+    yanchor: 400
+    anchor_radius: 100
+    data_size: 40
+    data: "This is a meta-meta-meta-information."
+  - name: 'pcd'
+    xanchor: 300
+    yanchor: 300
+    anchor_radius: 150
+    data_size: 40
+    data: "The CTFoMator will never work!"
+  - name: 'ia'
+    xanchor: 300
+    yanchor: 70
+    anchor_radius: 100
+    data_size: 20
+    data: "Never send a human to do a machine's job."
+  - name: 'lmc'
+    xanchor: 700
+    yanchor: 400
+    anchor_radius: 140
+    data_size: 20
+    data: "Not a single language was given that day."
