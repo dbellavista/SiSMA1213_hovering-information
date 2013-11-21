@@ -109,18 +109,6 @@ public class MobileResourceArtifact extends Artifact {
 		}
 	}
 
-
-	@OPERATION
-	void imIn(Number x, Number y, Number ax, Number ay, Number area,
-			OpFeedbackParam<Boolean> Res) {
-		double dx = x.doubleValue();
-		double dy = y.doubleValue();
-		double dax = ax.doubleValue();
-		double day = ay.doubleValue();
-		double darea = area.doubleValue();
-		Res.set(Math.sqrt((dx - dax) * (dx - dax) + (dy - day) * (dy - day)) < darea);
-	}
-
 	@OPERATION
 	void receiveMessage(Object receiverName, OpFeedbackParam<Boolean> res,
 			OpFeedbackParam<Object> sender, OpFeedbackParam<Object> senderName,
