@@ -8,40 +8,148 @@ the implementation, I chosen to use \emph{Jason+CArtAgO}
 infrastructure.
 
 \subsection{Initialization}
+
 Prior to simulation, the sistem must be initialized. I couldn't find the
-required flexibility in the \emph{mas2j} files, so I decided to create a new
-Agent, called \emph{initiator}, which reads a configuration from a file and
-create agents, workspaces and common artifacts specifying the needed configuration.
+required flexibility in the \code{mas2j} files, so I decided to create a new
+Agent, called \emph{initiator}, which reads a configuration file and create
+agents, workspaces and common artifacts specifying the needed configuration.
 Artifacts are configured by setting the proper initialization parameters, while
 agents are configured by telling them what they have to believe (using the
-Jason \emph{tell} internal operation).
+\emph{AgentSpeak} \code{tell} primitive).
+
+The \emph{initiator} creates the person agents and inserts them into the
+environment. For each person, a new mobile agent is created. Each person
+searches the \emph{MobileUI Artifact}, which represent the mobile device
+itself. This artifact is created by the mobile node agent, thus, when the
+person agent finds it, both the mobile node and the person are ready to begin.
+
+When the system is about to start, the \emph{initiator} sends an
+\code{achieve(start)} to all the person agent. Each person agent turn on their
+mobile nodes using a new operation of \emph{MobileUI Artifact}:
+\code{StartDevice}, which is linked to the \emph{MobileUIInterface Artifact}
+and manifest itself to the mobile agent.
+
+The last initialization operation is the \emph{dissemination}, that is, to
+create the initial hovering agent inside some mobile nodes. For now the only
+dissemination method is the random dissemination, which assign to each mobile
+node an hovering agent with a certain probability.
+
+\subsection{Environment Artifact}
+
+The environment artifact represent the world. Every Body Artifact,
+MobileResource and the SimulationArtifact is linked to it. The Environment
+Artifact provides operation for insert, sense and move people into the
+environment. The \emph{MobileResource} is linked to the Environment Artifact
+for discovering neighbors, obtaining the position and sending and receiving
+messages.
+
+\subsection{Messaging System}
+
+For the communication, I have chosen to use the \emph{AgentSpeak} primitives
+for communication between hovering agents and their host and to use a custom
+message-passing architecture for communicating with neighbors. Doing this, I
+assumed a simple dispatch-based architecture, easily implementable in real
+mobile devices. The messaging system is realized as two new operation:
+\code{SendMessage} and \code{ReceiveMessage} into the \emph{MobileResource
+Artifat}.
+
+Thanks to the \code{await} method of \emph{CArtAgO}, the receive message
+operation blocks the execution flow, completing only when a new message is
+available.
+
+\subsection{Obtaining the position}
+
+Obtaining the position is an important task and must be performed continuously.
+I have added a new operation \code{StartObtainingPosition} in
+\emph{MobileResource Artifact}: using the \code{await} method, the artifact
+polls the position, manifesting itself to the agent with the new position.
+
 
 \subsection{Social System}
-People have to move around the world, basing on
-their environment perception. In the real world,
-a person has eyes, through which can recognize other
-people and point of interest and approximate their distance.
-This can be seen as a light sensor sensing the
-physical environment, which has a source producing light
-that is reflected by people and points of interest.
 
-From a simplified \emph{artifacful} points of view, the
-environment itself is an artifact linked to people's
-sensors and actuator. The environment knows the position of
-every people, updating its internal state when a person moves
-and returning it when the sense operation is executed.
+People have to move around the world, basing on their environment perception.
+In the real world, a person has eyes, through which can recognize other people
+and point of interest and approximate their distance.  This can be seen as a
+light sensor sensing the physical environment, which has a source producing
+light that is reflected by people and points of interest.
 
-During the initialization phase, a person agent gets to know
-its initial position in the environment and, just before to start,
-it can enter the environment in the right initial position.
+With the \code{Sense} operation, each person obtain a list of other people and
+points of interest. Behaviors can be build from here.
 
-\subsection{Hovering System}
+For now, the only implemented behavior is a sort of random walk: a person chose
+a random position and reach it at a random speed.
 
-First of all, the communication between mobile nodes is implemented using
-the same \emph{Environment Artifact} used for the Social System. It
-maintains a buffers of messages to be red, so that a sender put a message
-in the receiver queue and the receiver can read or get a message from there.
+\subsection{Hovering Survive Strategy}
 
-However, Jason doesn't like when an Agent blocks its plan without using the
-internal action \emph{.wait}, so the message receive it's actually implemented
-as a polling.
+The behavior of hovering agents depends on various factor. I have decided to
+rise the abstraction level by creating the concept of \emph{Defcon}. At defcon
+$5$ and $4$, an hovering agent thinks it's safe and just monitor it's position,
+speed and so on. At defcon $3$, the hovering starts probing the neighbors,
+creating a list of potential destination for landing or cloning operation. At
+defcon $2$, it tries to land on a mobile node closer to the anchor area. On
+defcon $1$ it clone itself on the best neighbor.
+
+For now the defcon level is computed by a linear combination of two reversed
+exponential function. With values close to $1$, the defcon tend to be higher,
+while with values closer to $0$, the defcon is lower. The function may depend
+on various factors. I have implemented:
+
+\[
+  v = e^{-\frac{Distance}{DeathZoneLimit}*ZoneFactor} * e^{\frac{NumNeighbors}{10}}
+\]
+
+\[
+  ZoneFactor = \begin{cases}
+    1, & \mbox{if } \mbox{ok zone} \\
+    2, & \mbox{if } \mbox{warning zone} \\
+    3, & \mbox{if } \mbox{violent zone} \\
+    4, & \mbox{if } \mbox{death zone} \\
+    \end{cases}
+\]
+
+\[
+  DefconLevel = \begin{cases}
+    1, & \mbox{if } 0.8  \leq v \\
+    2, & \mbox{if } 0.68 \leq v < 0.8  \\
+    3, & \mbox{if } 0.42 \leq v < 0.68  \\
+    4, & \mbox{if } 0.35 \leq v < 0.42  \\
+    5, & \mbox{if } 0.0  \leq v < 0.35  \\
+    \end{cases}
+\]
+
+Using the defcon level, the hovering agent can limit its interaction basing on
+various factors.
+
+\subsection{Hovering Landing and Cloning operations}
+
+In the real world, a landing operation may consist in the agent serializing,
+which transfer itself to the new mobile node, which will resume it. On the
+other hand, the clone operation should send the agent source and an initial
+sets of believes to the target mobile node. The new host will create a new
+agent and \emph{tell} him the initial believes.
+
+I have implemented a similar mechanism, but of course the hover agent doesn't
+send code or the serialized itself, because they are in the same local system.
+
+When an hovering information wants to land on another mobile node, after asking
+the permission, it sends a message, tells the old host that it's dead (using
+the Arakiri Speech) and waits for the resume of the new host. It may happen
+that the communication fails during the landing. In this case the hovering
+agent accepts it's fate and dies alone.
+
+\subsection{Odds and Ends}
+
+The JASON complexity raised, and I have faced some problems, without knowing
+the exact cause. They are surely due to a some implementation errors, but I
+wasn't able to spot them and the debugging wasn't so helpful. 
+
+This and that lead me to alterate and restore some SODA interaction. For
+instance the hovering information tells (and untells) its data to the mobile
+node (it's the reverse situation of the \emph{GetData Speech}).
+
+Moreover I haven't implemented some features, such as smarter movement for
+people, different and better dissemination process, landing and cloning basing
+on availability and accessibility of the hovering information and system
+analysis. All those features (except mayhaps for people movement) are easily
+implementable using the data available to each agent, but I have give up due to
+some random and frustrating errors.
