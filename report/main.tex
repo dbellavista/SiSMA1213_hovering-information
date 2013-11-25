@@ -1,25 +1,47 @@
 \documentclass[11pt]{article}
 
-\usepackage{float}
-\usepackage[utf8]{inputenc}
-\usepackage{url}
-\usepackage{hyperref}
-\hypersetup{unicode=true,          % non-Latin characters in Acrobat’s bookmarks
-    pdftitle={Hovering Information: implementation, simulation and analysis},    % title
-    pdfauthor={Daniele Bellavista},     % author
+\newcommand{\extraauthor}{Daniele Bellavista\\
+Scuola di Ingegneria ed Archiettura\\
+Ingegneria Informatica Magistrale\\
+Corso Sistemi Multiagente LM\\
 }
+\newcommand{\xauth}{Daniele Bellavista}
+\newcommand{\xtitle}{Hovering Information: implementation using MAS}
+
+\usepackage{amsmath}
+\usepackage{placeins}
+\usepackage{float}
+\usepackage{ifpdf,ifluatex}
+\ifluatex
+\usepackage{fontspec}
+\else
+\usepackage[utf8x]{inputenc}
+\fi
+
+\usepackage{url}
+\ifpdf
+\usepackage{hyperref}
+\hypersetup{unicode=true,
+    pdftitle={\xtitle},
+    pdfauthor={\xauth},
+}
+\fi
 
 \usepackage{chngcntr}
 \counterwithin{figure}{subsection}
 \counterwithin{table}{subsection}
 
+\usepackage{xspace}
+\usepackage[usenames,dvipsnames]{xcolor}
+\usepackage{graphicx}
+
+\newcommand{\action}[1]{\texttt{#1}\xspace}
+\newcommand{\code}[1]{{\small{\texttt{#1}}}\xspace}
+\newcommand{\codescript}[1]{{\scriptsize{\texttt{#1}}}\xspace}
+
 \begin{document}
-\title{Hovering Information: implementation, simulation and analysis}
-\author{Daniele Bellavista\\
-Scuola di Ingegneria ed Archiettura\\
-Ingegneria Informatica Magistrale\\
-Corso Sistemi Multiagente LM\\
-}
+\title{\xtitle}
+\author{\xauth}
 
 \maketitle
 
