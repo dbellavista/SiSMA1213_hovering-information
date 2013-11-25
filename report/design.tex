@@ -2,33 +2,34 @@
 \label{sec:design}
 
 This project aims to implement the hovering information system working inside
-a social environment. Mobile nodes are owned by people, who move inside an
+a social environment. Mobile nodes are owned by people, moving inside an
 environment composed by anchors, that is, locations where pieces of hovering
 information are present. In a real context, anchors are bound to points of
 interest, such as shops, information centers, and so on.
 
 The system simulates an hovering information usage, inside an environment
 (although ``\emph{a simulator without the reproducibility ability is no more
-than little game}''[cit. Pianini], so for now on I may use the word
+than little game}''[cit. Pianini], so from now on I may use the word
 ``simulator'' as a synonymous for ``little game''). People, carrying mobile
 nodes, have to walk with different behaviour, emulating movements inside an
 area composed by points of interest.  The simulation should gather periodic
 data about hovering information status and properties (i.e.\ availability,
 survivability and accessibility), nodes position and communications link.
 
-Note on the implemented system: the people move only using some sort of random
-walk, nothing more.
+\textbf{Note on the implemented system}: the people move only using some sort of random
+walk, nothing more. And the simulation system only shows the actors, without
+computing the system properties.
 
 \subsection{Preliminary analysis}
 
 From requirements a three sub-system design emerges:
-\begin{enumerate}
-	\item Simulator (graphic interface).
-	\item Hovering information (composed by pieces of hovering information and
-		mobile nodes).
-	\item Social system (a group of hovering information users moving into
-		the environment).
-\end{enumerate}
+\begin{description}
+	\item[Simulator:] graphic interface.
+	\item[Hovering information:] composed by pieces of hovering information and
+		mobile nodes.
+	\item[Social system:] a group of hovering information users moving into
+		the environment.
+\end{description}
 
 \subsection{Requirements Analysis}
 
@@ -252,7 +253,7 @@ System}, already present in the environment.
 			\hline
 			\textbf{Requirement} & \textbf{Dependency} \\
 			\hline
-			& \\
+			Move & BoundedWorldDep  \\
 			\hline
 		\end{tabular}
 		\caption{Reference Requirement-Dependency table $(C)RReqD_t$}
@@ -448,6 +449,8 @@ System}, already present in the environment.
 			\hline
 			HostDep & Pieces can performs certain operations only with its host and vice-versa. \\
 			\hline
+			RemoteNodeDep & Pieces and nodes can perform certain operations only with remote host. \\
+			\hline
 		\end{tabular}
 	\caption{Dependency table $(C)D_t$}
 	\label{tab:cdt}
@@ -463,17 +466,17 @@ System}, already present in the environment.
 			\hline
 			access\_local\_information & HostDep, NodeIfDep, PositionDep\\
 			\hline
-			access\_remote\_information & NeighbourDep, NodeIfDep, PositionDep\\
+			access\_remote\_information & NeighbourDep, RemoteNodeDep, NodeIfDep, PositionDep\\
 			\hline
 			inquire\_world & InquireDep \\
 			\hline
 			show\_simulation & GUIDep, InquireDep \\
 			\hline
-			move\_task & BoundedWorldDep \\
+			move\_task & BoundedWorldDep  \\
 			\hline
-			land\_task & NeighbourDep, HostDep, PositionDep \\
+			land\_task & NeighbourDep, RemoteNodeDep, HostDep, PositionDep \\
 			\hline
-			clone\_task & NeighbourDep, HostDep, PositionDep \\
+			clone\_task & NeighbourDep, RemoteNodeDep, HostDep, PositionDep \\
 			\hline
 		\end{tabular}
 	\caption{Task-Dependency table $(C)TD_t$}
@@ -509,7 +512,7 @@ System}, already present in the environment.
 			\hline
 			Communication Range & PositionDep, NeighbourDep. \\
 			\hline
-			World & InquireDep, GUIDep, BoundedWorldDep. \\
+			World & InquireDep, GUIDep, BoundedWorldDep \\
 			\hline
 		\end{tabular}
 	\caption{Topology-Dependency table $(C)TopD_t$}
@@ -517,19 +520,6 @@ System}, already present in the environment.
 \end{table}
 
 \subsection{Architectural Design}
-
-Communication mechanisms were not specified during analysis, so, in order to
-reduce design and implementation complexity, I assume that the only way that
-mobile nodes have to communicate with each other is by \emph{dispatches}, that
-is, asynchronous message passing with strong expectation by the sender that the
-receiver will process the message.
-
-The communication act is then decomposed into two primitives: \emph{in} and
-\emph{out}. The communication resource is shared, so each user must have an
-unique id.
-
-However, I pose no limits on the communications between a mobile node and its
-hosted pieces.
 
 \subsubsection{Transition Tables}
 
@@ -541,11 +531,12 @@ hosted pieces.
 			\hline
       Simulation Manager & inquire\_world, show\_simulation.   \\
 			\hline
-			Person & access\_information, move\_task \\
+			Person & move\_task \\
 			\hline
-			Mobile node & access\_information.  \\
+      Mobile node & display\_information, access\_local\_information,
+                    access\_remote\_information, land\_task, clone\_task. \\
 			\hline
-			Piece of Hovering Information & survive\_task, be\_available\_task. \\
+			Piece of Hovering Information & land\_task, clone\_task, access\_local\_infromation. \\
 			\hline
 		\end{tabular}
 	\caption{Transition Role-Task table $(C)TRT_t$}
@@ -558,19 +549,19 @@ hosted pieces.
 			\hline
 			\textbf{Task} & \textbf{Action} \\
 			\hline
-			analyze\_simulation & AnalyzeSimulation. \\
-			\hline
 			inquire\_world & InquireNodes, InquireHoveringInformations, InquireEnvironment. \\
 			\hline
 			show\_simulation & ShowSimulation. \\
 			\hline
-			access\_information & AccessInformation, ShowInformationToUI.\\
+			access\_local\_information & NotifyInformation, GetInformation.\\
+			\hline
+			access\_remote\_information & AskInformation, GetInformation.\\
 			\hline
 			move\_task & SenseAction, MoveAction. \\
 			\hline
-			survive\_task & Land, Clone, DeterminateDefcon. \\
+			land\_task & Probe, AskPermission, Land. \\
 			\hline
-			be\_available\_task & Land, Clone, DeterminateAvilability. \\
+			clone\_task & Probe, AskPermission, Clone. \\
 			\hline
 		\end{tabular}
 	\caption{Transition Task-Action table $(C)TTA_t$}
@@ -585,7 +576,7 @@ hosted pieces.
 			\hline
 			SimulatorUIRes & render. \\
 			\hline
-			MobileResource & discover\_neighbour, get\_position, manage\_storage. \\
+			MobileResource & discover\_neighbour, get\_position. \\
 			\hline
 		\end{tabular}
 	\caption{Transition Resource-Function table $(C)TRF_t$}
@@ -600,11 +591,7 @@ hosted pieces.
 			\hline
 			render & RenderWorld. \\
 			\hline
-			manage\_storage & AllocateData, EditData, RemoveData. \\
-			\hline
-			discover\_neighbour & DiscoveNeighbour. \\
-			\hline
-			Communicate & SendMessage, ReceiveMessage. \\
+			discover\_neighbors & DiscoveNeighbors. \\
 			\hline
 			get\_position & ObtainPosition. \\
 			\hline
@@ -621,18 +608,19 @@ hosted pieces.
 			\hline
 			GUIDep & Render Interaction \\
 			\hline
-      NeighbourDep & DiscoverNeighbour Interaction, SendMessage Interaction,
-      ReceiveMessage Interaction \\
+      NeighbourDep & DiscoverNeighbor Interaction \\
 			\hline
-			StorageDep & AllocateData Interaction, EditData Interaction, RemoveData Interaction \\
+      PositionDep &  ObtainPosition Interaction \\
 			\hline
-			NodeIfDep & ShowInformation Interaction \\
+			NodeIfDep & DisplayInfoInteraction \\
 			\hline
-			InquireDep & Inquisition Interaction\\
+			InquireDep & InquireNodeInteraction, InquireHoveringInteraction\\
 			\hline
 			BoundedWorldDep & \\
 			\hline
-			HostDep & \\
+			HostDep & GetDataInteraction, ArakiriInteraction, PleaseDieInteraction \\
+			\hline
+			RemoteNodeDep & GetRemoteDataInteraction, ProbingInteraction, PermissionToLandInteraction, LandInteraction, CloneInteraction \\
 			\hline
 		\end{tabular}
 	\caption{Transition Dependency-Interaction table $(C)TDI_t$}
@@ -645,13 +633,18 @@ hosted pieces.
 			\hline
 			\textbf{Dependency} & \textbf{Rule} \\
 			\hline
-			NeighbourDep & Neighbour Rule, Send Rule, Receive Rule\\
+			NeighbourDep & Neighbour Rule \\
 			\hline
-			StorageDep & Allocation Rule, DataExists Rule \\
+      PositionDep & Accessible Rule, OkZone Rule, WarningZone Rule, ViolentZone
+      Rule, DeathZone Rule \\
 			\hline
 			NodeIfDep & \\
 			\hline
 			InquireDep & \\
+			\hline
+      RemoteNodeDep & NoDuplication Rule \\
+			\hline
+			HostDep & Allocation Rule, Hosting Rule, Hosting Resource Rule\\
 			\hline
 			BoundedWorldDep & Bounded World Rule\\
 			\hline
@@ -686,44 +679,35 @@ hosted pieces.
 	\begin{tabular}{|p{5cm}|p{7cm}|}
 			\hline
 			\textbf{Action} & \textbf{Description} \\
-			\hline
-			AccessInformation & Find and access to the data of the required
-			information. \\
-			\hline
-			ListInformation & Gets all the information available to the mobile node
-			that is valid in the current position.\\
-			\hline
-			CreateInformation & Create a new hovering information. \\
-			\hline
-			CreateViaUI & A mobile user can create an hovering information using the
-			mobile UI. \\
-			\hline
-      ShowInformationToUI & Show available information to the device UI, so
-      that it's accessible from the user.\\
-			\hline
-			Replicate & Make a copy of the hovering information to be transferred to
-			another mobile node. \\
-			\hline
-			Jump & Transfer the hovering information to another mobile node. \\
-			\hline
-			AccessInformationData & Allow access to the hovering information data. \\
-			\hline
-			SenseAction & Obtain the near person or points of interest. \\
-			\hline
-			MoveAction & Basic movement in the environment. \\
       \hline
-      AnalyzeSimulation & Analyze the system properties such as hovering
-      information requirements and complex network parameters. \\
-			\hline
-			ShowSimulation & Obatin a renderable world representation. \\
-			\hline
-			InquireNodes & Get all the information about mobile nodes.\\
-			\hline
-			InquireHoveringInformation & Get all the information about pieces of
-			hovering information.\\
-			\hline
-			InquireEnvironment & Get extra information about environment.\\
-			\hline
+      InquireNodes & Obtain information on mobile nodes, for showing the simulation. \\
+      \hline
+      InquireHoveringInformations & Obtain informatio on pieces of hovering
+                                    information, for showing the simulation\\
+      \hline
+      InquireEnvironment & Obtain information about the world, for showing the simulation. \\
+      \hline
+      ShowSimulation & Show the simulation\\
+      \hline
+      NotifyInformation & Show on the mobile node ui interface the information. \\
+      \hline
+      GetInformation & Obtain the information from a currently hosted mobile node. \\
+      \hline
+      AskInformation & Ask information to a neighbor.\\
+      \hline
+      SenseAction & Obtain information from the environment, such as other people and points of interest.\\
+      \hline
+      MoveAction & Move inside the world.\\
+      \hline
+      Probe & Obtain information such as pieces, space and position from a
+      neighbor mobile node. \\
+      \hline
+      AskPermission & Ask permission for landing or cloning to a mobile node. \\
+      \hline
+      Land & Perfom a landing operation toward a neigbour mobile node.\\
+      \hline
+      Clone & Perform a clone operation toward a neighbour mobile node.\\
+      \hline
 		\end{tabular}
 	\caption{Action table $(C)A_t$}
 	\label{tab:cat}
@@ -739,17 +723,6 @@ hosted pieces.
 			\hline
 			DiscoveNeighbour & Discover peers node inside the communication range. \\
 			\hline
-      SendMessage & Send an asynchronous message to a node that resides in
-      communication range. \\
-			\hline
-      ReceiveMessage & Receive a message. Blocks if there are no messages. \\
-			\hline
-			AllocateData & Allocate space for a data into the mobile node buffer. \\
-			\hline
-			EditData & Edit a previously allocated data into the mobile node buffer. \\
-			\hline
-			RemoveData & Remove a data from the mobile node buffer. \\
-			\hline
 			ObtainPosition & Obtain the current node position using some location
 			device. \\
 			\hline
@@ -764,14 +737,14 @@ hosted pieces.
 			\hline
 			\textbf{Role} & \textbf{Action} \\
 			\hline
-			Simulation Manager & AnalyzeSimulation, InquireNodes, InquireHoveringInformations, In-
-			quireEnvironment, ShowSimulation. \\
+      Simulation Manager & InquireNodes, InquireHoveringInformations,
+      InquireEnvironment, ShowSimulation. \\
 			\hline
-			Person & SenseAction, MoveAction, CreateViaUI. \\
+			Person & SenseAction, MoveAction. \\
 			\hline
-			Mobile node & ManageDevice, ListInformation, CreateInformation, ShowInformationToUI.  \\
+			Mobile node & NotifyInformation, GetInformation, AskInformation.  \\
 			\hline
-			Piece of Hovering Information & Replicate, Jump, AccessInformationData. \\
+			Piece of Hovering Information & Probe, AskPermission, Land, Clone. \\
 			\hline
 		\end{tabular}
 	\caption{Role-Action table $(C)RA_t$}
@@ -786,8 +759,7 @@ hosted pieces.
 			\hline
 			SimulatorUIRes & RenderWorld. \\
 			\hline
-			MobileResource & InsertData, RemoveData, GetRemainingSpace,
-			GetMaximumSize, DiscoveNeighbour, SendMessage, ReceiveMessage, ObtainPosition. \\
+			MobileResource & DiscoveNeighbour, ObtainPosition. \\
 			\hline
 		\end{tabular}
 	\caption{Resource-Operation table $(C)RO_t$}
@@ -802,18 +774,11 @@ hosted pieces.
 			\hline
 			\textbf{Interaction (Social \& Simulation)} & \textbf{Description} \\
 			\hline
-			Sense Interaction & Sense the world, obtaining information about other
-			people and points of interest. \\
-			\hline
-			Move Interaction & Move inside the world, following a certain behaviour.
-			\\
-			\hline
-			User Create Interaction & Mobile users have to communicate with the
-			mobile node in order to create information. \\
-			\hline
-			\hline
-			Inquisition Interaction & World inquisition for simulation analysis and
+			InquireNode Interaction & Mobile node inquisition for simulation analysis and
 			management purposes. \\
+			\hline
+      InquireHovering Interaction & Pieces of hovering information inquisition
+      for simulation analysis and management purposes. \\
 			\hline
 			Render Interaction & The system should interact with the GUI. \\
 			\hline
@@ -828,39 +793,32 @@ hosted pieces.
 			\hline
 			\textbf{Interaction (Hovering System)} & \textbf{Description} \\
 			\hline
-			ShowInformation Interaction & Show the mobile user the available information. \\
+			DisplayInfo Interaction & Show the mobile user the available information. \\
 			\hline
-      AllocateData Interaction & Allocate if possible enough space for a new
-      piece of hovering information inside a mobile node buffer. \\
+			GetData Interaction & Mobile nodes ask hosted pieces of hovering information for their data. \\
 			\hline
-      EditData Interaction & Edit or set a previously allocated data of a piece
-      of hovering information inside a mobile node buffer. \\
+      GetRemoteData Interaction & Mobile nodes ask their neighbors their hovering information data. \\
 			\hline
-			RemoveData Interaction & Remove a piece of hovering information from the
-			hosting mobile node buffer. \\
+			PleaseDie Interaction & Mobile nodes asks hovering information to die, releasing resources. \\
 			\hline
-			Access Interaction & Mobile nodes have to communicate together in order to
-			access an hovering information. \\
+			Arakiri Interaction & Pieces of hovering information warn their host they are about to commit suicide. \\
 			\hline
-			List Interaction & Mobile nodes have to communicate together in order to
-			obtain the list of available hovering information. \\
+      Probing Interaction & Pieces of hovering informtion ask their
+            host's neighbors information on their available space, their hosted
+            pieces and their position. \\
 			\hline
-			DiscoverNeighbour Interaction & Mobile nodes or piece of hovering
-			information have to know the neighbours. \\
+      PermissionToLand Interaction & Pieces of hovering information ask mobile
+      nodes the permission to perform a transfer (land or clone). \\
 			\hline
-      SendMessage Interaction & Mobile nodes can send messages to their
-      neighbour, specifying an high-level receiver. \\
+      Land Interaction & Pieces of hovering information perform a landing toward a remote mobile node. \\
 			\hline
-      ReceiveMessage Interaction & Mobile nodes can receive messages specifying
-      an high-level receiver. \\
+      Clone Interaction & Pieces of hovering information perform a clone toward a remote mobile node. \\
 			\hline
+      DiscoverNeighbor Interaction & Mobile nodes and pieces of hovering
+      information use the mobile resource to get a list of neighbors. \\
 			\hline
-			AccessInformationData Interaction & Mobile nodes must interact with Pieces
-			of Hovering Information in order to get their data. \\
-			\hline
-			Jump Interaction & Jump from a mobile node to another. \\
-			\hline
-			Replication Interaction & Replicate to another mobile node. \\
+      ObtainPosition Interaction & Mobile nodes and pieces of hovering
+      information use the mobile resource to get the current position. \\
 			\hline
 		\end{tabular}
 	\caption{Interaction table $(C)Ihov_t$}
@@ -872,37 +830,29 @@ hosted pieces.
 	\begin{tabular}{|p{5cm}|p{7cm}|}
 			\hline
 			\textbf{Action} & \textbf{Interaction} \\
-			\hline
-			AccessInformation & Access Interaction, Communication Interaction. \\
-			\hline
-			ListInformation & List Interaction, Communication Interaction. \\
-			\hline
-			CreateInformation & Communication Interaction, Communication Interaction.\\
-			\hline
-			CreateViaUI & User Create Interaction \\
-			\hline
-      ShowInformationToUI & ShowInformation Interaction.\\
-			\hline
-			Replicate & Replication Interaction, Communication Interaction.  \\
-			\hline
-			Jump & Jump Interaction, Communication Interaction. \\
-			\hline
-			AccessInformationData & AccessInformationData Interaction \\
-			\hline
-			MoveAction & Move Interaction \\
-			\hline
-			SenseAction & Sense Interaction \\
-			\hline
-			AnalyzeSimulation & Inquisition Interaction \\
-			\hline
-			InquireNodes & Inquisition Interaction. \\
-			\hline
-			InquireHoveringInformation & Inquisition Interaction. \\
-			\hline
-			InquireEnvironment & Inquisition Interaction. \\
-			\hline
-			ShowSimulation & Render Interaction \\
-			\hline
+      \hline
+      InquireNodes & InquireNode Interaction \\
+      \hline
+      InquireHoveringInformations & InquireHovering Interaction\\
+      \hline
+      InquireEnvironment & \\
+      \hline
+      ShowSimulation & \\
+      \hline
+      NotifyInformation & \\
+      \hline
+      GetInformation &  GetData Interaction\\
+      \hline
+      AskInformation & GetRemoteData Interaction\\
+      \hline
+      Probe & Probing Interaction \\
+      \hline
+      AskPermission & PermissionToLand Interaction \\
+      \hline
+      Land & Land Interaction\\
+      \hline
+      Clone & Clone Interaction\\
+      \hline
 		\end{tabular}
 	\caption{Action-Interaction table $(C)AcI_t$}
 	\label{tab:cacit}
@@ -916,20 +866,9 @@ hosted pieces.
 			\hline
 			RenderWorld & Render Interaction. \\
 			\hline
-			DiscoveNeighbour & DiscoverNeighbour Interaction. \\
+			DiscoveNeighbour & DiscoverNeighbor Interaction. \\
 			\hline
-			SendMessage & SendMessage Interaction. \\
-			\hline
-			ReceiveMessage & ReceiveMessage Interaction. \\
-			\hline
-			AllocateData & AllocateData Interaction \\
-			\hline
-			EditData & EditData Interaction \\
-			\hline
-			RemoveData & RemoveData Interaction \\
-			\hline
-			ObtainPosition & Jump Interaction, Replicate Interaction, List
-			Interaction, Access Interaction.  \\
+			ObtainPosition & ObtainPosition Interaction.  \\
 			\hline
 		\end{tabular}
 	\caption{Operation-Interaction table $(C)OpI_t$}
@@ -937,6 +876,15 @@ hosted pieces.
 \end{table}
 
 \subsubsection{Constraints Tables}
+
+Given $A$ the anchor radius of an hovering information and $D$ the distance of
+a piece of hovering information from its anchor center, the space is divided in four zones:
+\begin{description}
+  \item[Ok Zone:] $D \leq A$
+  \item[Warning Zone:] $A < D \leq A*2$
+  \item[Violent Zone:] $A*2 < D \leq A*3$
+  \item[Death Zone:] $D < A*3$
+\end{description}
 
 \begin{table}[H]
 	\centering
@@ -947,31 +895,34 @@ hosted pieces.
 			Accessible Rule & A mobile node can access an hovering information, if it
 			resides in its anchor area. \\
 			\hline
-			Listing Rule & A mobile node answers to a listing interaction only with
-			information accessible from the sender position. \\
-			\hline
-			Creation Rule & An hovering information can be created from a mobile node
-			residing in the anchor area. \\
-			\hline
       Allocation Rule & A mobile node cannot allocate more information than its
       buffer permits. \\
-			\hline
-      DataExists Rule & Only a previously allocated data can be edited or removed. \\
 			\hline
 			Neighbour Rule & A mobile node is reachable (is a neighbour) from
 			another if both are in communication range. \\
 			\hline
-			Movement Duplicate Rule & If a neighbour mobile node doesn't contain the same
-			hovering information, movement or replication is allowed. \\
+			No Duplication Rule & If a neighbour mobile node doesn't contain the same
+			hovering information, landing or cloning is allowed. \\
 			\hline
 			Bounded World Rule & People cannot move outside the world. \\
 			\hline
-			Node Location Rule & A mobile node and an hovering information can access
-			only its own mobile resource. \\
+      Hosting Resource Rule & An hovering information can have only one host and can use
+      only its host mobile resource. \\
 			\hline
-			Send Rule & A message can be delivered only to nodes in communication range. \\
+      Hosting Rule & A mobile node can communicate directly only with its
+      hosted pieces of hovering information and viceversa. \\
 			\hline
-			Receive Rule & A message can be picked up only by the high-level receiver. \\
+      OkZone Rule & A piece of hovering information is in its \emph{ok zone}
+      it's safe and may not perform cloning, landing or probing actions. \\
+			\hline
+      WarningZone Rule & A piece of hovering information is in its
+      \emph{warning zone} may begin to landing toward closer nodes, or perform a moderate cloning. \\
+			\hline
+      ViolentZone Rule & A piece of hovering information is in its
+      \emph{violent zone} is in danger an may try to survive at any cost. \\
+			\hline
+      DeathZone Rule & A piece of hovering information is in its \emph{death
+      zone} must commit suicide. \\
 			\hline
 		\end{tabular}
 	\caption{Rule table $(C)Ru_t$}
@@ -984,41 +935,35 @@ hosted pieces.
 			\hline
 			\textbf{Interaction} & \textbf{Rule} \\
 			\hline
-			Move Interaction & Bounded World Rule. \\
+			InquireNode Interaction &\\
 			\hline
-			Sense Interaction & \\
+      InquireHovering Interaction &\\
 			\hline
-			ShowInformation Interaction & \\
+			Render Interaction &\\
 			\hline
-			AllocateData Interaction & Allocation Rule, Node Location Rule \\
+			DisplayInfo Interaction &\\
 			\hline
-			EditData Interaction & DataExists Rule, Node Location Rule \\
+			GetData Interaction & Hosting Rule, Accessible Rule \\
 			\hline
-			RemoveData Interaction & DataExists Rule, Node Location Rule \\
+      GetRemoteData Interaction & Neighbour Rule, Accessible Rule \\
 			\hline
-			Access Interaction & Accessible Rule, Neighbour Rule \\
+			PleaseDie Interaction & Hosting Rule \\
 			\hline
-			List Interaction & Listing Rule, Neighbour Rule \\
+			Arakiri Interaction & Hosting Rule \\
 			\hline
-			AccessInformationData Interaction & Neighbour Rule\\
+      Probing Interaction & Neighbour Rule, Hosting Resource Rule\\
 			\hline
-			DiscoverNeighbour Interaction & Neighbour Rule\\
+      PermissionToLand Interaction & Neighbour Rule, Hosting Resource Rule\\
 			\hline
-			Send Interaction & Send Rule, Neighbour Rule\\
+      Land Interaction & Allocation Rule, No Duplicate Rule, Neighbour Rule,
+      OkZone Rule, WarningZone Rule, ViolentZone Rule, DeathZone Rule \\
 			\hline
-			Receive Interaction & Receive Rule, Neighbour Rule\\
+      Clone Interaction & Allocation Rule, No Duplicate Rule, Neighbour Rule,
+      OkZone Rule, WarningZone Rule, ViolentZone Rule, DeathZone Rule \\
 			\hline
-			User Create Interaction & \\
+      DiscoverNeighbor Interaction & Neighbour Rule, Hosting Resource Rule \\
 			\hline
-			User Access Interaction & \\
-			\hline
-			Jump Interaction & Movement Duplicate Rule, Neighbour Rule \\
-			\hline
-			Replication Interaction & Movement Duplicate Rule, Neighbour Rule \\
-			\hline
-			Render Interaction & \\
-			\hline
-			Inquisition Interaction & \\
+      ObtainPosition Interaction & Hosting Resource Rule \\
 			\hline
 		\end{tabular}
 	\caption{Interaction-Rule table $(C)IRu_t$}
@@ -1031,8 +976,7 @@ hosted pieces.
 			\hline
 			\textbf{Resource} & \textbf{Rule} \\
 			\hline
-      MobileResource & Storage Rule, Neighbour Rule, Node Location Rule, Send
-      Rule, Receive Rule. \\
+      MobileResource & Neighbour Rule, Hosting Resource Rule, Allocation Rule. \\
 			\hline
 		\end{tabular}
 	\caption{Resource-Rule table $(C)ReRu_t$}
@@ -1049,12 +993,11 @@ hosted pieces.
 			\hline
 			Person & Bounded World Rule. \\
 			\hline
-      Piece of Hovering Information &  Movement Duplicate Rule, DataExists
-      Rule, Allocation Rule, Neighbour Rule, Send Rule, Receive Rule.  \\
+      Piece of Hovering Information &  Neighbour Rule, Accessible Rule, No
+      Duplicate Rule, Hosting Resource Rule, Hosting Rule, OkZone Rule,
+      WarningZone Rule, ViolentZone Rule, DeathZone Rule.  \\
 			\hline
-      Mobile Node & Accessible Rule, Listing Rule, Creation Rule, Neighbour
-      Rule, Send Rule, Receive Rule, DataExists Rule, Allocation Rule, Node
-      Location Rule. \\
+      Mobile Node & Accessible Rule, Allocation Rule, Neighbour Rule, No Duplication Rule \\
 			\hline
 		\end{tabular}
 	\caption{Role-Rule table $(C)RoRu_t$}
@@ -1067,13 +1010,13 @@ hosted pieces.
 			\hline
 			\textbf{Space} & \textbf{Rule} \\
 			\hline
-			Anchor Area Space & Accessible Rule, Listing Rule, Creation Rule. \\
+			Anchor Area Space & Accessible Rule, OkZone Rule, WarningZone Rule, ViolentZone Rule, DeathZone Rule \\
 			\hline
-			Communication Range Space & Neighbour Rule, Send Rule, Receive Rule. \\
+			Communication Range Space & Neighbour Rule \\
 			\hline
-			Node Space & Node Location Rule, Accessible Rule, Listing Rule, Creation Rule. \\
+			Node Space & Hosting Rule \\
 			\hline
-			World Space & Bounded World Rule. \\
+			World Space & Bounded World Rule \\
 			\hline
 		\end{tabular}
 	\caption{Space-Rule table $(C)SRu_t$}
@@ -1205,16 +1148,14 @@ hosted pieces.
 			\hline
 			Body Artifact & MoveAction, SenseAction. \\
 			\hline
-			MobileUI Artifact & CreateViaUI Action, ShowInformationToUI Action. \\
+			MobileUI Artifact & NotifyInformation. \\
 			\hline
-			MobileUIInterface Artifact & ShowInformationToUI Action, CreateViaUI Action. \\
+			MobileUIInterface Artifact & NotifyInformation. \\
 			\hline
-      Simulator Artifact & ShowSimulation, AnalyzeSimulation,
-      InquireNodes, InquireHoveringInformation, InquireEnvironment. \\
+      Simulator Artifact & ShowSimulation, InquireNodes,
+      InquireHoveringInformation, InquireEnvironment. \\
 			\hline
-			HoveringInformation Artifact & AccessInformationData. \\
-			\hline
-			MobileNode Artifact & CreateInformation \\
+			HoveringInformation Artifact & \\
 			\hline
 		\end{tabular}
 	\caption{Mapping Artifact-Action table $(C)MAAc_t$}
@@ -1257,8 +1198,7 @@ hosted pieces.
 			\hline
 			UI Artifact & RenderWorld. \\
 			\hline
-      MobileResource Artifact & DiscoveNeighbour, SendMessage, ReceiveMessage,
-      AllocateData, EditData, RemoveData, ObtainPosition. \\
+      MobileResource Artifact & DiscoveNeighbour,  ObtainPosition. \\
 			\hline
 		\end{tabular}
 	\caption{Mapping Artifact-Operation table $(C)MArOp_t$}
@@ -1273,8 +1213,8 @@ hosted pieces.
 			\hline
 			Body Artifact & Bounded World Rule. \\
 			\hline
-			MobileResource Artifact & Allocation Rule, DataExists Rule, Neighbour Rule, Node Location
-			Rule, Movement Duplicate Rule. \\
+      MobileResource Artifact & Allocation Rule, Neighbour Rule, Hosting
+      Resource Rule. \\
 			\hline
 		\end{tabular}
 	\caption{Mapping Artifact-Rule table $(C)MArRu_t$}
@@ -1306,31 +1246,13 @@ hosted pieces.
 			\hline
 			\textbf{Interaction} & \textbf{Use} \\
 			\hline
-			Move Interaction & Move Use \\
+			Render Interaction & Render Use\\
 			\hline
-			Sense Interaction & Sense Use \\
+			DisplayInfo Interaction & DisplayInfo Use\\
 			\hline
-			User Create Interaction & UserCreate Use \\
+      DiscoverNeighbor Interaction & Discover Use \\
 			\hline
-			ObtainPosition Interaction & ObtainPosition Use \\	
-			\hline
-			DiscoverNeighbour Interaction & DiscoverNeighbour Use \\	
-			\hline
-			SendMessage Interaction & Send Use \\	
-			\hline
-			ReceiveMessage Interaction & Receive Use \\	
-			\hline
-			ShowInformation Interaction & ShowInformation Use \\
-			\hline
-			AllocateData Interaction & Allocation Use \\
-			\hline
-			RemoveData Interaction & Removal Use \\
-			\hline
-			EditData Interaction & Edit Use \\
-			\hline
-			Render Interaction & Render Use \\
-			\hline
-			Inquisition Interaction & Inquisition Use, Analysis Use \\
+      ObtainPosition Interaction & ObtainPosition Use \\
 			\hline
 		\end{tabular}
 	\caption{Mapping Interaction-Use table $(C)MIU_t$}
@@ -1343,9 +1265,7 @@ hosted pieces.
 			\hline
 			\textbf{Interaction} & \textbf{Manifest} \\
 			\hline
-			ShowInformation Interaction & ShowInformation Manifest \\
-			\hline
-			UserCreate Interaction & UserCreate Manifest \\
+			DisplayInfo Interaction & NewInfo Manifest \\
 			\hline
 		\end{tabular}
 	\caption{Mapping Interaction-Manifest table $(C)MIM_t$}
@@ -1358,15 +1278,25 @@ hosted pieces.
 			\hline
 			\textbf{Interaction} & \textbf{SpeakTo} \\
 			\hline
-			Jump Interaction & Jump Speech \\
+			InquireNode Interaction & NodeInquisition Speech \\
 			\hline
-			Replication Interaction & Replication Speech \\
+      InquireHovering Interaction & HoveringInquisition Speech  \\
 			\hline
-			List Interaction & List Speech \\
+			GetData Interaction & GetData Speech\\
 			\hline
-			Access Interaction & Access Speech \\
+      GetRemoteData Interaction & GetRemoteData Speech \\
 			\hline
-			Inquisition Interaction & Inquisition Speech \\
+			PleaseDie Interaction & PleaseDie Speech \\
+			\hline
+			Arakiri Interaction & Arakiri Speech \\
+			\hline
+      Probing Interaction & Probe Speech \\
+			\hline
+      PermissionToLand Interaction & Permission to Land Speech \\
+			\hline
+      Land Interaction & Landing Speech \\
+			\hline
+      Clone Interaction & Clone Speech \\
 			\hline
 		\end{tabular}
 	\caption{Mapping Interaction-SpeakTo table $(C)MISp_t$}
@@ -1379,11 +1309,9 @@ hosted pieces.
 			\hline
 			\textbf{Interaction} & \textbf{LinkedTo} \\
 			\hline
-			ShowInformation Interaction & ShowInformation Link \\
+			Render Interaction & Render Link \\
 			\hline
-			UserCreate Interaction & UserCreate Link \\
-			\hline
-			Render Interaction & Render Link\\
+			DisplayInfo Interaction & DisplayInfo Link \\
 			\hline
 		\end{tabular}
 	\caption{Mapping Interaction-LinkedTo table $(C)MIL_t$}
@@ -1402,10 +1330,10 @@ hosted pieces.
 			\hline
 			Person & Body Artifact, MobileUI Artifact. \\
 			\hline
-      MobileNode & MobileUI Artifact, MobileUIInterface Artifact, MobileNode
+      MobileNode & MobileUI Artifact, MobileUIInterface Artifact, MobileResource
       Artifact\\
 			\hline
-			Hovering & HoveringInformation Artifact. \\
+			Hovering & MobileResource Artifact, HoveringInformation Artifact. \\
 			\hline
 		\end{tabular}
 	\caption{Agent-Artifact table $(C)AA_t$}
@@ -1446,19 +1374,17 @@ hosted pieces.
 			\hline
 			\textbf{Artifact} & \textbf{UsageInterface} \\
 			\hline
-			Body Artifact & Sense, MoveTo. \\
+			Body Artifact & Sense, Move. \\
 			\hline
-			MobileUI Artifact & CreateViaUI. \\
+			MobileUI Artifact & \\
 			\hline
 			MobileUIInterface Artifact & ShowInformation. \\
 			\hline
-      MobileResource Artifact & DiscoveNeighbour, SendMessage, ReceiveMessage,
-      AllocateData, EditData, RemoveData, ObtainPosition. \\
+      MobileResource Artifact & DiscoveNeighbour, ObtainPosition. \\
 			\hline
-      Simulator Artifact & ShowSimulation, AnalyzeSimulation, InquireHovering,
-      InquireEnvironment \\
+      Simulator Artifact & ShowSimulation, InquireEnvironment \\
 			\hline
-			HoveringInformation Artifact & GetData \\
+			HoveringInformation Artifact & \\
 			\hline
 		\end{tabular}
 	\caption{Artifact-UsageInterface table $(C)AUI_t$}
@@ -1499,33 +1425,19 @@ hosted pieces.
 			\hline
 			\textbf{Use} & \textbf{Protocol} \\
 			\hline
-			Sense Use & sense \newline return list\_people and list\_points\_of\_interest \\
+			Movement Use & world = Sense()\newline
+			               choose\_destination\newline
+			               Move(Destination) \\
 			\hline
-			Move Use & move\_to(position, velocity) \\
+			Render Use & ShowSimulation(World) \\
 			\hline
-			UserCreate Use & create(information) \\
+			DisplayInfo Use & ShowInformation(Data) \\
 			\hline
-			ObtainPosition Use & ask position\newline return position\\
+      DiscoverNeighbor Use & neigh\_list = DiscoverNeighbor()\\
 			\hline
-			DiscoverNeighbour Use & discover neighbours\newline return list of neighbours\\
+      ObtainPosition Use & position = ObtainPosition()\\
 			\hline
-			Send Use & send\_message(NeighbourID, ReceiverID, message) \\
-			\hline
-			Receive Use & receive\_message(ReceiverID)\newline return message \\
-			\hline
-			ShowInformationToUI Use & show information\\
-			\hline
-			Allocation Use & allocate(name, size) \\
-			\hline
-			Edit Use & edit(name, new\_data) \\
-			\hline
-			Removal Use & remove(name) \\
-			\hline
-			Inquisiton Use & inquire\_environment \\
-			\hline
-			Analysis Use & analyze\_system(inquisition\_result) \newline return results\\
-			\hline
-			Render Use & show\_world(inquisition\_result) \\
+			InquireEnvironment Use & env\_info = InquireEnvironment()\\
 			\hline
 		\end{tabular}
 	\caption{Use-Protocol table $(C)UP_t$}
@@ -1538,14 +1450,13 @@ hosted pieces.
 			\hline
 			\textbf{Agent} & \textbf{Use} \\
 			\hline
-			Person & Sense Use, Move Use, UserCreate Use\\
+			Person & Movement Use \\
 			\hline
-      MobileNode & ObtainPosition Use, DiscoverNeighbour Use, Send Use, Receive Use,
-      ShowInformationToUI Use, ShowList Use, Allocation Use.  \\
+      MobileNode & ObtainPosition Use, DiscoverNeighbour Use, DisplayInfo Use. \\
 			\hline
-			Hovering & Send Use, Receive Use, Edit Use, Removal Use. \\
+			Hovering &  ObtainPosition Use, DiscoverNeighbour Use\\
 			\hline
-			Simulator & Inquisition Use, Analysis Use, Render Use \\
+			Simulator & InquireEnvironment Use, Render Use \\
 			\hline
 		\end{tabular}
 	\caption{Agent-Use table $(C)AgeU_t$}
@@ -1558,18 +1469,17 @@ hosted pieces.
 			\hline
 			\textbf{Artifact} & \textbf{Use} \\
 			\hline
-			Body Artifact & Move Use, Sense Use. \\
+			Body Artifact & Movement Use. \\
 			\hline
-			MobileUI Artifact & UserCreate Use. \\
+			MobileUI Artifact & \\
 			\hline
-      MobileResource Artifact & DiscoverNeighbour Use, Send Use, Receive Use,
-      Allocation Use, Edit Use, Remove Use \\
+      MobileResource Artifact & DiscoverNeighbour Use, ObtainPosition Use \\
 			\hline
-			MobileUIInterface Artifact & ShowInformation Use. \\
+			MobileUIInterface Artifact & DisplayInfo Use. \\
 			\hline
-			HoveringInformation Artifact & AccessInformationData. \\
+			HoveringInformation Artifact & \\
 			\hline
-			Simulator Artifact & Inquisition Use, Analysis Use, Render Use \\
+			Simulator Artifact & InquireEnvironment, Render Use \\
 			\hline
 		\end{tabular}
 	\caption{Artifact-Use table $(C)ArtU_t$}
@@ -1582,17 +1492,39 @@ hosted pieces.
 			\hline
 			\textbf{SpeakTo} & \textbf{Protocol} \\
 			\hline
-			Jump Speech & I\_am\_already\_there? \newline response \newline if\_not
-			try\_insert(information) \newline response \newline if\_yes remove\_information \\
+			InquireNode Speech & inquire\_node\newline
+			                     reply node data \\
 			\hline
-			Replication Speech & I\_am\_already\_there? \newline response \newline if\_not
-			try\_insert(information) \newline response \\
+      InquireHovering Speech & inquire\_hoveringinformation\newline
+                               reply hovering information data\\
 			\hline
-			List Speech & give\_me\_valid\_info\_id(my\_position) \newline return list\_info\_id\\
+			GetData Speech & give\_me\_your\_data
+			                  reply my data\\
 			\hline
-			Access Speech & give\_me\_information(info\_id) \newline return information \\
+      GetRemoteData Speech &  have\_you\_this\_data\newline
+                              reply yes or no\newline
+                              get\_data\newline
+                              reply data \\
 			\hline
-			Inquisiton Speech & inquire\_mobile\_ask \\
+			PleaseDie Speech & please\_die\newline
+			                   ack \\
+			\hline
+			Arakiri Speech & performing\_arakiri\newline
+			                  ack\\
+			\hline
+      Probing Speech & have\_you\_space\newline
+                       reply yes, no, position and if a equal piece is already present\\
+			\hline
+      PermissionToLand Speech & can\_i\_land\newline
+                                reply yes or no\\
+			\hline
+      Land Speech & land\newline
+                    wait for data receiving\newline
+                    resume\\
+			\hline
+      Clone Speech & clone\newline
+                     wait for data receiving\newline
+                     start\\
 			\hline
 		\end{tabular}
 	\caption{SpeakTo-Protocol table $(C)SP_t$}
@@ -1605,12 +1537,15 @@ hosted pieces.
 			\hline
 			\textbf{Agent} & \textbf{SpeakTo} \\
 			\hline
-      MobileNode & List Speech, Access Speech, Creation Speech, AskAccess
-      Speech, Replication Speech, Jump Speech, Inquisiton Speech. \\
+      MobileNode & InquireNode Speech, GetData Speech, GetRemoteData Speech,
+      PleaseDie Speech, Arakiri Speech, Probe Speech, PermissionToLand Speech,
+      Landing Speech, Clone Speech. \\
 			\hline
-			Piece of Hovering Information & Jump Speech, Replication Speech. \\
+      Piece of Hovering Information & InquireHovering Speech, GetData Speech,
+      PleaseDie Speech, Arakiri Speech, Probe Speech, PermissionToLand Speech,
+      Landing Speech, Clone Speech. \\
 			\hline
-			Simulator & Inquisition Speech \\
+			Simulator & InquireNode Speech, InquireHovering Speech \\
 			\hline
 		\end{tabular}
 	\caption{Agent-SpeakTo table $(C)AgeSp_t$}
@@ -1623,9 +1558,7 @@ hosted pieces.
 			\hline
 			\textbf{Manifest} & \textbf{Protocol} \\
 			\hline
-			UserCreate Manifest & requested\_creation(info) \\
-			\hline
-			ShowInformation Manifest & new\_info \\
+			DisplayInfo Manifest & new\_info \\
 			\hline
 		\end{tabular}
 	\caption{Manifest-Protocol table $(C)MP_t$}
@@ -1638,11 +1571,7 @@ hosted pieces.
 			\hline
 			\textbf{Agent} & \textbf{Manifest} \\
 			\hline
-			Hovering & \\
-			\hline
-			MobileNode & UserCreate Manifest \\
-			\hline
-			Person & ShowInformation Manifest\\
+			Person & DisplayInfo Manifest\\
 			\hline
 		\end{tabular}
 	\caption{Agent-Manifest table $(C)AgeM_t$}
@@ -1654,8 +1583,6 @@ hosted pieces.
 	\begin{tabular}{|p{4cm}|p{8cm}|}
 			\hline
 			\textbf{Artifact} & \textbf{Manifest} \\
-			\hline
-			MobileUI Artifact & UserCreate Manifest \\
 			\hline
 			MobileUIInterface Artifact & ShowInfo Manifest\\
 			\hline
@@ -1670,15 +1597,9 @@ hosted pieces.
 			\hline
 			\textbf{LinkedTo} & \textbf{Protocol} \\
 			\hline
-			GUI Link & render(world) \\
-			%\hline
-			%Inquisition Link & inquire nodes \newline return node info \newline inquire
-			%hovering \newline return hovering info\newline
-			%InquireEnvironment\newline return environment info \\
+			Render Link & render(world) \\
 			\hline
-			ShowInformation Link & show\_info(info) \\
-			\hline
-			UserCreate Link & create\_info(info) \\
+			DisplayInfo Link & show\_info(info) \\
 			\hline
 		\end{tabular}
 	\caption{LinkedTo-Protocol table $(C)LP_t$}
@@ -1691,13 +1612,13 @@ hosted pieces.
 			\hline
 			\textbf{Artifact} & \textbf{LinkedTo} \\
 			\hline
-			MobileUIInterface Artifact & ShowInformation Link, UserCreate Link. \\
+			MobileUIInterface Artifact & DisplayInfo Link. \\
 			\hline
-			MobileUI Artifact & ShowInformation Link, UserCreate Link. \\
+			MobileUI Artifact & DisplayInfo Link. \\
 			\hline
-			UI Artifact & GUI Link \\
+			UI Artifact & Render Link \\
 			\hline
-			Simulator Artifact & GUI Link \\
+			Simulator Artifact & Render Link \\
       \hline
 		\end{tabular}
 	\caption{Artifact-LinkedTo table $(C)ArtL_t$}
@@ -1750,12 +1671,12 @@ hosted pieces.
 			\hline
 			\textbf{Workspace} & \textbf{Artifact} \\
 			\hline
-			Node Workspace & HoveringInformation Artifact, MobileNode Artifact,
+			Node Workspace & HoveringInformation Artifact,
 			MobileResource Artifact, MobileUIInterface Artifact. \\
 			\hline
       World & Simulator Artifact, Body Artifact, MobileUI Artifact. \\
 			\hline
-			Anchor Area & HoveringInformation Artifact. \\
+			Anchor Area & \\
 			\hline
 		\end{tabular}
 	\caption{Workspace-Artifact table $(C)WArt_t$}
