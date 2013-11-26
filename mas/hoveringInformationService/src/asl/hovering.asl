@@ -42,8 +42,6 @@
 		+zone(violent, Area * 2, Area * 3);	
 		+zone(death_zone, Area * 3, INFINITE);
 		
-		+approach_level(0);
-		+approach_variation(0);
 		+num_neighbors(0);
 		+current_zone(ok);
 
@@ -171,12 +169,7 @@
 		!getOld(Speed, Distance, Direct, AnchorVect, OldSpeed, OldDistance, OldDirect, OldAnchorVect);
 		Direct = [DX, DY];
 		AnchorVect = [AVX, AVY];
-		// TODO: what to do?
-		?approach_level(AL);
-		-approach_level(_);
 		!updateZone(Distance);
-		NAL = (DX*AVX) + (DY*AVY);
-		+approach_level(NAL);
 		
 		?artifacts(resource, MResID);
 		discoverNeighbors(List) [artifact_id(MResID)];
@@ -207,7 +200,7 @@
 /**
  * Decides the defcon basing on a linear combination between exponential functions.
  */
-@defconDec[atomic] +!decideDefcon : approach_level(AL) & approach_variation(AV) & speed(SP) & current_zone(Zone) &
+@defconDec[atomic] +!decideDefcon :  speed(SP) & current_zone(Zone) &
 									 cur_defcon(CurDef, CurPoint) & defcon(CurDef, MinThr, MaxThr) &
 									 distance(Dist) & zone(death_zone, Max_Dist, _) & num_neighbors(NumNeigh)
 	<-	if(Zone == ok) {
@@ -228,7 +221,6 @@
 		}
 		}
 	
-		// TODO: use the approach level to consider the direction
 		?artifacts(hovering, HArtID);
 		exp(DistancePoints, -Mul*(Dist / Max_Dist)) [artifact_id(HArtID)];
 		
