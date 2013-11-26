@@ -31,10 +31,6 @@ public class MobileStorage {
 		return data.getValue();
 	}
 	
-	public Object[] getAllData() {
-		return storage.values().toArray(new Object[storage.size()]);
-	}
-
 	public boolean allocateData(Object ID, double size) {
 		if(freeSpace < size) {
 			return false;
@@ -42,13 +38,6 @@ public class MobileStorage {
 		freeSpace -= size;
 		storage.put(ID, new Data("__no_data__", size));
 		return true;
-	}
-	
-	public void editData(Object ID, String newValue) {
-		Data d = storage.get(ID);
-		if(d != null) {
-			d.setValue(newValue);
-		}
 	}
 	
 	public synchronized void freeData(Object ID) {

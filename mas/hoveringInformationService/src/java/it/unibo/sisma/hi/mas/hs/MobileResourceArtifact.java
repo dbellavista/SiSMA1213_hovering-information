@@ -40,7 +40,6 @@ public class MobileResourceArtifact extends Artifact {
 
 		defineObsProperty("total_space", this.storage.getTotalSpace());
 		defineObsProperty("free_space", this.storage.getFreeSpace());
-		defineObsProperty("data", (Object) new Object[0]);
 	}
 
 	@OPERATION
@@ -135,15 +134,6 @@ public class MobileResourceArtifact extends Artifact {
 		res.set(storage.allocateData(ID, size));
 		ObsProperty fsProp = getObsProperty("free_space");
 		fsProp.updateValue(this.storage.getFreeSpace());
-		ObsProperty dataProp = getObsProperty("data");
-		dataProp.updateValue(this.storage.getAllData());
-	}
-
-	@OPERATION
-	void editData(Object ID, String data) {
-		storage.editData(ID, data);
-		ObsProperty dataProp = getObsProperty("data");
-		dataProp.updateValue(this.storage.getAllData());
 	}
 
 	@OPERATION
@@ -151,8 +141,6 @@ public class MobileResourceArtifact extends Artifact {
 		storage.freeData(ID);
 		ObsProperty fsProp = getObsProperty("free_space");
 		fsProp.updateValue(this.storage.getFreeSpace());
-		ObsProperty dataProp = getObsProperty("data");
-		dataProp.updateValue(this.storage.getAllData());
 	}
 
 	@OPERATION
