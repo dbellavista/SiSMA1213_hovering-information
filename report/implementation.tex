@@ -147,9 +147,18 @@ This and that lead me to alterate and restore some SODA interaction. For
 instance the hovering information tells (and untells) its data to the mobile
 node (it's the reverse situation of the \emph{GetData Speech}).
 
+Another example is the \emph{GetRemoteData Speech}. The mobile node doesn't
+asks every mobile node which data they have, but instead it sends to every
+neighbor its information everytime something changes. This lead to the
+construction of a database, which it's easily queried by the mobile node.
+
 Moreover I haven't implemented some features, such as smarter movement for
 people, different and better dissemination process, landing and cloning basing
 on availability and accessibility of the hovering information and system
 analysis. All those features (except mayhaps for people movement) are easily
 implementable using the data available to each agent, but I have give up due to
 some random and frustrating errors.
+
+There is also a \emph{bug}: the communication range is not well managed, so for
+a message is succesfully sent it's necessary that only the sender has the
+receiver in range. In a real context, they must be both in range.
