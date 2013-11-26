@@ -32,6 +32,7 @@
 *.xdy
 *.tdo
 report/main.pdf
+report/presentation/main.pdf
 papers/*
 old/
 simulatorUI/RemoteSystemsTempFiles/
