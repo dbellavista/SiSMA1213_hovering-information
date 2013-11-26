@@ -4,14 +4,14 @@
 The goal of this project is to simulate and analyze the
 hovering system used by the social system. In order to
 reduce the technological gap between the SODA process and
-the implementation, I chosen to use \emph{Jason+CArtAgO}\cite{cartago,jaslide,cartex}.
-infrastructure.
+the implementation, I have chosen to use
+\emph{Jason+CArtAgO}\cite{cartago,jaslide,cartex} infrastructure.
 
 \subsection{Initialization}
 
 Prior to simulation, the sistem must be initialized. I couldn't find the
 required flexibility in the \code{mas2j} files, so I decided to create a new
-Agent, called \emph{initiator}, which reads a configuration file and create
+Agent, called \emph{initiator}, which reads a configuration file and creates
 agents, workspaces and common artifacts specifying the needed configuration.
 Artifacts are configured by setting the proper initialization parameters, while
 agents are configured by telling them what they have to believe (using the
@@ -24,34 +24,34 @@ itself. This artifact is created by the mobile node agent, thus, when the
 person agent finds it, both the mobile node and the person are ready to begin.
 
 When the system is about to start, the \emph{initiator} sends an
-\code{achieve(start)} to all the person agent. Each person agent turn on their
+\code{achieve(start)} to all the person agents. Each person agent turns on its
 mobile nodes using a new operation of \emph{MobileUI Artifact}:
 \code{StartDevice}, which is linked to the \emph{MobileUIInterface Artifact}
-and manifest itself to the mobile agent.
+and manifests itself to the mobile agent.
 
-The last initialization operation is the \emph{dissemination}, that is, to
-create the initial hovering agent inside some mobile nodes. For now the only
-dissemination method is the random dissemination, which assign to each mobile
-node an hovering agent with a certain probability.
+The last initialization operation is the \emph{dissemination}, that is, the
+creation of the initial hovering agent inside some mobile nodes. For now the
+only dissemination method is the random dissemination, which assigns to each
+mobile node an hovering agent with a certain probability.
 
 \subsection{Environment Artifact}
 
-The environment artifact represent the world. Every Body Artifact,
+The environment artifact represents the world. Every Body Artifact,
 MobileResource and the SimulationArtifact is linked to it. The Environment
 Artifact provides operation for insert, sense and move people into the
-environment. The \emph{MobileResource} is linked to the Environment Artifact
+environment. The \emph{MobileResoursce} is linked to the Environment Artifact
 for discovering neighbors, obtaining the position and sending and receiving
 messages.
 
 \subsection{Messaging System}
 
-For the communication, I have chosen to use the \emph{AgentSpeak} primitives
+For the communication, I have used the \emph{AgentSpeak} primitives
 for communication between hovering agents and their host and to use a custom
 message-passing architecture for communicating with neighbors. Doing this, I
 assumed a simple dispatch-based architecture, easily implementable in real
-mobile devices. The messaging system is realized as two new operation:
+mobile devices. The messaging system is realized with two new operation
 \code{SendMessage} and \code{ReceiveMessage} into the \emph{MobileResource
-Artifat}.
+Artifat}, usable by both the mobile node and the hosted hovering information.
 
 Thanks to the \code{await} method of \emph{CArtAgO}, the receive message
 operation blocks the execution flow, completing only when a new message is
@@ -60,18 +60,16 @@ available.
 \subsection{Obtaining the position}
 
 Obtaining the position is an important task and must be performed continuously.
-I have added a new operation \code{StartObtainingPosition} in
+I have defined a new operation \code{StartObtainingPosition} in
 \emph{MobileResource Artifact}: using the \code{await} method, the artifact
-polls the position, manifesting itself to the agent with the new position.
+polls the position, manifesting it to the focused agents.
 
 
 \subsection{Social System}
 
 People have to move around the world, basing on their environment perception.
 In the real world, a person has eyes, through which can recognize other people
-and point of interest and approximate their distance.  This can be seen as a
-light sensor sensing the physical environment, which has a source producing
-light that is reflected by people and points of interest.
+and point of interest and approximate their distance.
 
 With the \code{Sense} operation, each person obtain a list of other people and
 points of interest. Behaviors can be build from here.
@@ -89,10 +87,10 @@ creating a list of potential destination for landing or cloning operation. At
 defcon $2$, it tries to land on a mobile node closer to the anchor area. On
 defcon $1$ it clone itself on the best neighbor.
 
-For now the defcon level is computed by a linear combination of two reversed
-exponential function. With values close to $1$, the defcon tend to be higher,
-while with values closer to $0$, the defcon is lower. The function may depend
-on various factors. I have implemented:
+For now the defcon level is computed by a linear combination of two exponential
+function with values about between 0 and 1. With values closer to $1$, the
+defcon leven is low, while with values closer to $0$, the defcon is
+high. The function may depend on various factors. I have implemented:
 
 \[
   v = e^{-\frac{Distance}{DeathZoneLimit}*ZoneFactor} * e^{\frac{NumNeighbors}{10}}
@@ -117,16 +115,16 @@ on various factors. I have implemented:
     \end{cases}
 \]
 
-Using the defcon level, the hovering agent can limit its interaction basing on
-various factors.
+Using the defcon level, the hovering agent can adjust its interactions basing on
+multiple factors.
 
 \subsection{Hovering Landing and Cloning operations}
 
-In the real world, a landing operation may consist in the agent serializing,
-which transfer itself to the new mobile node, which will resume it. On the
-other hand, the clone operation should send the agent source and an initial
-sets of believes to the target mobile node. The new host will create a new
-agent and \emph{tell} him the initial believes.
+In the real world, a landing operation may consist in the agent serialization.
+The agent packs and transfers itself into the new mobile node, which will resume
+it. On the other hand, the clone operation should send the agent source and an
+initial sets of believes to the target mobile node. The new host will create a
+new agent and \emph{tell} him the initial believes.
 
 I have implemented a similar mechanism, but of course the hover agent doesn't
 send code or the serialized itself, because they are in the same local system.
@@ -143,7 +141,7 @@ The JASON complexity raised, and I have faced some problems, without knowing
 the exact cause. They are surely due to a some implementation errors, but I
 wasn't able to spot them and the debugging wasn't so helpful. 
 
-This and that lead me to alterate and restore some SODA interaction. For
+This and that leads me to change, restore and reedit some SODA interaction. For
 instance the hovering information tells (and untells) its data to the mobile
 node (it's the reverse situation of the \emph{GetData Speech}).
 

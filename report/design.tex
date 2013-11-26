@@ -10,11 +10,13 @@ interest, such as shops, information centers, and so on.
 The system simulates an hovering information usage, inside an environment
 (although ``\emph{a simulator without the reproducibility ability is no more
 than little game}''[cit. Pianini], so from now on I may use the word
-``simulator'' as a synonymous for ``little game''). People, carrying mobile
-nodes, have to walk with different behaviour, emulating movements inside an
-area composed by points of interest.  The simulation should gather periodic
-data about hovering information status and properties (i.e.\ availability,
-survivability and accessibility), nodes position and communications link.
+``simulator'' as a synonymous for ``little game'').
+
+People, carrying mobile nodes, have to walk with different behaviour, emulating
+movements inside an area composed by points of interest.  The simulation should
+gather periodic data about hovering information status and properties (i.e.\
+availability, survivability and accessibility), nodes position and
+communications link.
 
 \textbf{Note on the implemented system}: the people move only using some sort of random
 walk, nothing more. And the simulation system only shows the actors, without
@@ -38,7 +40,7 @@ From the requirements and the preliminary analysis considerations, the
 information system} and the \emph{Social system}, treating them as a single
 system. The subsystem \emph{Simulator} doesn't require independent control or
 intelligence, so the simulator interface can be assumed as a \emph{Legacy
-System}, already present in the environment.
+System}.
 
 \subsubsection{Requirements Tables}
 
@@ -190,6 +192,15 @@ System}, already present in the environment.
 
 
 \subsection{Analysis}
+
+By analyzing the requirements, the basilar and necessary tasks are defined.
+Those are the tasks for landing and cloning hovering information, displaying
+information on the mobile device and get information hosted locally or
+remotely.
+
+I decided to create functions for getting the position and discovering the
+neighbors, because those operation are available to each subject using the
+mobile node.
 
 \subsubsection{References Tables}
 
@@ -520,6 +531,14 @@ System}, already present in the environment.
 \end{table}
 
 \subsection{Architectural Design}
+
+I re-iterated many times this phases. At last I have decided to not report the
+communication methods, but to assume that interaction are possible, regardless
+of the topology: if two mobile nodes are in rage, they can communicate.
+
+Pieces of hovering information interact with remote mobile nodes, for asking
+information (probe action), asking permission for landing or cloning and to
+perform the true land or clone.
 
 \subsubsection{Transition Tables}
 
@@ -1102,6 +1121,9 @@ a piece of hovering information from its anchor center, the space is divided in 
 \end{table}
 
 \subsection{Detailed Design}
+
+I haven't used the layering feature of SODA, so the design has only one
+possible architecture.
 
 \subsubsection{Carving Diagram}
 
