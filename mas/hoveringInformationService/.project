@@ -32,11 +32,4 @@
 		<nature>org.eclipse.xtext.ui.shared.xtextNature</nature>
 		<nature>jasonide.jasonNature</nature>
 	</natures>
-	<linkedResources>
-		<link>
-			<name>implementation.tex</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/report/implementation.tex</locationURI>
-		</link>
-	</linkedResources>
 </projectDescription>
