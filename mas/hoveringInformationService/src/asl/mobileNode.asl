@@ -318,9 +318,9 @@
 	<-  ?artifacts(resource, MResID);
 		?position([X, Y]);
 		if( ((AX-X)*(AX-X) + (AY-Y)*(AY-Y)) > Area) {
-			+database(ID, HName, true);	
+			+database(Sender, HName, true);	
 		} else {
-			+database(ID, HName, false);
+			+database(Sender, HName, false);
 		}
 		!add_db(Sender, T1);
 		.
@@ -339,12 +339,17 @@
 		showInformation(HName, Data) [artifact_id(UIfResID)];
 		.
 		
+// My database
 +!elaborate_db(ID, HName, true) : node_id(ID).
 
+// Remote database, and I haven't the data locally
 +!elaborate_db(ID, HName, true) : node_id(NodeID) & not (ID == NodeID)  & not database(NodeID, HName, true)
 	<- 	?id(NodeID);
 		sendMessage(NodeID, ID, "mobile", [please_data, HName]);
 		.
+
+// Remote database ok, but I already have the local data
++!elaborate_db(_, _, _).
 
 @please_ok[atomic] +!manage_message(Sender, SenderName, ["please_data", HName])
 	<-	?id(NodeID);

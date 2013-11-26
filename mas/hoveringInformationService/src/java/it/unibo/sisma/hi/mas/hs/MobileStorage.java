@@ -40,7 +40,7 @@ public class MobileStorage {
 		return true;
 	}
 	
-	public synchronized void freeData(Object ID) {
+	public void freeData(Object ID) {
 		Data d = storage.remove(ID);
 		if(d != null) {
 			freeSpace += d.getSize();
