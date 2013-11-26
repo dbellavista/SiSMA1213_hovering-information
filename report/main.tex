@@ -35,6 +35,32 @@ Corso Sistemi Multiagente LM\\
 \usepackage[usenames,dvipsnames]{xcolor}
 \usepackage{graphicx}
 
+\usepackage{listings}
+\lstset{%
+  breakatwhitespace=false,
+  breaklines=true,
+  captionpos=t,
+  extendedchars=true,
+  literate= {à}{{\`a}}1
+            {η}{{$\eta$}}1
+            {μ}{{$\mu$}}1
+            {ρ}{{$\rho$}}1,
+  frame=single,
+  keepspaces=true,
+  basicstyle=\ttfamily\footnotesize,
+  keywordstyle=\color{blue},
+  commentstyle=\color{OliveGreen},
+  stringstyle=\color{RedOrange},
+  numbers=left,
+  numberstyle=\tiny\color{CadetBlue},
+  rulecolor=\color{black},
+  showspaces=false,
+  showstringspaces=false,
+  showtabs=false,
+  tabsize=2,
+  title=\lstname
+}
+
 \newcommand{\action}[1]{\texttt{#1}\xspace}
 \newcommand{\code}[1]{{\small{\texttt{#1}}}\xspace}
 \newcommand{\codescript}[1]{{\scriptsize{\texttt{#1}}}\xspace}
